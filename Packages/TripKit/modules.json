@@ -1,0 +1,26 @@
+{
+  "TripDomain": [
+    "TripLocalization"
+  ],
+  "TripRouting": [
+    "TripDomain",
+    "TripLocalization"
+  ],
+  "MapEngine": [
+    "TripDomain",
+    "TripLocalization"
+  ],
+  "TripStorage": [
+    "TripDomain",
+    "TripLocalization"
+  ],
+  "TripIntelligence": [
+    "TripDomain",
+    "TripLocalization"
+  ],
+  "TripLocalization": [],
+  "TripIntegrations": [
+    "TripDomain",
+    "TripLocalization"
+  ]
+}
