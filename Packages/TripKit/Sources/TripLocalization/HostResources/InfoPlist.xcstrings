@@ -1,0 +1,125 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleName" : {
+      "comment" : "Product bundle name; retain the brand spelling in every language.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trip"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trip"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trip"
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Location permission explanation.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show your current position and find directions from My Location when you use the location control or request directions."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "स्थान बटन इस्तेमाल करने या दिशा-निर्देश माँगने पर आपकी मौजूदा स्थिति दिखाने और मेरा स्थान से रास्ता खोजने के लिए।"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ಸ್ಥಳ ಬಟನ್ ಬಳಸುವಾಗ ಅಥವಾ ದಾರಿ ಕೇಳುವಾಗ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಸ್ಥಳವನ್ನು ತೋರಿಸಲು ಮತ್ತು ಅಲ್ಲಿಂದ ಮಾರ್ಗಗಳನ್ನು ಹುಡುಕಲು ಬಳಸಲಾಗುತ್ತದೆ."
+          }
+        }
+      }
+    },
+    "NSCalendarsWriteOnlyAccessUsageDescription": {
+      "comment": "Permission requested only for the explicit native travel action.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add the trip bookings you select to your calendar."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "आपके चुने हुए यात्रा बुकिंग को आपके कैलेंडर में जोड़ने के लिए।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಪ್ರವಾಸದ ಬುಕಿಂಗ್‌ಗಳನ್ನು ನಿಮ್ಮ ಕ್ಯಾಲೆಂಡರ್‌ಗೆ ಸೇರಿಸಲು."
+          }
+        }
+      }
+    },
+    "NSRemindersFullAccessUsageDescription": {
+      "comment": "Permission requested only for the explicit native travel action.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export the packing tasks you select to Reminders and prevent duplicate exports."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "आपके चुने हुए पैकिंग कार्यों को रिमाइंडर में भेजने और डुप्लिकेट निर्यात रोकने के लिए।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಪ್ಯಾಕಿಂಗ್ ಕೆಲಸಗಳನ್ನು ಜ್ಞಾಪನೆಗಳಿಗೆ ಸೇರಿಸಲು ಮತ್ತು ನಕಲಿ ರಫ್ತುಗಳನ್ನು ತಡೆಯಲು."
+          }
+        }
+      }
+    },
+    "NSAlarmKitUsageDescription": {
+      "comment": "Permission requested only for the explicit native travel action.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set travel alarms only when you confirm a time, and cancel them if the saved booking changes."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "आपके समय की पुष्टि करने पर यात्रा अलार्म लगाने और सहेजी गई बुकिंग बदलने पर उन्हें रद्द करने के लिए।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನೀವು ಸಮಯವನ್ನು ಖಚಿತಪಡಿಸಿದಾಗ ಮಾತ್ರ ಪ್ರಯಾಣದ ಅಲಾರ್ಮ್ ಹೊಂದಿಸಲು ಮತ್ತು ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಬದಲಾದರೆ ರದ್ದುಗೊಳಿಸಲು."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

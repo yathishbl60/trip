@@ -1,0 +1,246 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Open ${target} in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ${target} in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${target} को ${applicationName} में खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ${target} ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "Create a trip in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a trip in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में एक यात्रा बनाएं"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ಪ್ರವಾಸವನ್ನು ರಚಿಸಿ"
+          }
+        }
+      }
+    },
+    "Read my itinerary in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read my itinerary in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में मेरा यात्रा कार्यक्रम पढ़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನನ್ನ ಪ್ರವಾಸವನ್ನು ${applicationName} ನಲ್ಲಿ ಓದಿ"
+          }
+        }
+      }
+    },
+    "What's planned today in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's planned today in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "आज ${applicationName} में क्या योजना बनाई गई है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಇಂದು ${applicationName} ನಲ್ಲಿ ಏನು ಯೋಜಿಸಲಾಗಿದೆ"
+          }
+        }
+      }
+    },
+    "Plan my saved places in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan my saved places in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में मेरे सहेजे गए स्थानों की योजना बनाएं"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನನ್ನ ಉಳಿಸಿದ ಸ್ಥಳಗಳನ್ನು ${applicationName} ನಲ್ಲಿ ಯೋಜಿಸಿ"
+          }
+        }
+      }
+    },
+    "Track my trip day in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Track my trip day in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में मेरी यात्रा के दिन को ट्रैक करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನನ್ನ ಪ್ರವಾಸದ ದಿನವನ್ನು ${applicationName} ನಲ್ಲಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ"
+          }
+        }
+      }
+    },
+    "Mark my next place visited in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark my next place visited in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "मेरे द्वारा देखे गए अगले स्थान को ${applicationName} में चिह्नित करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ಭೇಟಿ ನೀಡಿದ ನನ್ನ ಮುಂದಿನ ಸ್ಥಳವನ್ನು ಗುರುತಿಸಿ"
+          }
+        }
+      }
+    },
+    "End day tracking in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End day tracking in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में अंतिम दिन की ट्रैकिंग"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ಅಂತಿಮ ದಿನದ ಟ್ರ್ಯಾಕಿಂಗ್"
+          }
+        }
+      }
+    },
+    "Explore places in ${applicationName}": {
+      "extractionState": "manual",
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explore places in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में स्थानों का अन्वेषण करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ಸ್ಥಳಗಳನ್ನು ಅನ್ವೇಷಿಸಿ"
+          }
+        }
+      }
+    },
+    "What's next in ${applicationName}": {
+      "comment": "Siri invocation phrase. Preserve every ${parameter} token.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's next in ${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} में आगे क्या है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${applicationName} ನಲ್ಲಿ ಮುಂದೆ ಏನಿದೆ"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
