@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TripWeatherEnabled</key>
+	<false/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.native.trip</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>trip</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>Add the trip bookings you select to your calendar.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>Export the packing tasks you select to Reminders and prevent duplicate exports.</string>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Set travel alarms only when you confirm a time, and cancel them if the saved booking changes.</string>
+</dict>
+</plist>
