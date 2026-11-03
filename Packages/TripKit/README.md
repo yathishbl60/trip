@@ -33,15 +33,13 @@ The Xcode app links all seven local products, so no package registry is involved
 | TripIntelligence | TripPlanningService → ItineraryDraft | Cancellation, supplied-place validation, private generation schema |
 
 PlaceRepository requires a PlaceProviding implementation; the app's
-ApplePlaceProvider owns resource loading and native search. The package does not
+ApplePlaceProvider supplies live MapKit search results. The package does not
 choose an app bundle or import Explore. Hosts create and retain the public
 DirectionsModel and inject location, search, presentation callbacks, and colors.
 See [directions integration](../../DIRECTIONS.md); no app source copying is needed.
 TripLimits centralizes trip
 editing policy; change consumers together if a public limit changes.
 
-Each implementation target depends only on TripDomain and TripLocalization. A developer changing
-storage need not modify the map, and routing changes need not touch generation.
 Coordinate changes to public domain contracts before parallel implementation.
 Keep schemas, MapKit task holders, and generated Foundation Models types private.
 

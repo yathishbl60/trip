@@ -57,19 +57,6 @@ Ticket/document attachments depend on roadmap #4 and are not implemented here.
 Today currently provides saved event details and notes; it has no placeholder
 ticket button. The ticket portion of roadmap #3's ship bar remains dependent on #4.
 
-## Verification, October 17, 2026
+## Verification
 
-`bash scripts/check.sh` passes architecture, source/member size, preview,
-controller storage, UIKit, project-skill size, and whitespace audits.
-
-`bash scripts/performance.sh system-check` passes with optimized production
-algorithms under Swift 6 strict concurrency and MainActor default isolation.
-Checks cover legacy migration and round trips, device-zone changes, spring gaps,
-repeated hours, half-hour DST, skipped dates, date-line travel, day schedules,
-booking endpoint removal, system projections, Today selection, visit progress,
-and manual leave-by guidance. Existing schedule and journey checks also run.
-
-The iOS Simulator Debug app/widget build found date-formatting and missing-import
-errors; those were corrected. The build rerun was declined, so current full app
-and widget compilation remains unverified. Canvas, simulator/device appearance,
-VoiceOver, and signed system-surface behavior have not been visually verified.
+Use the source gate in [Contributing](../CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.

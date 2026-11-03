@@ -1,8 +1,8 @@
 # Trip app icons
 
 The folded map, winding route, and location pin use Trip's existing teal and mint
-palette. Artwork was generated with the built-in `image_gen.imagegen` tool on
-2026-10-13 using the imagegen skill. No API-key or CLI fallback was used.
+palette. The asset catalog contains the selected generated artwork; the prompts below
+record its reproducible design inputs.
 
 ## Project assets
 
@@ -91,5 +91,6 @@ Selected generated images were resized to 1024 × 1024 with `sips`. RGB artwork
 was tagged sRGB; the tinted asset was matched to Gray Gamma 2.2. Transparent
 artwork retains alpha. The spatial foreground reuses the dark icon bytes.
 
-Source audits and file checks do not establish installed appearance. No app
-build, benchmark, simulator Home Screen, or headset check was requested.
+After changing artwork, check dimensions, color profiles, alpha and catalog
+membership. Verify installed light, dark and tinted appearances on the Home Screen
+and spatial layering on supported hardware. Source audits cannot establish appearance.

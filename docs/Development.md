@@ -1,8 +1,17 @@
 # Development workflow
 
-Trip is a feature-oriented application with reusable Swift packages. The factory
-is the set of ownership contracts, local templates, dependency injection, and
-verification commands below. Runtime features remain ordinary Swift types.
+Use this workflow to find the right owner, make a focused change, and verify it.
+The workspace tools read the ownership manifests and provide optional scaffolding;
+feature behavior lives in the existing Swift types.
+
+## Contents
+
+- [Find the smallest owning area](#find-the-smallest-owning-area)
+- [From task to review](#from-task-to-review)
+- [Start a new feature](#start-a-new-feature)
+- [AI-assisted changes](#ai-assisted-changes)
+- [Use this repository as a reference](#use-this-repository-as-a-reference)
+- [Automation](#automation)
 
 ## Find the smallest owning area
 

@@ -2,7 +2,7 @@
 
 Start at `Packages/TripKit/Sources/TripRouting/Feature`:
 DirectionsSheetView → DirectionsController → DirectionsModel. The entire feature
-is compiled in TripRouting, which depends only on TripDomain and system frameworks.
+is compiled in TripRouting, which depends on TripDomain, TripLocalization, and system frameworks.
 It has no Explore, Trips, app-navigation, storage, or shared-theme dependency.
 Its host owns its lifetime; the UI is available on iOS and visionOS.
 

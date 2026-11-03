@@ -16,6 +16,12 @@ on app types, MapKit, SwiftUI, or a translation service at runtime.
 - `TripText+*.swift` files are generated, grouped, and capped below the project's
   physical line limit. Edit the catalog instead of these accessors.
 
+## Contents
+
+- [Use existing text](#use-existing-text)
+- [Add or change text](#add-or-change-text)
+- [Translation review and verification](#translation-review-and-verification)
+
 ## Use existing text
 
 ```swift

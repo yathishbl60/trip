@@ -1,7 +1,7 @@
 # Test seams and future coverage
 
-This restructuring adds no app test target or new test suite. Existing routing
-tests and standalone performance checks remain available. Source audits parse
+The repository has routing package tests and standalone performance checks.
+There is no app test target. Source audits parse
 Swift and enforce contracts; they do not execute application behavior.
 
 ## Where later tests belong

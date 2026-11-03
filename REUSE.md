@@ -9,6 +9,14 @@ and the ApplePlaceProvider adapter remain app-owned.
 Create and retain the model once at the feature's composition root, outside `body`.
 Views send actions to controllers; providers and models handle data and behavior.
 
+## Contents
+
+- [Configure a feature](#configure-a-feature)
+- [Saving in a host](#saving-in-a-host)
+- [Data adapters](#data-adapters)
+- [Policy controls](#policy-controls)
+- [Domain boundaries](#domain-boundaries)
+
 ## Configure a feature
 
 ```swift
@@ -109,13 +117,13 @@ presentation and a MapKit mapping when using Apple's provider.
 
 Hotels, places, and activities can adapt their search results directly. The independent
 Directions feature composes the TripRouting product and injected host callbacks.
-See [DIRECTIONS.md](DIRECTIONS.md) for copying the UI or using the package alone.
+See [DIRECTIONS.md](DIRECTIONS.md) for hosting the package UI or using its engine alone.
 Trip paths and friend tracking need additional domain models and UI. Current
 search merging retains earlier results up to the configured cap; it does not
 implement a live presence stream or deleted-record events.
 Those features can extend the provider/model boundary without changing placement.
 
-The supplied artwork, ratings, metadata labels, and detail view remain the current
-sample-place presentation. Provide domain-specific details and replace sample
-metadata/artwork when integrating a real catalog. Increasing density or collection
+Live MapKit results use real place metadata and category icons. Preview place data
+can contain illustrative ratings and image names; those are not live provider data.
+Supply licensed media and source-appropriate details when integrating another catalog. Increasing density or collection
 limits requires device profiling; configurable limits are not a frame-rate guarantee.

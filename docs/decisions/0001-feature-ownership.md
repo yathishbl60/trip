@@ -1,10 +1,10 @@
 # 0001: Feature ownership and explicit composition
 
-Status: accepted. Date: 2026-11-01.
+Status: accepted.
 
 ## Context
 
-Trip has six reusable package targets and growing app features. Small Swift files
+Trip has seven reusable package targets and growing app features. Small Swift files
 help local reading, but a flat collection of model extensions and broad shared
 permissions make ownership harder to follow. Concrete service defaults inside UI
 models also make component previews depend on live infrastructure.
@@ -12,7 +12,7 @@ models also make component previews depend on live infrastructure.
 ## Decision
 
 Keep feature-oriented View–Controller–Model with structs for controllers and
-MainActor UI models. Organize model files by workflow. Retain the six package
+MainActor UI models. Organize model files by workflow. Retain the seven package
 targets with explicit dependency edges. App remains the composition and navigation
 owner; AppTripServices supplies production Trips dependencies. The same feature
 models accept local preview providers and later controlled test providers.

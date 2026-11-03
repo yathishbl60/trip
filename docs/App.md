@@ -43,9 +43,9 @@ New navigation requests and tab selections cancel an older pending link resoluti
 ## Service composition
 
 `Dependencies/AppTripServices.swift` constructs production Trips models with
-TripStoring and domain planning/lookup/ordering protocols. AppRuntime shares only
-the durable library; each scene gets its own assistant, lookup, packing, and
-tracking state. App intents use the same service factory. AppModel requires its
+TripStoring and domain planning/lookup/ordering protocols. AppRuntime shares the
+durable library and its system publisher; each scene gets its own assistant,
+lookup, packing, and tracking state. App intents use the same service factory. AppModel requires its
 Trips model explicitly. See [Dependencies](Dependencies.md) for lifetime details.
 
 Native booking capture, explicit exports and alarms, and planned-visit weather follow

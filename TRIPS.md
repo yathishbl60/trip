@@ -37,17 +37,25 @@ through the native share sheet; private day and stop notes are excluded.
 
 The local store migrates the earlier `trips.json` snapshot from Application
 Support the first time it opens. The import is marked complete in SwiftData so
-deleting every trip does not resurrect old data. Preview fixtures use an
-in-memory store and never touch the user's database.
+deleting every trip does not resurrect old data. Preview fixtures use isolated local providers and never touch the user's database.
 
 ## On-device itinerary assistant
 
-**Draft an itinerary** in the editor's options menu opens the optional Apple Intelligence assistant.
-It receives only the selected trip's saved-place names, categories, and
-coordinates. It returns a reviewable draft with no invented opening hours,
-prices, travel times, or places. Saving creates a new trip, preserving the
-original plan. Availability messaging explains when Apple Intelligence is
-disabled, downloading, or unsupported; manual planning always remains usable.
+**Draft an itinerary** opens the optional Apple Intelligence assistant. Choose up
+to 24 saved places, a 1–5 day duration, pace, and interests. The model receives
+place names, categories, coordinates and nearby distances; private notes and
+checklist contents are excluded. Suggestions use supplied places and do not
+invent opening hours, prices or travel times.
+
+Review or refine the draft before applying it to the current trip or saving a new
+trip. Applying validates the source itinerary and protects scheduled visits, stable
+identities, notes and checklist state. Saving a new trip preserves the original
+and carries over local notes with a reset checklist. Changed choices invalidate
+old drafts; cancellation rejects late results.
+
+Availability messages explain unsupported hardware, disabled Intelligence or an
+unfinished model download. Manual planning remains usable. Private Cloud Compute
+is disabled in the checked-in configuration.
 
 ## Persistence behavior
 

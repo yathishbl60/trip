@@ -1,12 +1,5 @@
 # Siri, Apple Intelligence, widgets, and trip day tracking
 
-Integration baseline verification · 2026-10-20, before subsequent search changes:
-the Debug iOS Simulator build passed after the
-TripSurfaceAgenda isolation repair, including the app, widget extension and App
-Intents metadata processing (Xcode-beta, iOS 27.2, arm64/x86_64, signing disabled).
-No warnings or errors were reported. Source audits pass. Executable system checks,
-rendered previews, Simulator interaction and signed-device behavior remain unverified.
-
 The app exposes actions over the real local trip library. Siri and Shortcuts can
 open a saved trip, create a named trip with dates and days, read its itinerary,
 draft a plan with Apple Intelligence, track a day, mark the next place visited,
@@ -20,7 +13,19 @@ text. A date outside the itinerary stays empty instead of substituting another d
 Try “What's planned today in Trip”. **Read Trip Itinerary** also includes journey
 events. **Undo Last Trip Visit** is available in the Shortcuts editor for recovery.
 
-## Native travel services · 2026-11-01
+## Contents
+
+- [Native travel services](#native-travel-services)
+- [Next item and direct actions](#next-item-and-direct-actions)
+- [Find a place from another app](#find-a-place-from-another-app)
+- [Ask my trip](#ask-my-trip)
+- [Widgets and Live Activities](#widgets-and-live-activities)
+- [Packing and departure preparation](#packing-and-departure-preparation)
+- [Ownership and signing](#ownership-and-signing)
+- [Verification](#verification)
+- [Apple references](#apple-references)
+
+## Native travel services
 
 A saved trip's options menu now offers **Import booking** and **Export to Calendar**.
 Each day's Add menu can import directly into that day. Import accepts a selected
@@ -64,7 +69,7 @@ retry. Apple Weather attribution accompanies forecasts. **Read My Trip Day** add
 optional Include weather parameter, off by default, for the first timed saved visit.
 A forecast failure still returns the saved itinerary.
 
-WeatherKit is disabled in the current Personal Team signing configuration. The
+WeatherKit is disabled in the checked-in signing configuration. The
 weather sheet and opted-in briefing explain the limitation without making service
 requests; enabling live weather requires an eligible profile and the explicit
 host configuration flag. Other integrations remain available.
@@ -73,7 +78,7 @@ Native adapters live in TripIntegrations behind injected TripDomain contracts.
 [Native travel services](docs/NativeTravelServices.md) records acceptance and
 verification; [dependency lifetimes](docs/Dependencies.md) describes composition.
 
-## Next item and direct actions · 2026-10-19
+## Next item and direct actions
 
 **Get What's Next in My Trip** returns zero or one typed saved detail for Shortcuts,
 plus a reusable result card with Open details and, for a mapped place, Directions.
@@ -82,8 +87,8 @@ planned for today. Multiple current trips require an explicit choice. It never
 silently chooses a future day. While tracking, the next unvisited place takes
 priority; otherwise the trip's local day supplies upcoming saved commitments.
 Private notes are excluded, authentication is required, and uncertain times remain
-labeled for review. Save this action in a custom Shortcut named “What's next” to
-invoke that name with Siri; the existing automatic App Shortcut phrases remain intact.
+labeled for review. Use the ready-made “What's next in Trip” phrase or configure this action in a
+custom Shortcut.
 
 Items in the existing Siri day briefing and the itinerary widget now link to their
 specific saved detail. Additional medium-widget items have individual links.
@@ -111,11 +116,7 @@ duplicate progress bar and repeated count. Active activity taps open the exact n
 place; stale and ended activity taps open the itinerary. Maps and Mark visited remain
 available on the Lock Screen and expanded Island.
 
-Source/architecture/preview-definition audits passed. Compilation, metadata export,
-focused executable checks, Simulator interaction, and signed-device behavior have
-not been verified for this change; the user requested source-only verification.
-
-## Find a place from another app · 2026-10-20
+## Find a place from another app
 
 **Find a Place for My Trip** accepts one place name or address, a saved trip, and
 an explicit day number. It opens the existing **Add places** sheet with the search
@@ -140,15 +141,9 @@ system. The action requires authentication and resolves current saved data; a
 deleted day or an editing session prevents the handoff instead of replacing a draft.
 The scene validates those conditions again when it consumes the request.
 
-Source audits pass, including the required day-parameter declaration checked against
-the installed SDK. Existing picker previews now attach their picker to the model
-and disable live search so seeded states remain deterministic. Cold launch, share
-sheet invocation, Siri, App Intents metadata, and actual search/add interactions
-remain unverified under the current source-only verification instruction.
-
 ## Ask my trip
 
-### Direct answers, discovery, and directions · 2026-10-26
+### Direct answers, discovery, and directions
 
 **Ask My Saved Trip** is a background action in the Shortcuts editor. Choose a saved
 trip and a question such as “Where am I staying on day two?” It interprets the question
@@ -170,11 +165,9 @@ answers retain the original day UUID, so reordering cannot redirect them to anot
 day; a deleted day is rejected. Editing saved records reloads the snippet. Private
 notes and checklist text are excluded from the answer, model context, and search index.
 
-**What's next in Trip** is now the tenth ready-made Siri phrase. Its existing action
+**What's next in Trip** is one of the ten ready-made Siri phrases. Its existing action
 resolves active tracking or one unambiguous trip planned today; it requires a choice
-when multiple trips qualify. Existing phrases remain available. The user approved a
-single 22-line exception for `TripShortcuts.appShortcuts`; the source audit limits that
-exception to the named declaration and retains the 20-line rule elsewhere.
+when multiple trips qualify. Declaration-size rules are maintained in [AGENTS.md](AGENTS.md).
 
 Spotlight indexes up to 300 details from today and future trip days, including
 multi-day stays, with trip names to distinguish similar records. Updates use the
@@ -185,12 +178,6 @@ Index publication enables discovery but does not guarantee Siri ranking or sugge
 Medium itinerary widgets add a native Maps directions link for the displayed saved
 place, alongside visit completion while tracking. Bookings without saved coordinates
 do not show directions. Actions derive from the displayed item, not a different stop.
-
-Source, architecture, localization, and preview-definition audits passed. The existing
-system-check harness now includes answer privacy, spanning stays, unsupported requests,
-missing days, and deleted-record regression cases. These checks, app compilation,
-metadata export, model evaluation, rendered previews, and signed-device interactions
-have not been run for this change. Hindi and Kannada additions remain marked for review.
 
 Open a saved trip's options menu and choose **Ask my trip**, or use **Find Saved
 Trip Details** in Shortcuts with a trip and optional question. Browse the whole
@@ -227,24 +214,10 @@ in Trip”, or “Track my trip day in Trip”. Siri asks for missing parameters
 same actions are available in the Shortcuts editor for automations, such as opening
 your itinerary each morning or marking a visit from the Action button.
 
-Apple Intelligence drafting uses the existing on-device Foundation Models worker.
-It arranges at most 24 saved places into 1–5 days and opens the existing assistant
-for review. Drafting never replaces or saves the original itinerary automatically.
-Unsupported hardware, disabled Intelligence, and an unfinished model download
-produce actionable availability messages; manual planning remains available.
-The assistant offers a searchable saved-place chooser, pace, and interests. A new
-assistant session starts with the trip's duration (clamped to 1–5 days); Shortcuts
-parameters override that duration and preferences. Every selected place is included
-once in the draft. Changed choices invalidate old drafts, and cancellation rejects
-late results. Drafts can be refined and either reviewed for application to the current
-trip or saved as a new trip. Applying preserves identities, notes and checklist state;
-TripItineraryRevision protects scheduled visits and changed source itineraries. The model
-receives calculated nearby-place distances, and a local ordering pass reduces backtracking.
-New-trip saving carries over notes and a reset checklist locally; private notes
-and checklist contents are never supplied to Foundation Models or system projections.
-Saved trips are indexed as App Entities in Spotlight, and the editor supplies
-onscreen entity context to Siri and Apple Intelligence. This app does not claim
-a travel assistant schema that Apple hasn't provided.
+Itinerary drafting and its privacy/review contract are described in
+[Trip planning](TRIPS.md#on-device-itinerary-assistant). Saved trips are indexed as
+App Entities, and the editor supplies onscreen entity context. The app does not
+claim an unsupported travel assistant schema.
 
 ## Widgets and Live Activities
 
@@ -276,7 +249,7 @@ flights and reservations are not visit checkmarks. Activity content also refresh
 trip titles and day numbers after edits. Optional new fields preserve decoding of
 previous activity states.
 
-## Packing and departure preparation · 2026-10-17
+## Packing and departure preparation
 
 In **Checklist → options → Suggest a packing list**, Foundation Models generates
 an on-device draft from trip duration, activity/journey categories, and an optional
@@ -287,7 +260,7 @@ weather, baggage rules, visas, or medical requirements. Travel essentials still 
 without Apple Intelligence. Requests stop on dismissal, backgrounding, preference
 changes, or duration/activity changes, with a 45-second deadline and stale-result rejection.
 
-New Shortcuts actions: **Read Trip Checklist**, **Get Trip Checklist Items**,
+Checklist actions: **Read Trip Checklist**, **Get Trip Checklist Items**,
 **Add Trip Checklist Item**, **Set Trip Checklist Item Completion**,
 **Open Trip Checklist**, and **Suggest Packing with Apple Intelligence**.
 The read action returns remaining items and an interactive card for the first three.
@@ -306,8 +279,7 @@ Old snapshots remain readable and request an app refresh for missing counts.
 Completed checklist status describes only the checklist, not overall travel readiness.
 
 On iOS, add **Open saved trip** in Control Center, Lock Screen controls, or the
-Action button picker. Configure a required saved trip and choose Itinerary or
-Checklist. A foreground intent runs in the host and validates the current trip;
+Action button picker. Configure a required saved trip and choose Itinerary, Checklist, or Next item. A foreground intent runs in the host and validates the current trip;
 an editing session blocks the handoff so unsaved drafts are preserved. Its handler
 is installed at app initialization. URL-representable intents require universal
 links, so this control uses a host action rather than Trip's custom URL scheme.
@@ -316,14 +288,6 @@ Active Lock Screen and expanded Dynamic Island activities offer a Maps direction
 link to the next saved place alongside Mark visited. This uses saved coordinates;
 stale, ended, and completed presentations hide directions. It adds no live ETA or
 background navigation. Optional coordinate fields preserve old activity decoding.
-
-This addition passed source/architecture/wiring audits and, on 2026-10-17, a Debug
-iOS Simulator build with Xcode-beta / iOS 27.2, including the embedded widget
-extension and App Intents metadata processing (code signing disabled).
-Packing model evaluation, Siri discovery, Canvas layouts, signed-device controls,
-widget scheduling, and Dynamic Island interactions remain unverified. The focused
-TripPackingChecks are registered in the existing system-check harness but were
-not executed; performance runs were not requested.
 
 ## Ownership and signing
 
@@ -349,14 +313,6 @@ ownership, App Groups, shared source membership, embedding, and Live Activity me
 When a build is requested, `bash scripts/build.sh app Debug` compiles the host and
 embedded extension with the installed SDK and existing strict concurrency settings.
 Compilation does not establish Siri discovery or correct device presentation.
-
-The 2026-10-14 integration update was source-audited only; no app build, benchmark,
-Canvas rendering, or signed-device check was requested for this pass. Added local
-previews cover event widgets, Siri briefs, lookup fallback/retry, and expanded,
-compact, minimal, completed, and stale activity states. Standalone
-`TripSystemProjectionChecks` cover projection privacy/order, legacy JSON, event
-boundaries, spanning-stay retrieval, and exact-date briefings; they are registered
-in the performance check runner but were not executed in this pass.
 
 On a signed device, verify first launch and an empty library, duplicate trip names,
 deleted trips/days/stops, selecting another tracked trip before tapping an old widget,

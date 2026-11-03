@@ -34,8 +34,9 @@ library guards readiness and trip capacity. Workflow models own duplicate checks
 validation, notices, and success feedback. Controllers expose bindings/actions;
 they do not assemble plans or decide persistence policy.
 
-Inject `TripLibraryModel(store: provider)`, assistant, lookup, packing, and ordering
-providers into TripModel. Workflow models use typed TripAIClient values; no model
+Inject `TripLibraryModel(store: provider)` and the assistant, lookup, packing,
+ordering, booking-import, system-action, weather and tracking models/providers
+into TripModel. [Dependencies](Dependencies.md) defines their lifetimes. Workflow models use typed TripAIClient values; no model
 constructs a live storage or intelligence service. Use one library per
 revisioned store session. A 250 ms debounce coalesces writes; changed IDs support
 partial updates. Failures retain pending edits, retry flushes them, and an older
@@ -69,6 +70,16 @@ Failed-library loading keeps its explanation visible during a retry and replaces
 Retry with an observable loading indicator until the attempt finishes. The existing
 shared load task coalesces callers; failure restores Retry and success opens the library.
 
+## Contents
+
+- [Model folders](#model-folders)
+- [Planning workflows](#planning-workflows)
+- [Complete journey timeline](#complete-journey-timeline)
+- [Timed itineraries](#timed-itineraries)
+- [Visual itinerary](#visual-itinerary)
+- [Map and local stop-order suggestions](#map-and-local-stop-order-suggestions)
+- [Preview a day and save a place in context](#preview-a-day-and-save-a-place-in-context)
+
 ## Model folders
 
 `Workspace` contains TripModel composition and cross-workflow actions. `Library`
@@ -83,7 +94,7 @@ focused owner before adding another TripModel extension.
 ## Planning workflows
 
 See [Search](Search.md) for matching across places, trips and saved details,
-compatible result retention, combined filters and current verification limits.
+compatible result retention, combined filters and verification scope.
 
 Each day has a direct Add places action and a separate calendar menu for events.
 Its native search sheet keeps the trip and day
@@ -121,13 +132,7 @@ Source review cases for this flow include destination changes during debounce,
 adding repeatedly without closing, Undo after switching days, external stop edits
 or deletion, missing map coordinates, day capacity, and creating a day while
 saving. Local preview definitions cover search results, long names, empty days,
-feedback, narrow widths, dark appearance, and accessibility text. The current
-Debug iOS Simulator build and source audits pass. On October 18, manual Simulator
-review covered trip creation/editing, empty and populated plans, live search,
-repeated additions, destination switching, Undo across days, persistence after
-relaunch, the former day replay, directions, and checklist additions. Light/dark appearance
-and accessibility text were inspected. See UILayoutAudit.md for exact coverage;
-VoiceOver, iPad, visionOS, and physical-device checks remain separate.
+feedback, narrow widths, dark appearance, and accessibility text.
 
 Day directions are a host callback, with the route capacity supplied by the host.
 A multi-place route starts at the first planned place and visits the rest in order.
@@ -137,7 +142,8 @@ location behavior. Longer days show the supported limit instead of dropping stop
 Checklists store bounded items in TripPlan's JSON payload. Older payloads decode
 with an empty checklist; the SwiftData schema is unchanged. Templates skip existing
 titles. Duplicating a trip or saving an AI draft carries the checklist forward with
-all items pending. Checklist contents stay out of public widget and Siri projections.
+all items pending. Widget snapshots contain checklist counts only. Authenticated checklist actions
+resolve requested text from the canonical saved library.
 
 The AI planner offers saved-place selection, pace, interests, and freeform preferences.
 Changing any planning input cancels the current request and invalidates the draft.

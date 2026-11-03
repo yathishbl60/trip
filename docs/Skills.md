@@ -42,8 +42,7 @@ workstation it is `~/.codex/skills/app-development`. Its standalone source packa
 is maintained separately and can be shared without Trip or private home-directory
 resources. The user-wide ownership policy lives in `~/.codex/AGENTS.md`.
 Historical third-party originals and migration backups stay outside all skill
-discovery roots and outside the public package. Their earlier application to Trip
-is recorded in [the applied review](reviews/apple-guidance-2026-10-24.md).
+discovery roots and outside the public package.
 
 ## Fallback and verification
 

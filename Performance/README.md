@@ -22,6 +22,12 @@ together for internal checks. Normal Xcode and package builds compile the real
 module boundaries without that flag. Source moves change report digests; retain
 existing baselines as historical measurements rather than rewriting them.
 
+## Contents
+
+- [Commands](#commands)
+- [Coverage](#coverage)
+- [Extending the suite](#extending-the-suite)
+
 ## Commands
 
 ```sh
@@ -68,12 +74,12 @@ them does not establish that they have been run.
 `TripSurfaceSelectionChecks` defines active overnight tracking, ended-session day
 rollover, completed visits with a later flight, expiry, and deleted/foreign target
 coverage. It exercises the widget's production day/session selector, not WidgetKit
-rendering, timeline delivery, or button execution. These new checks have not run.
+rendering, timeline delivery, or button execution. Run the focused harness to verify the current revision.
 
 `PlaceSearchChecks` defines cross-field Unicode/whitespace matching, stable name
 relevance, matching before result limits, duplicate-listing/branch preservation and
 combined detail day/category/text filtering. It is registered in `system-check`;
-these new checks have not run and do not verify live search or UI interactions.
+these checks do not verify live search or UI interactions.
 
 The source audit lives in `scripts/audit_sources.swift` and
 `scripts/SourceAudit/MemberAudit.swift`, with a shell runner using Xcode’s
@@ -92,21 +98,19 @@ with a warning. A source change is expected; a workload/checksum change needs a 
 baseline. Timing failures are opt-in because unrelated machine load adds noise.
 Use repeated runs on an idle, similarly powered/thermally stable machine.
 
-`Baselines/development-mac.json` records this implementation's first complete run.
-It was captured before committing; its dirty flag is intentional and its source
-hash identifies the compiled source set. Prefer your own local baseline; the
+`Baselines/development-mac.json` includes the source digest and machine metadata
+needed to interpret its measurements. Prefer your own local baseline; the
 comparison command requires an explicit override when the recorded machine differs.
 
 ## Coverage
 
-The November 1 map refinements add `CameraGroundScaleChecks`,
-`LayoutVisibilityChecks`, and `MarkerRetirementChecks` through the existing check
+Map checks include `CameraGroundScaleChecks`,
+`LayoutVisibilityChecks`, and `MarkerRetirementChecks` through the standard check
 entry points. They cover calibrated menu stages and dot selection after newer
 camera feedback, pitch/viewport fallback, offscreen candidate budgets, edge
 overlap, gesture-time style ceilings, and retirement before native appearance.
-The bounded-retirement fixture now marks its annotations as appeared so it tests
-actual fades. These changes passed source audits; the new executable checks and
-benchmarks have not been run, and no device performance improvement is claimed.
+The bounded-retirement fixture marks annotations as appeared to exercise fade
+lifetimes. Algorithm checks do not measure native rendering or device frame pacing.
 
 - Subpixel pan and gentle pinch activity with accumulated projection thresholds;
   bounded geographic ranking against a full-sort oracle, score ties, duplicate

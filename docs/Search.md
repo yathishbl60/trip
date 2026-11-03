@@ -1,8 +1,8 @@
 # Search across Trip
 
-## Prefix suggestions · 2026-10-20
+## Prefix suggestions
 
-Explore and Add places now use `MKLocalSearchCompleter` while typing, with up to
+Explore and Add places use `MKLocalSearchCompleter` while typing, with up to
 20 native suggestions and location subtitles. A full `MKLocalSearch` query can
 interpret “Ph” as one place/country; it is not an autocomplete list. The change
 uses Apple's [completion API](https://developer.apple.com/documentation/mapkit/mklocalsearchcompleter).
@@ -16,17 +16,6 @@ still performs a full search. Add places resolves a chosen suggestion, then keep
 the existing explicit Add action and Undo. Saved matches remain directly available.
 Typing cancels superseded resolution. Clearing, dismissal, day changes and
 backgrounding cancel owned work; foregrounding resumes the active search.
-
-The subsequent supplied compiler diagnostics were addressed by importing TripDomain
-in consuming autocomplete files and moving `arrivalClock` onto TripStopTiming's
-primary declaration. The separate extension source was removed from the manifest.
-Source/architecture/preview-definition checks pass. The latest build attempt stopped
-at sandbox-protected Swift/Xcode caches; the escalated rerun was declined. Compilation,
-live “Ph” suggestions and actual selection/add interactions remain unverified for
-this autocomplete revision. Earlier successful builds apply to the preceding code.
-
-Search improvements · 2026-10-20. The integration baseline was committed first as
-`da79d50`; this search work follows that baseline.
 
 ## Matching and relevance
 
@@ -79,25 +68,4 @@ the existing cancellable interpretation and saved-data results.
 
 ## Verification
 
-`bash scripts/check.sh` passes: architecture/source manifests, 100-line files,
-20-line members, previews, controller storage, UIKit prohibition and whitespace.
-Local preview definitions cover populated Explore results with Save enabled,
-route retry/no-results, a trip search failure retaining results, and detail search
-with combined filters while Intelligence is unavailable.
-
-`PlaceSearchChecks` is registered in the existing system-check harness. It defines
-cross-field/Unicode matching, stable relevance, limits applied after matching,
-duplicate branches and combined detail scope. These executable checks were not run.
-The previous integration build does not verify this search revision. No app/package
-build, rendered preview, Simulator interaction or benchmark was run in the initial
-source-only pass. The subsequent build repair below supersedes its compilation status.
-
-## Build repair · 2026-10-20
-
-The user reported a compiler failure in the chained ranking expression. Replaced
-the enumerated/filter/map/sort chain with an explicitly typed ranking array and
-stable sort, keeping the matching and result order policy. The Debug iOS Simulator
-build passed with Xcode-beta / iOS 27.2, arm64/x86_64 and signing disabled, including
-the app, widget extension and App Intents metadata processing. No warnings/errors
-were reported in `.build/build-errors-fix.log`. Source audits pass. Executable
-regression checks, rendered previews and device interactions remain unverified.
+Use the source gate in [Contributing](../CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.

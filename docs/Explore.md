@@ -13,7 +13,7 @@ Start at `Views/Map/MapExperienceView.swift`. Its host supplies a detail builder
 | Map styles and traffic | MapAppearanceController, MapAppearanceModel, MapAppearanceRestoration |
 | Street-level imagery | PlaceLookAroundController, PlaceLookAroundModel, PlaceLookAroundView |
 | Routing integration | ExploreDirectionsController, ExploreModel+DirectionsEnvironment |
-| MapKit place conversion and bundled seed data | Services/ApplePlaceProvider, MapSearchService, PlaceFactory |
+| MapKit search and place conversion | Services/ApplePlaceProvider, MapSearchService, PlaceFactory |
 
 ExploreEnvironment is the host contract for saving: optional savePlace,
 dismissSave, and isSavingPlace. Supply all three for a save-enabled host. The save
@@ -56,6 +56,13 @@ device when runtime verification is requested.
 Cached word matching, result identity validation, no-results recovery and the
 shared behavior across planning searches are described in [Search](Search.md).
 
+## Contents
+
+- [Gesture responsiveness and search continuity](#gesture-responsiveness-and-search-continuity)
+- [Calibrated zoom and annotation lifecycle](#calibrated-zoom-and-annotation-lifecycle)
+- [Styles and place details](#styles-and-place-details)
+- [Launch discovery](#launch-discovery)
+
 ## Gesture responsiveness and search continuity
 
 Camera feedback detects movement even when each callback advances by less than a
@@ -85,9 +92,7 @@ The bounded cache evicts its least recently used area; replacing an existing key
 does not evict a second entry. Empty successful responses are cacheable, while
 failed requests never enter that cache.
 
-Source checks and algorithm fixtures cover these scheduling changes. The October 18
-Simulator review below covers the current app build and exercised interactions;
-algorithm benchmarks and measured frame pacing remain separate verification. In very dense rotated or highly pitched views, offscreen candidates
+In very dense rotated or highly pitched views, offscreen candidates
 can still consume the geographic projection budget; the bounded ranking change
 does not claim exact visible-area coverage or device speed measurements.
 
@@ -121,8 +126,7 @@ place can be considered in a dense tilted map.
 Annotations superseded before native appearance release their reservations and
 are removed immediately. Appeared annotations retain their fade, collision space,
 and bounded retirement lifetime. The existing native identity and Reduce Motion
-behavior remain. See [the November review](reviews/map-interaction-2026-11-01.md)
-for regression coverage and verification scope.
+behavior remain.
 
 ### Reading and tuning the map code
 
@@ -171,8 +175,7 @@ there is no global imagery cache. Previews cover local idle/loading/failure/no-c
 states and do not automatically request live imagery. Coverage and native viewer
 interaction still require device verification when authorized.
 
-
-## Launch discovery and map UI review · October 18
+## Launch discovery
 
 An unfiltered nearby POI request can reach MapKit's result limit within a small
 central cluster. Decluttering correctly collapses those coordinates, leaving the
@@ -201,11 +204,3 @@ control relocation was withdrawn after runtime checks exposed regressions; extra
 collision geometry is not a delivered change. App composition shows save
 confirmations inside an open place sheet, and above the tab bar when the map
 itself is visible.
-
-Earlier builds of the retained improvements were exercised on iPhone 18 Pro Max /
-iOS 27.2 with live Maps data: cold launch, category filtering/reset, search, place selection/framing,
-and saving Nai Lert Park Heritage Home and Bangkok Dolls to the sample Bangkok
-Weekend trip. Dark appearance and accessibility-large text were inspected. The
-final build restores the original control host and compiles successfully; its
-Simulator relaunch was declined, so that final runtime pass is incomplete.
-See [the layout audit](UILayoutAudit.md) for final evidence and verification limits.

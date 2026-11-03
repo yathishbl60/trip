@@ -13,4 +13,3 @@ Read only the relevant `app-development` state/performance topic when additional
 - Fixtures inject independent models and services rather than the shared AppRuntime.
 
 For a source extraction, preserve existing state lifetimes and inspect the affected consumers.
-The [applied review](../../../../docs/reviews/apple-guidance-2026-10-24.md) records earlier Trip changes, not current verification.

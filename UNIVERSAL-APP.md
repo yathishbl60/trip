@@ -4,6 +4,13 @@ Trip has native iOS/iPadOS and visionOS host and widget configurations. Shared
 TripKit modules declare iOS 27, macOS 27, and visionOS 27 deployment support.
 Use the installed Xcode SDK; deployment targets and strict concurrency remain unchanged.
 
+## Contents
+
+- [Navigation and data](#navigation-and-data)
+- [Resizing and reserved regions](#resizing-and-reserved-regions)
+- [visionOS](#visionos)
+- [Verification matrix](#verification-matrix)
+
 ## Navigation and data
 
 - Native TabView uses sidebarAdaptable with tab-bar placement on iPhone so
@@ -87,18 +94,3 @@ trip windows; keyboard focus; state restoration; deleted links; map controls/Leg
 place/directions/save sheets; denied location; route loading/cancellation; and Reduce Motion.
 Build results establish compilation only; pose, spatial input, and signed system
 integration behavior require runtime/device checks.
-
-Verification on 2026-10-07 used Xcode 27.2 beta (27B5019j), SDK 27.2,
-Debug, generic simulator destinations, and CODE_SIGNING_ALLOWED=NO.
-Both platform builds completed successfully, including TripWidgets and App Intents
-metadata. The visionOS result includes the final keyboard availability guard;
-the iOS result precedes that guard. A final iOS confirmation rerun was declined.
-Source/architecture audits and all installed skill frontmatter checks passed.
-Device poses, two-window interactions, and spatial input were not visually verified.
-
-The 2026-10-26 pass initially covered source and previews. A subsequent build-error
-report requested compilation: `bash scripts/build.sh app Debug` succeeded with
-Xcode 27.2, a generic iOS Simulator destination, and CODE_SIGNING_ALLOWED=NO,
-including the app and widget extension, with no compiler warnings. Source audits
-passed. See [Duo readiness](docs/DuoReadiness.md) for scope and preview coverage.
-The updated visionOS build and visual/device behavior remain unverified.

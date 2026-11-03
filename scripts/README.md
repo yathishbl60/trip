@@ -1,7 +1,7 @@
 # Development tools
 
 Run `bash scripts/check.sh` for source-only checks. It runs architecture validation,
-workspace references, localization, Apple skill integrity, maintained skill links, SwiftSyntax auditing,
+workspace references, localization, project skill names and references, SwiftSyntax auditing,
 and diff whitespace validation; it never builds the app or
 benchmarks algorithms. Tool output/caches belong in ignored `.build` directories.
 

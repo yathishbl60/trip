@@ -45,8 +45,8 @@ buttons. ViewThatFits stacks the actions when labels do not fit; large accessibi
 text always stacks them. Fitted native buttons keep their content height inside
 Lists and tall containers; explicit title-and-icon labels preserve action names.
 Contact rows, Look Around, and nearby discovery follow; sharing and secondary actions
-also remain in the toolbar. Live places use their actual metadata; illustrative category
-photos are shown only for bundled sample places, with a visible sample label.
+also remain in the toolbar. Live places use their actual metadata; live places use category symbols. Preview image references do not imply that
+photographs are bundled or that a live photo source exists.
 
 On iOS, navigation screens apply `.scrollEdgeEffectStyle(.soft, for: .top)` to their
 content hierarchy, including pushed destinations and modal forms. AppShellView sets
@@ -67,8 +67,8 @@ See Apple's [scroll edge effects](https://developer.apple.com/documentation/swif
 
 The trip library uses compact category artwork and separate title, date range,
 and saved-place counts. Accessibility text sizes stack the artwork above the text.
-Trip editor covers may show labeled sample imagery for bundled places; live stops
-use category symbols. Forms explain name-length validation and allow an expanded
+Trip editor covers use category symbols for live stops. Preview metadata may
+reference sample imagery, but the app currently bundles only its icon artwork. Forms explain name-length validation and allow an expanded
 sheet while typing. Filters identify active categories and describe loaded counts.
 
 Use short, direct text and sentence case for in-app headings and actions. Keep Apple

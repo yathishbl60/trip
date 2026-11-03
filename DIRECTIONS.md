@@ -4,6 +4,14 @@ TripRouting contains the complete reusable directions engine, SwiftUI feature,
 route rendering, and map geometry. The engine supports iOS 27, macOS 27, and
 visionOS 27; the existing sheet and map UI support iOS and visionOS.
 
+## Contents
+
+- [Routing package](#routing-package)
+- [SwiftUI feature](#swiftui-feature)
+- [Access boundary](#access-boundary)
+- [Sheet and interaction behavior](#sheet-and-interaction-behavior)
+- [Platform limits](#platform-limits)
+
 ## Routing package
 
 Add the local `Packages/TripKit` package and its `TripRouting` product to another
@@ -193,7 +201,7 @@ preserve route selection across traffic-only refreshes. Requests and location
 waits have deadlines and generations; old responses cannot overwrite newer state.
 Already being at a destination has an explicit arrival state.
 
-## Platform limits and verification
+## Platform limits
 
 Driving, walking, cycling, and automatic modes draw MapKit routes. Transit exposes
 ETA only. Toll/highway avoidance and departure/arrival dates affect in-app requests.
@@ -210,49 +218,4 @@ avoidance, Maps links, stable route identity, and camera/viewport geometry witho
 live services. DirectionsFeatureIntegrationTests additionally composes the public
 sheet/map API on iOS and visionOS; it is excluded from host-macOS test runs.
 
-### Extraction verification · October 20, 2026
-
-- Source comparison: 39 moved implementations match their original code after
-  imports, access, public initializer additions, and platform guards are normalized.
-  The appearance, configuration, and environment initializers retain their former defaults.
-- `bash scripts/check.sh`: architecture, source/skill limits, syntax, preview
-  presence, controller storage, UIKit, and whitespace checks pass.
-- Debug builds using Xcode-beta 27.2: the app and widget compile for generic iOS
-  Simulator (arm64/x86_64) and visionOS Simulator (arm64/x86_64), with signing disabled.
-- Standalone macOS TripRouting Debug build and 16 routing tests pass. Two public
-  feature integration tests pass on iPhone 18 Pro Max / iOS 27.2 Simulator using
-  the package's TripKit-Package scheme and local fixtures.
-- The only availability repairs guard the iOS-only scrollDismissesKeyboard modifier
-  in the moved stop picker and the existing TripLookupView. iOS content and behavior
-  remain the same; visionOS does not provide that modifier.
-- The skill's Python validator could not load PyYAML; Ruby's YAML parser validated
-  its frontmatter, and local links and the 50-line limit were checked separately.
-- No live route request, gesture walkthrough, Canvas rendering, or visual comparison
-  was performed during extraction. Simulator package tests do not establish visual parity.
-
-The subsequent access review hides controller/presentation/state and native
-adapter details behind the documented host API. Its views and routing algorithms
-retain their implementations. The extraction results above describe the earlier
-revision; verification of the access review is recorded separately below.
-
-### Access review verification · October 20, 2026
-
-- Compiler-generated iOS public symbol graph confirms the controller, presentation
-  model, status enum, raw model state, native request arrays, adapter helpers and
-  stored builder inputs are absent. Public signatures contain no internal feature types.
-- Both view entry points export model-based initializers; controller-based
-  initializers remain internal. No view body or routing algorithm changed.
-- Debug iOS and visionOS app/widget builds and standalone macOS TripRouting build
-  pass on Xcode 27.2. All 16 macOS routing tests and both public-consumer iOS
-  Simulator tests pass. Request/callout implementation tests use @testable;
-  public-consumer tests retain a normal import.
-- `bash scripts/check.sh` passes. The routing skill documents these access rules.
-- Build, test, and symbol-graph logs use the ignored `.build/routing-api-*` paths.
-  The package test runner reports its expected App Intents metadata-skip warning;
-  the app/widget builds have no compiler diagnostics. No visual walkthrough was run.
-
-Before release, exercise native sheets and live MapKit on physical devices:
-location allowed/denied/restricted, offline and throttled requests, changing modes
-and stops during requests, background/resume, Maps absent or blocked, rotation,
-VoiceOver, large text, Reduce Motion, and actual regional routing coverage.
-Compilation and fixture checks do not establish that device behavior.
+Use the source gate in [Contributing](CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.

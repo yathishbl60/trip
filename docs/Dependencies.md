@@ -65,6 +65,6 @@ trip saves and foreground activation reconcile pending alarms with canonical boo
 Import and forecasts use cancellation plus generation checks. No provider is created
 inside a view or silently substituted after a failure. See [native travel services](NativeTravelServices.md).
 
-The current Personal Team configuration injects UnavailableTripWeatherService.
+The checked-in weather-disabled configuration injects UnavailableTripWeatherService.
 A host explicitly enabled and provisioned for WeatherKit injects the shared
 AppleTripWeatherService actor/cache. Previews always use a local provider.
