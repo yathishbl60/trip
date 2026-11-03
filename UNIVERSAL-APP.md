@@ -1,0 +1,104 @@
+# Adaptive app and window contract
+
+Trip has native iOS/iPadOS and visionOS host and widget configurations. Shared
+TripKit modules declare iOS 27, macOS 27, and visionOS 27 deployment support.
+Use the installed Xcode SDK; deployment targets and strict concurrency remain unchanged.
+
+## Navigation and data
+
+- Native TabView uses sidebarAdaptable with tab-bar placement on iPhone so
+  Trips and Explore remain reachable alongside the Trips library sidebar.
+  iPadOS and visionOS retain their sidebar preference. The system owns bar position
+  and adaptation.
+  Trips uses NavigationSplitView for the
+  library and selected plan, collapsing naturally in compact windows.
+- Ordinary trip selection stays in the current window. “Open in New Window” in a
+  trip context menu uses a UUID-valued WindowGroup when multiple windows are supported.
+- Each ContentView retains its own AppModel, map, selection, routing, form drafts,
+  assistant, trip search, and sort. All production windows and intents share one
+  revisioned TripLibraryModel and system publisher to avoid conflicting store sessions.
+- Commands use SwiftUI focused scene values; foreground intents queue requests
+  for an active scene. A background scene cannot consume a pending destination.
+- SceneStorage restores each window's tab and selected UUID after loading. Deleted
+  trips clear selection across windows; missing deep-link destinations remain recoverable.
+- Restoring a selected trip preserves the saved tab; explicit trip-window links open
+  Trips. Reopening the same trip reveals its compact detail without clearing its state.
+- Trip editor secondary actions use ToolbarOverflowMenu, sharing native overflow
+  with other toolbar items instead of nesting a custom ellipsis menu.
+
+## Resizing and reserved regions
+
+Navigation, bars, sheets, menus, map controls, and attribution use system components.
+MapReader reprojects when container geometry changes. iOS 27.1 reserved
+regions are queried with availability guards and translated into global coordinates;
+only value rectangles cross into map collision and camera logic. Frames include
+system margins already. Route and selection framing choose an exposed rectangle
+outside the fold, occlusions, and sheet. The map stays one continuous native surface.
+
+Trip map uses AnyLayout inside the existing NavigationSplitView. It keeps both
+the map and stop list present when the navigation columns collapse. On iOS 27.1,
+an active interior division region determines the pane axis, lengths, and gap.
+Without a division, the current container aspect ratio determines the layout.
+Pane identity stays stable without device-width tables or nested ArrangementView.
+Map controls remain native and within safe areas.
+Vertical day maps use a text-scaled preferred list height instead of assigning a
+fixed percentage to the map; the fallback caps the list at half the available height.
+Place actions use ViewThatFits and native buttonSizing; full labels stack when
+they cannot fit alongside each other. Accessibility text always uses the stack.
+Place details, filters, trip forms, the assistant, and Directions
+use native form-sized presentations. Semantic toolbar placements let the system
+position close and primary actions; text-heavy items remain horizontal on iOS 27.1.
+Gallery resizing retains zoom and scales the pan offset with the fitted image,
+then clamps it to the new viewport. In-flight gestures wait for release after a
+resize so old translations cannot jump the image.
+Directions expands its content for regular-width and short windows, including
+when a previously compact sheet moves into a wider layout.
+
+## visionOS
+
+The app opens native resizable windows, uses standard SwiftUI controls and sheets,
+and gives custom map markers native hover feedback. Directions expose their
+expanded controls because spatial sheets do not offer the iPhone's collapsed detent.
+Saved trips, place search, routes, manual planning, and supported on-device
+intelligence keep their existing service availability checks.
+
+ActivityKit and Live Activity widget/previews compile on iOS only. visionOS retains
+actual visit tracking through the same App Group projection and interactive widgets.
+Spatial widgets support native glass and elevated/recessed mounting, and simplify
+content for distant viewing. No unsupported Dynamic Island surface is simulated.
+Custom place and trip rows use 60-point targets on visionOS and 44-point targets
+on iOS; native buttons retain system styling. Custom selectable rows have standard
+hover highlights, and important place names can grow at accessibility text sizes.
+
+Current guidance: [Apple layout](https://developer.apple.com/design/human-interface-guidelines/layout),
+[iPhone Duo layouts](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo),
+[ArrangementView](https://developer.apple.com/documentation/swiftui/arrangementview),
+and [native button sizing](https://developer.apple.com/documentation/swiftui/view/buttonsizing(_:)).
+
+## Verification matrix
+
+Run `bash scripts/check.sh` for source ownership, line limits, previews, and wiring.
+When requested, `bash scripts/build.sh app Debug` builds iOS Simulator and
+`bash scripts/build.sh visionOS Debug` builds visionOS Simulator, including widgets.
+
+Exercise compact/wide/short windows; Dynamic Type; Duo closed/open/folded poses;
+Split View on either side; Stage Manager and external-display windows; two concurrent
+trip windows; keyboard focus; state restoration; deleted links; map controls/Legal;
+place/directions/save sheets; denied location; route loading/cancellation; and Reduce Motion.
+Build results establish compilation only; pose, spatial input, and signed system
+integration behavior require runtime/device checks.
+
+Verification on 2026-10-07 used Xcode 27.2 beta (27B5019j), SDK 27.2,
+Debug, generic simulator destinations, and CODE_SIGNING_ALLOWED=NO.
+Both platform builds completed successfully, including TripWidgets and App Intents
+metadata. The visionOS result includes the final keyboard availability guard;
+the iOS result precedes that guard. A final iOS confirmation rerun was declined.
+Source/architecture audits and all installed skill frontmatter checks passed.
+Device poses, two-window interactions, and spatial input were not visually verified.
+
+The 2026-10-26 pass initially covered source and previews. A subsequent build-error
+report requested compilation: `bash scripts/build.sh app Debug` succeeded with
+Xcode 27.2, a generic iOS Simulator destination, and CODE_SIGNING_ALLOWED=NO,
+including the app and widget extension, with no compiler warnings. Source audits
+passed. See [Duo readiness](docs/DuoReadiness.md) for scope and preview coverage.
+The updated visionOS build and visual/device behavior remain unverified.

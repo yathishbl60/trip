@@ -1,0 +1,4 @@
+interface:
+  display_name: "Trip Universal App"
+  short_description: "Native resizing, multitasking, and visionOS support"
+  default_prompt: "Use $trip-universal-app to adapt Trip while preserving compact navigation and map behavior."

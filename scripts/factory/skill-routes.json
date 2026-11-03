@@ -1,0 +1,233 @@
+{
+  "defaults": {
+    "source": [
+      {
+        "when": "Changing feature composition or state ownership",
+        "project": [
+          "trip-swiftui-vcm"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "package": [
+      {
+        "when": "Changing a reusable contract or dependency boundary",
+        "project": [],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "preview": [
+      {
+        "when": "Changing local fixtures or preview composition",
+        "project": [
+          "trip-previews-build"
+        ],
+        "global": []
+      }
+    ]
+  },
+  "owners": {
+    "App": [
+      {
+        "when": "Changing composition and cross-feature callbacks",
+        "project": [
+          "trip-swiftui-vcm"
+        ],
+        "global": [
+          "app-development"
+        ]
+      },
+      {
+        "when": "Changing windows, scene lifetime, or adaptive navigation",
+        "project": [
+          "trip-universal-app"
+        ],
+        "global": [
+          "app-development"
+        ]
+      },
+      {
+        "when": "Changing intents or system entry points",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "Explore": [
+      {
+        "when": "Changing map search, markers, selection, or camera behavior",
+        "project": [
+          "trip-map-decluttering"
+        ],
+        "global": [
+          "app-development"
+        ]
+      },
+      {
+        "when": "Changing directions integration",
+        "project": [
+          "trip-routing"
+        ],
+        "global": []
+      },
+      {
+        "when": "Changing feature state composition",
+        "project": [
+          "trip-swiftui-vcm"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "Trips": [
+      {
+        "when": "Changing planning, editing, or saved-trip state",
+        "project": [
+          "trip-swiftui-vcm"
+        ],
+        "global": [
+          "app-development"
+        ]
+      },
+      {
+        "when": "Changing directions entry points",
+        "project": [
+          "trip-routing"
+        ],
+        "global": []
+      }
+    ],
+    "DesignSystem": [
+      {
+        "when": "Changing shared native styling or components",
+        "project": [],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "Widgets": [
+      {
+        "when": "Changing widget, control, or Live Activity behavior",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "Places": [
+      {
+        "when": "Changing place search adapters or completion lifetime",
+        "project": [
+          "trip-map-decluttering"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "System": [
+      {
+        "when": "Changing shared system projections or journey runtime",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "IntelligenceConfiguration": [
+      {
+        "when": "Changing availability or AI capability policy",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripDomain": [
+      {
+        "when": "Changing shared values, persistence schemas, or service contracts",
+        "project": [],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripRouting": [
+      {
+        "when": "Changing reusable directions contracts, state, or UI",
+        "project": [
+          "trip-routing"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "MapEngine": [
+      {
+        "when": "Changing ranking, collisions, cache policy, or layout",
+        "project": [
+          "trip-map-decluttering"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripStorage": [
+      {
+        "when": "Changing durable storage or migration",
+        "project": [],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripIntelligence": [
+      {
+        "when": "Changing generated drafts, availability, or planning service lifetime",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripLocalization": [
+      {
+        "when": "Changing shared localized resources or accessors",
+        "project": [],
+        "global": [
+          "app-development"
+        ]
+      }
+    ],
+    "TripIntegrations": [
+      {
+        "when": "Changing native booking import, Calendar, Reminders, alarms, or forecasts",
+        "project": [
+          "trip-system-integrations"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
+    ]
+  }
+}

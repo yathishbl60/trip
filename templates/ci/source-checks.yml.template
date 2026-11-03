@@ -1,0 +1,16 @@
+# Opt in only after provisioning a dedicated macOS runner with the required Xcode.
+# Assign that runner the custom label trip-xcode. Never run untrusted fork code.
+name: Source checks
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: [self-hosted, macOS, trip-xcode]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: bash scripts/check.sh

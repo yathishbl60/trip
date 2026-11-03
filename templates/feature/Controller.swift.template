@@ -1,0 +1,3 @@
+@MainActor struct ${feature}Controller {
+    let model: ${feature}Model
+}

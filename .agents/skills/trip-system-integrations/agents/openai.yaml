@@ -1,0 +1,4 @@
+interface:
+  display_name: "Trip System Integrations"
+  short_description: "Native Siri, widgets, Intelligence, and trip Live Activities"
+  default_prompt: "Use $trip-system-integrations to improve Trip's native system integrations."

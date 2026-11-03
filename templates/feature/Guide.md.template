@@ -1,0 +1,35 @@
+# ${feature}
+
+User task: ${purpose}
+
+Owner: `trip/Features/${feature}`. Follow `${feature}RootView` →
+`${feature}Controller` → `${feature}Model`. The starter only renders injected
+content; implement this task before connecting it to a product entry point.
+
+## Implementation contract
+
+- Start with `python3 scripts/workspace.py context ${feature} --json`.
+- Define the observable benefit and acceptance cases in [a task brief](../../templates/task.md).
+- Models own state and behavior; controllers store only their model.
+- Inject external services and host callbacks through model initializers.
+- Use TripDomain for shared values and service contracts. No sibling state access.
+- Add localized content, loading/empty/failure states, cancellation, and local previews.
+- App owns navigation and composition; connect through an existing contextual entry point.
+- Record persistence, identity, accessibility, and async behavior before review.
+
+## Integration checklist
+
+- State the existing entry point and the specific App composition file that will own this model.
+- Keep live service creation in `trip/App/Dependencies`; previews supply local services.
+- List domain values/contracts to reuse; record any new package edge in the ownership manifest.
+- Identify the lifetime of drafts, selections, pending requests, and stored values.
+- Exercise success, empty, failure/retry, cancellation, long content, and accessible layouts.
+- Confirm cancel preserves saved data, repeated actions are safe, and stale results cannot replace current state.
+- Add the contextual entry point only after the interaction and recovery behavior work.
+
+## Verification
+
+Run `bash scripts/check.sh`. The ownership entry is already registered.
+Run builds and benchmarks only when requested. Report source, compilation, and
+runtime/visual evidence separately, including what remains unverified.
+Use [future test seams](../Testing.md) for later coverage and service fakes.

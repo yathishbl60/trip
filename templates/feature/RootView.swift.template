@@ -1,0 +1,19 @@
+import SwiftUI
+
+struct ${feature}RootView: View {
+    let controller: ${feature}Controller
+
+    var body: some View {
+        Text(controller.model.title)
+    }
+}
+
+#Preview("${feature} · local content") {
+    ${feature}RootView(controller: ${feature}Controller(model: ${feature}Model(title: "Sample ${feature}")))
+}
+
+#Preview("${feature} · long title and large text") {
+    ${feature}RootView(controller: ${feature}Controller(
+        model: ${feature}Model(title: "Sample ${feature} with a longer title")))
+        .dynamicTypeSize(.accessibility2).preferredColorScheme(.dark)
+}

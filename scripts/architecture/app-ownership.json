@@ -1,0 +1,142 @@
+{
+  "App": {
+    "path": "trip/App",
+    "dependencies": [
+      "Explore",
+      "Trips",
+      "DesignSystem",
+      "Places",
+      "System",
+      "IntelligenceConfiguration"
+    ],
+    "packages": [
+      "TripDomain",
+      "TripRouting",
+      "TripLocalization",
+      "TripStorage",
+      "TripIntelligence",
+      "TripIntegrations"
+    ],
+    "guide": "docs/App.md",
+    "purpose": "Application composition, scene lifetime, navigation, and intents",
+    "entryPoints": [
+      "trip/App/Dependencies/AppTripServices.swift",
+      "trip/App/Models/AppRuntime.swift",
+      "trip/App/Models/AppModel.swift"
+    ]
+  },
+  "Explore": {
+    "path": "trip/Features/Explore",
+    "dependencies": [
+      "DesignSystem",
+      "Places"
+    ],
+    "packages": [
+      "TripDomain",
+      "TripRouting",
+      "MapEngine",
+      "TripLocalization"
+    ],
+    "guide": "docs/Explore.md",
+    "purpose": "Map browsing, place search, selection, and camera behavior",
+    "entryPoints": [
+      "trip/Features/Explore/Views/Map/MapExperienceView.swift",
+      "trip/Features/Explore/Models/Explore/ExploreModel.swift"
+    ]
+  },
+  "Trips": {
+    "path": "trip/Features/Trips",
+    "dependencies": [
+      "DesignSystem",
+      "Places",
+      "System",
+      "IntelligenceConfiguration"
+    ],
+    "packages": [
+      "TripDomain",
+      "TripRouting",
+      "TripLocalization"
+    ],
+    "forbiddenImports": [
+      "SwiftData",
+      "FoundationModels"
+    ],
+    "guide": "docs/Trips.md",
+    "purpose": "Saved trip planning, editing, and journey workflows",
+    "entryPoints": [
+      "trip/Features/Trips/Models/Workspace/TripModel.swift",
+      "trip/Features/Trips/Models/Library/TripLibraryModel.swift",
+      "trip/Features/Trips/Controllers/TripController.swift"
+    ]
+  },
+  "DesignSystem": {
+    "path": "trip/DesignSystem",
+    "dependencies": [],
+    "packages": [
+      "TripLocalization"
+    ],
+    "guide": "docs/DesignSystem.md",
+    "purpose": "Shared native visual styles and semantic assets",
+    "entryPoints": []
+  },
+  "Widgets": {
+    "path": "TripWidgets",
+    "dependencies": [
+      "System"
+    ],
+    "packages": [
+      "TripDomain",
+      "TripStorage",
+      "TripRouting",
+      "TripLocalization"
+    ],
+    "forbiddenImports": [
+      "FoundationModels",
+      "TripIntelligence"
+    ],
+    "guide": "SYSTEM-INTEGRATIONS.md",
+    "purpose": "Widget timelines, controls, and Live Activity views",
+    "entryPoints": []
+  },
+  "Places": {
+    "path": "trip/Shared/Places",
+    "dependencies": [],
+    "packages": [
+      "TripDomain",
+      "TripLocalization"
+    ],
+    "guide": "docs/Search.md",
+    "purpose": "App-specific place conversion, autocomplete, and text search",
+    "entryPoints": [
+      "trip/Shared/Places/PlaceTextSearch.swift"
+    ]
+  },
+  "System": {
+    "path": "trip/Shared/System",
+    "dependencies": [],
+    "packages": [
+      "TripDomain",
+      "TripStorage",
+      "TripRouting",
+      "TripLocalization"
+    ],
+    "guide": "SYSTEM-INTEGRATIONS.md",
+    "purpose": "Shared host and widget projections and journey runtime",
+    "entryPoints": [
+      "trip/Shared/System/TripSystemData.swift"
+    ]
+  },
+  "IntelligenceConfiguration": {
+    "path": "trip/Shared/Intelligence",
+    "dependencies": [],
+    "packages": [
+      "TripDomain",
+      "TripLocalization"
+    ],
+    "guide": "docs/Dependencies.md",
+    "purpose": "Host capability policy for available AI processing modes",
+    "entryPoints": [
+      "trip/Shared/Intelligence/TripAIConfiguration.swift"
+    ]
+  }
+}

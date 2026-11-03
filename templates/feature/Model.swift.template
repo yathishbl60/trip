@@ -1,0 +1,7 @@
+import Observation
+
+@MainActor @Observable final class ${feature}Model {
+    let title: String
+
+    init(title: String) { self.title = title }
+}

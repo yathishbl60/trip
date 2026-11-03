@@ -1,0 +1,123 @@
+{
+  "checksPassed": true,
+  "dirty": true,
+  "environment": {
+    "architecture": "arm64",
+    "compiler": "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.2.0",
+    "cpu": "Apple M5 Max",
+    "flags": "-O -whole-module-optimization -swift-version 6 -strict-concurrency=complete -default-isolation MainActor -enable-upcoming-feature MemberImportVisibility",
+    "macOS": "27.2",
+    "sdk": "27.2"
+  },
+  "metrics": [
+    {
+      "checksum": 31860,
+      "medianMicroseconds": 39.583,
+      "name": "lookup/2000/0.4deg/scan",
+      "p95Microseconds": 47.209,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 31860,
+      "medianMicroseconds": 5.083,
+      "name": "lookup/2000/0.4deg/index",
+      "p95Microseconds": 5.541,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 0,
+      "medianMicroseconds": 37.167,
+      "name": "lookup/2000/6.0deg/scan",
+      "p95Microseconds": 45.416,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 0,
+      "medianMicroseconds": 0.458,
+      "name": "lookup/2000/6.0deg/index",
+      "p95Microseconds": 0.459,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 787080,
+      "medianMicroseconds": 1008.667,
+      "name": "lookup/50000/0.4deg/scan",
+      "p95Microseconds": 1069.25,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 787080,
+      "medianMicroseconds": 115.5,
+      "name": "lookup/50000/0.4deg/index",
+      "p95Microseconds": 130.375,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 3420,
+      "medianMicroseconds": 934.167,
+      "name": "lookup/50000/6.0deg/scan",
+      "p95Microseconds": 1000.834,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 3420,
+      "medianMicroseconds": 6.666,
+      "name": "lookup/50000/6.0deg/index",
+      "p95Microseconds": 7.833,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 24200,
+      "medianMicroseconds": 2290.792,
+      "name": "layout/Region",
+      "p95Microseconds": 2420.042,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 24200,
+      "medianMicroseconds": 2320.292,
+      "name": "layout/City",
+      "p95Microseconds": 2459.042,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 24200,
+      "medianMicroseconds": 2295.083,
+      "name": "layout/District",
+      "p95Microseconds": 2397.958,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 20024,
+      "medianMicroseconds": 2476.375,
+      "name": "layout/Neighborhood",
+      "p95Microseconds": 2581.292,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 21130,
+      "medianMicroseconds": 2468.333,
+      "name": "layout/Street",
+      "p95Microseconds": 2564.833,
+      "sampleCount": 200,
+      "warmupCount": 20
+    }
+  ],
+  "recordedAt": "2026-09-23T14:41:51.351243+00:00",
+  "revision": "f59b27242526a631d8e85247a06bcd56595cfd67",
+  "schemaVersion": 1,
+  "sourceDigest": "4c366da48970135ebfaccd4148539a1ad626ea7f716734b02ca6fd1a51a03fd3",
+  "workloadVersion": 1
+}
