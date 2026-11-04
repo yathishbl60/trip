@@ -8,6 +8,7 @@ enum TripJourneyChecks {
         try spanProtection()
         try validation()
         try TripJourneyPersistenceChecks.run()
+        try TripStopTransferChecks.run()
     }
 
     private static func coexistence() throws {

@@ -51,6 +51,8 @@ Packages/TripKit/Sources/TripDomain/Trips/TripEvent.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripEvent+Validation.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripJourneyItem.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripPlan+JourneyEditing.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripStopTransfer.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripStopTransfer+Validation.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripCollection.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripChecklistItem.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripChecklistEditing.swift
@@ -110,6 +112,7 @@ Packages/TripKit/Sources/TripLocalization/TripText+Intents4.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents5.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents6.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents7.swift
+Packages/TripKit/Sources/TripLocalization/TripText+Motion.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel2.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel3.swift

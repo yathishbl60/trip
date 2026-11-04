@@ -6,6 +6,7 @@ struct TripTrackingSection: View {
     let trip: TripPlan
     let controller: TripController
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @ViewBuilder var body: some View {
         if controller.model.tracking.runtime?.journey?.tripID == trip.id || controller.model.tracking.error != nil {
@@ -25,8 +26,11 @@ struct TripTrackingSection: View {
             ProgressView(value: Double(journey.visited.count), total: Double(max(day.stops.count, 1))) {
                 Text(TripText.dayValueValueOfValueVisited(TripText.number(day.number), TripText.number(journey.visited.count), TripText.number(day.stops.count)).resource).font(.headline)
             }
+            .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: journey.visited.count)
             if let stop = journey.nextStop(in: day), journey.isActive {
                 Label(stop.name, systemImage: "mappin.and.ellipse").font(.title3.weight(.semibold))
+                    .contentTransition(.opacity)
+                    .animation(reduceMotion ? nil : .smooth(duration: 0.2), value: stop.id)
                 Button(TripText.markVisited2.resource, systemImage: "checkmark.circle", action: controller.visitNextStop)
                     .buttonStyle(.borderedProminent).tint(AppTheme.accentFill)
             } else { Text(journey.visited.count == day.stops.count ? TripText.allPlacesVisited.text : TripText.trackingEnded.text) }

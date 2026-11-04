@@ -24,7 +24,8 @@ struct TripStopPlanningRow: View {
         }
         .padding(.leading, railWidth + AppTheme.Spacing.medium)
         .overlay(alignment: .leading) {
-            TripItineraryRail(number: number, color: stop.place.category.color, continuesSequence: continuesSequence)
+            TripItineraryRail(number: number, color: stop.place.category.color, continuesSequence: continuesSequence,
+                              isComplete: controller.model.hasVisited(stop.id, dayID: dayID, tripID: tripID))
         }
         .padding(.vertical, AppTheme.Spacing.tight)
     }
@@ -56,6 +57,7 @@ struct TripStopPlanningRow: View {
         .buttonStyle(.plain)
         .hoverEffect(.highlight)
         .accessibilityHint(TripText.showThisPlaceOnTheMap.resource)
+        .accessibilityValue(controller.model.hasVisited(stop.id, dayID: dayID, tripID: tripID) ? TripText.visited.text : "")
     }
 }
 

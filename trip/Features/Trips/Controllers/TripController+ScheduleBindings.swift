@@ -42,4 +42,12 @@ extension TripController {
                        draft: TripStopTimingDraft) -> Binding<Int> {
         Binding(get: { draft.timing[keyPath: keyPath] }, set: { draft.setMinutes($0, for: keyPath) })
     }
+
+    func timingSlider(_ keyPath: WritableKeyPath<TripStopTiming, Int>,
+                      draft: TripStopTimingDraft) -> Binding<Double> {
+        Binding(get: { Double(draft.timing[keyPath: keyPath]) }, set: { value in
+            guard value.isFinite else { return }
+            draft.setMinutes(Int(value.rounded()), for: keyPath)
+        })
+    }
 }

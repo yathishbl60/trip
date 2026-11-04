@@ -19,17 +19,32 @@ struct FilterPanelView: View {
         .sensoryFeedback(.selection, trigger: controller.model.filters.selected)
     }
 
-    private var categories: some View {
+    @ViewBuilder private var categories: some View {
+        if typeSize.isAccessibilitySize {
+            categoryList
+        } else {
+            ScrollView {
+                VStack(alignment: .leading, spacing: AppTheme.spacing) {
+                    CategoryChipsView(controller: controller)
+                    footer.font(.footnote).foregroundStyle(.secondary)
+                }.padding()
+            }
+        }
+    }
+
+    private var categoryList: some View {
         List {
             Section {
                 allPlaces
                 ForEach(controller.model.filters.rows) { row in
                     CategoryFilterRow(row: row, controller: controller)
                 }
-            } footer: {
-                Text(TripText.valueCountsIncludePlacesOutsideTheVisibleMap(controller.model.filters.loadedPlacesDescription).resource)
-            }
+            } footer: { footer }
         }
+    }
+
+    private var footer: some View {
+        Text(TripText.valueCountsIncludePlacesOutsideTheVisibleMap(controller.model.filters.loadedPlacesDescription).resource)
     }
 
     private var allPlaces: some View {

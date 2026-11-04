@@ -214,6 +214,13 @@ coordinates, distant places and empty-day ranking.
 `TripPlanningChecks` and `TripBookingConflictChecks` exercise production domain
 code. These additions have source-audit coverage; they have not yet been executed.
 
+`TripStopTransferChecks` and `TripStopTransferValidationChecks` run through
+`TripJourneyChecks`. They cover atomic cross-day and same-day drops, empty days,
+mixed booking gaps, identity/notes/timing retention, multi-source ordering,
+fixed-arrival boundaries, duplicate/full destinations, stale edits, and missing
+drop targets. They use the production `TripStopTransfer` sources. They have
+source-audit coverage; execution requires a requested algorithm-check run.
+
 `TripBookingImportChecks` covers conservative document proposals, AM/PM and midnight,
 preserved offset evidence, ambiguous and invalid dates, and bounded text/date choices.
 It is registered in `system-check` and uses production parser sources. These new

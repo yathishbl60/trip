@@ -34,17 +34,17 @@ struct TripStopTimingView: View {
 
     private var visit: some View {
         Section(TripText.visit.resource) {
-            Stepper(TripText.durationValue(TripScheduleText.duration(draft.timing.visitMinutes)).text,
-                    value: controller.timingMinutes(\.visitMinutes, draft: draft), in: TripLimits.visitMinutes, step: 5)
+            TripDurationControl(label: TripText.durationValue(TripScheduleText.duration(draft.timing.visitMinutes)).text,
+                                minutes: controller.timingSlider(\.visitMinutes, draft: draft), range: TripLimits.visitMinutes)
         }
     }
 
     private var travel: some View {
         Section {
-            Stepper(TripText.travelValue(TripScheduleText.duration(draft.timing.travelMinutes)).text,
-                    value: controller.timingMinutes(\.travelMinutes, draft: draft), in: TripLimits.travelMinutes, step: 5)
-            Stepper(TripText.bufferValue(TripScheduleText.duration(draft.timing.bufferMinutes)).text,
-                    value: controller.timingMinutes(\.bufferMinutes, draft: draft), in: TripLimits.bufferMinutes, step: 5)
+            TripDurationControl(label: TripText.travelValue(TripScheduleText.duration(draft.timing.travelMinutes)).text,
+                                minutes: controller.timingSlider(\.travelMinutes, draft: draft), range: TripLimits.travelMinutes)
+            TripDurationControl(label: TripText.bufferValue(TripScheduleText.duration(draft.timing.bufferMinutes)).text,
+                                minutes: controller.timingSlider(\.bufferMinutes, draft: draft), range: TripLimits.bufferMinutes)
         } header: { Text(draft.isFirst ? TripText.toTheFirstPlace.text : TripText.fromThePreviousStop.text) } footer: {
             Text(TripText.manualAllowancesIncludingExtraTimeBetweenStops.resource)
         }

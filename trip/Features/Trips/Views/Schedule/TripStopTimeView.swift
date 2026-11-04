@@ -4,11 +4,14 @@ import TripDomain
 struct TripStopTimeView: View {
     let timing: TripTimelineEntry
     var showsDetails = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
             Label(timing.timeText, systemImage: timing.fixedArrival == nil ? "clock" : "pin")
                 .font(.subheadline.weight(.medium)).foregroundStyle(.primary)
+                .contentTransition(reduceMotion ? .identity : .numericText())
+                .animation(reduceMotion ? nil : .smooth(duration: 0.18), value: timing.timeText)
             if showsDetails { details }
             if let conflict = timing.conflictText {
                 Label(conflict, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.primary)

@@ -26,10 +26,7 @@ struct TripChecklistRow: View {
     }
 
     private var completionSymbol: some View {
-        Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
-            .symbolRenderingMode(.hierarchical)
-            .tripSymbolReplacement(value: item.isComplete)
-            .accessibilityHidden(true)
+        TripCompletionSymbol(isComplete: item.isComplete)
     }
 }
 

@@ -40,6 +40,14 @@ checks do not replace checking actual materials over maps. Follow Apple's
 
 ## Presentation
 
+`TripPresentationSource` and `TripPresentationZoom` share a host-owned namespace
+for the place-detail Save button and its existing destination sheet. AppExploreView
+supplies the namespace without coupling Explore to Trips. Map context-menu saves,
+which have no retained source button, keep the standard sheet presentation.
+Reduce Motion uses the native cross-fade transition. `TripCompletionSymbol` draws
+the checkmark only as completion changes; it keeps a stable symbol footprint and
+leaves spoken completion state to the owning action or row.
+
 Place details lead with the place identity and native Directions/Save to trip
 buttons. ViewThatFits stacks the actions when labels do not fit; large accessibility
 text always stacks them. Fitted native buttons keep their content height inside

@@ -21,10 +21,7 @@ struct TripFeedbackView: View {
     }
 
     private var confirmationSymbol: some View {
-        Image(systemName: "checkmark.circle.fill")
-            .symbolRenderingMode(.palette)
-            .foregroundStyle(.primary, AppTheme.accent.opacity(0.2))
-            .accessibilityHidden(true)
+        TripSuccessSymbol(revision: model.revision)
     }
 }
 

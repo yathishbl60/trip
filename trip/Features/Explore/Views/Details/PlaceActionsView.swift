@@ -39,11 +39,7 @@ struct PlaceActionsView: View {
         .buttonStyle(.borderedProminent)
         .tint(AppTheme.accentFill)
         if controller.model.canSavePlaces {
-            Button { controller.save(place) } label: {
-                Label(TripText.save.resource, systemImage: "bookmark")
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .buttonStyle(.bordered).accessibilityLabel(TripText.saveToTrip.resource)
+            PlaceSaveButton(place: place, controller: controller)
         }
     }
 }

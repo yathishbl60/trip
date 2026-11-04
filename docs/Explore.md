@@ -65,6 +65,18 @@ shared behavior across planning searches are described in [Search](Search.md).
 
 ## Gesture responsiveness and search continuity
 
+Map options → Filters opens the existing filter sheet. Category buttons share a
+Liquid Glass container and stable effect identities in an adaptive grid, with
+animated selection symbols and loaded-place counts. Show places dismisses the
+sheet; no category strip or summary remains over the map. Active filters remain
+visible in the existing map menu's badge and category summary. Accessibility text
+sizes use the vertical category list. visionOS uses native bordered controls.
+
+Category controls never reserve canvas space or change native map safe areas,
+attribution or camera position. Reduce Motion disables the glass morph and
+selection animation. The existing catalog filtering, search scheduling and
+selection identities own the actual result updates.
+
 Camera feedback detects movement even when each callback advances by less than a
 pixel or a very small zoom step. Activity detection cancels settled annotation
 work immediately; expensive projection still uses the accumulated movement
@@ -196,8 +208,9 @@ The existing map menu always offers Search this area when idle. Failure/empty
 notices distinguish no results from failures; failure notices expose Retry directly.
 Active search owns its own status instead of also
 showing a floating map notice. Search uses a shorter prompt and primary/secondary
-result contrast. Filters use one category list, All categories to reset, and a
-loaded-count footer instead of a duplicate summary panel and Reset action.
+result contrast. Filters use one category grid (a list at accessibility sizes),
+All categories to reset, and a loaded-count footer instead of a duplicate summary
+panel and Reset action.
 
 Native controls retain their established automatic MapKit hosting. An attempted
 control relocation was withdrawn after runtime checks exposed regressions; extra

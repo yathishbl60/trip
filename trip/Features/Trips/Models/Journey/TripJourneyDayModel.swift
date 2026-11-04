@@ -4,10 +4,12 @@ import TripDomain
 struct TripJourneyDayModel {
     let items: [TripJourneyItem]
     let timeline: TripDayTimeline?
+    let reorderGroups: [TripJourneyReorderGroup]
     private let visitNumbers: [UUID: Int]
 
     init(trip: TripPlan, day: TripDay) {
         items = trip.journeyItems(on: day)
+        reorderGroups = TripJourneyReorderGroup.groups(items, dayID: day.id)
         timeline = trip.needsTimeZoneReview ? nil : TripDayTimeline(day: day, date: trip.date(for: day), calendar: trip.calendar)
         visitNumbers = Dictionary(day.stops.enumerated().map { ($0.element.id, $0.offset + 1) },
                                   uniquingKeysWith: { first, _ in first })

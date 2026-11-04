@@ -1,15 +1,19 @@
 import SwiftUI
+import TripDomain
 
 /// Save sheets belong to the host that composes Explore and Trips.
 struct AppExploreView: View {
     let controller: AppController
+    @Namespace private var saveNamespace
 
     var body: some View {
         MapExperienceView(model: controller.model.explore) { place, placeController in
             PlaceDetailView(place: place, controller: placeController)
+                .environment(\.tripPresentationNamespace, saveNamespace)
                 .safeAreaInset(edge: .bottom, spacing: 0) { placeFeedback }
                 .sheet(item: TripController(model: controller.model.trips).pendingPlace) {
                     TripSaveView(place: $0, controller: TripController(model: controller.model.trips))
+                        .modifier(TripPresentationZoom(id: $0.id, namespace: saveNamespace))
                 }
         }
         .sheet(item: controller.mapSaveDestination) {

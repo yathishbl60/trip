@@ -13,7 +13,10 @@ import SwiftUI
         Binding(get: { model.camera.zoom }, set: zoom)
     }
 
-    func show() { model.filters.isPresented = true }
+    func show() {
+        if model.catalog.isSearchPresented { model.searchPresentationChanged(false) }
+        model.filters.isPresented = true
+    }
     func dismiss() { model.filters.isPresented = false }
 
     func toggle(_ category: PlaceCategory) {

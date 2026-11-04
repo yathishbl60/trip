@@ -256,6 +256,25 @@ conflicting, overnight, dark, and accessibility text states.
 
 ## Visual itinerary
 
+Normal-mode itinerary rows use SwiftUI reorder containers to drag flexible places
+within or between days. Bookings and fixed-arrival visits remain outside the
+draggable groups; the group identity preserves the intended mixed-timeline gap.
+`TripStopTransfer` applies the change atomically by saved identities, preserves
+notes and timing values, and rejects stale days/calendar context, duplicate places,
+full days and same-day moves across a fixed arrival. Active tracking disables this
+drag workflow. Edit mode retains the established mixed-item reorder and delete
+actions; the Move to day menu remains available for accessible destination choice.
+
+Visit completion draws a checkmark in the existing numbered rail, and Undo restores
+the number. Checklist completion uses the same drawing primitive. The existing
+tracking progress and next-place text animate their own changes without moving the
+map or starting playback. Reduce Motion retains the final state immediately.
+
+Visit-time editing uses native five-minute sliders with hourly tick marks across
+the existing duration/allowance bounds. The existing draft setter clamps values;
+the planned time updates in place. Save, Cancel, fixed arrivals, destination zones
+and stale-edit protection retain their existing contracts.
+
 The day-by-day itinerary remains the main trip detail. Each day shows its date and
 place/event count, followed by the mixed journey items. A category-colored rail
 uses numbers for places and symbols for events beside the editable rows. It is decorative,

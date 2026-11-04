@@ -1,4 +1,5 @@
 import SwiftUI
+import TripDomain
 
 /// Transient overlays leave the Maps logo and Legal at the container's safe area.
 struct MapCanvasView: View {
@@ -51,5 +52,12 @@ struct MapCanvasView: View {
 }
 #Preview("No matching places · local search result") {
     MapCanvasView(controller: MapController(model: PreviewFixtures.noMatches()))
+}
+#Preview("Filtered map · unobstructed, local places, system map tiles") {
+    MapCanvasView(controller: MapController(model: PreviewFixtures.explore(categories: [.hotel, .cafe])))
+}
+#Preview("Filtered map · compact, large text") {
+    MapCanvasView(controller: MapController(model: PreviewFixtures.explore(categories: [.entertainment])))
+        .frame(width: 320, height: 600).dynamicTypeSize(.accessibility2).preferredColorScheme(.dark)
 }
 #endif

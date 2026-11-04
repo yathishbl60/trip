@@ -14,18 +14,30 @@ struct TripItineraryView: View {
             if let today = controller.today(trip.id, at: now), today.showsEntry {
                 TripTodayEntryView(tripID: trip.id, today: today, controller: controller)
             }
-            if let notice = controller.model.presentation.notice {
-                Section { Label(notice, systemImage: "info.circle").foregroundStyle(.secondary) }
-            }
+            notice
             TripTrackingSection(trip: trip, controller: controller)
-            ForEach(trip.days) { day in
-                TripDaySection(day: day, trip: trip, controller: controller)
-            }
+            days
             planningActions
+        }
+        .reorderContainer(for: TripJourneyItem.self, in: TripJourneyReorderGroupID.self,
+                          isEnabled: controller.model.canReorderStops(in: trip.id)) {
+            controller.reorderStops($0, in: trip)
         }
         #if os(iOS)
         .scrollDismissesKeyboard(.interactively)
         #endif
+    }
+
+    @ViewBuilder private var notice: some View {
+        if let notice = controller.model.presentation.notice {
+            Section { Label(notice, systemImage: "info.circle").foregroundStyle(.secondary) }
+        }
+    }
+
+    private var days: some View {
+        ForEach(trip.days) { day in
+            TripDaySection(day: day, trip: trip, controller: controller)
+        }
     }
 
     private var planningActions: some View {
@@ -61,5 +73,17 @@ struct TripItineraryView: View {
     NavigationStack {
         TripItineraryView(trip: model.library.trips[0], controller: TripController(model: model), now: TripTodayPreview.now)
     }
+}
+#Preview("Drag between days · mixed bookings, local") {
+    let model = TripJourneyPreview.planner()
+    NavigationStack {
+        TripItineraryView(trip: model.library.trips[0], controller: TripController(model: model), now: TripLayoutPreview.now)
+    }
+}
+#Preview("Cross-day drag · compact, dark") {
+    let model = TripSchedulePreview.planner(overloaded: true)
+    NavigationStack {
+        TripItineraryView(trip: model.library.trips[0], controller: TripController(model: model), now: TripLayoutPreview.now)
+    }.frame(width: 320).preferredColorScheme(.dark)
 }
 #endif

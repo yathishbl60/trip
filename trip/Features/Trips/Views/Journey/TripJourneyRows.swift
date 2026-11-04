@@ -1,11 +1,14 @@
+import Foundation
 import SwiftUI
 import TripDomain
+import TripLocalization
 
 struct TripJourneyRows: View {
     let trip: TripPlan
     let day: TripDay
     let controller: TripController
     let model: TripJourneyDayModel
+    @Environment(\.editMode) private var editMode
 
     init(trip: TripPlan, day: TripDay, controller: TripController) {
         self.trip = trip
@@ -14,12 +17,35 @@ struct TripJourneyRows: View {
         model = TripJourneyDayModel(trip: trip, day: day)
     }
 
-    var body: some View {
-        ForEach(model.items) { item in
-            row(item).listRowSeparator(.hidden)
+    @ViewBuilder var body: some View {
+        if editMode?.wrappedValue.isEditing == true { editableRows }
+        else { draggableRows }
+    }
+
+    private var draggableRows: some View {
+        ForEach(model.reorderGroups) { group in
+            ForEach(group.items) { item in row(item).listRowSeparator(.hidden) }
+                .reorderable(collectionID: group.id)
+                .onDelete { controller.removeJourneyVisits($0, items: group.items, day: day, trip: trip) }
+            if let anchor = group.anchor { anchoredRow(anchor) }
         }
-        .onMove { controller.moveJourneyItems($0, to: $1, day: day, trip: trip) }
-        .onDelete { controller.removeJourneyVisits($0, day: day, trip: trip) }
+    }
+
+    private func anchoredRow(_ item: TripJourneyItem) -> some View {
+        row(item).listRowSeparator(.hidden)
+            .swipeActions {
+                if item.stop != nil {
+                    Button(role: .destructive) {
+                        controller.removeJourneyVisits(IndexSet(integer: 0), items: [item], day: day, trip: trip)
+                    } label: { Label(TripText.delete.resource, systemImage: "trash") }
+                }
+            }
+    }
+
+    private var editableRows: some View {
+        ForEach(model.items) { item in row(item).listRowSeparator(.hidden) }
+            .onMove { controller.moveJourneyItems($0, to: $1, day: day, trip: trip) }
+            .onDelete { controller.removeJourneyVisits($0, day: day, trip: trip) }
     }
 
     @ViewBuilder private func row(_ item: TripJourneyItem) -> some View {
