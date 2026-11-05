@@ -1,5 +1,6 @@
 import TripLocalization
 import SwiftUI
+import AppIntents
 import TripDomain
 
 struct TripTodayView: View {
@@ -13,6 +14,7 @@ struct TripTodayView: View {
             else { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
         }
         .navigationTitle(TripText.today.resource).navigationBarTitleDisplayMode(.inline)
+        .tripWayfinding(.today, tripID: tripID, controller: controller)
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
@@ -49,6 +51,7 @@ struct TripTodayView: View {
                             .frame(maxWidth: .infinity, minHeight: AppTheme.controlTarget, alignment: .leading)
                             .contentShape(.rect)
                     }.buttonStyle(.plain)
+                        .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: item.id))
                 }
             }
         }

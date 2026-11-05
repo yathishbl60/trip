@@ -37,9 +37,9 @@ struct TripDayActionsMenu: View {
 
     @ViewBuilder private var suggestions: some View {
         if !day.stops.isEmpty {
-            NavigationLink {
-                TripMapView(tripID: trip.id, initialDayID: day.id, controller: controller)
-            } label: { Label(TripText.showDayOnMap.resource, systemImage: "map") }
+            Button(TripText.showDayOnMap.resource, systemImage: "map") {
+                controller.openDayTool(.map, dayID: day.id, tripID: trip.id)
+            }
             TripDayReviewActions(day: day, trip: trip, controller: controller)
             TripDayWeatherAction(day: day, trip: trip, controller: controller)
         }

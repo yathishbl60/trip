@@ -29,7 +29,7 @@ struct TripEditorView: View {
 
     @ViewBuilder private func destination(_ route: TripDetailRoute) -> some View {
         switch route.destination {
-        case .map: TripMapView(tripID: route.tripID, controller: controller)
+        case .map: TripMapView(tripID: route.tripID, initialDayID: route.dayID, controller: controller).id(route.dayID)
         case .checklist: TripChecklistView(tripID: route.tripID, controller: controller)
         case .collections: TripCollectionsView(tripID: route.tripID, controller: controller)
         case .lookup: TripLookupView(tripID: route.tripID, controller: controller)
@@ -54,7 +54,7 @@ struct TripEditorView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .toolbar { TripEditorToolbar(trip: trip, controller: controller) }
-        .appEntityIdentifier(EntityIdentifier(for: SavedTripEntity.self, identifier: trip.id))
+        .tripWayfinding(.itinerary, tripID: tripID, controller: controller)
     }
 
 }

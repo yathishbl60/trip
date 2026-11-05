@@ -6,6 +6,7 @@ extension AppRuntime {
         let title = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard (1...TripLimits.titleCharacters).contains(title.count) else { throw TripIntentError.invalidTitle }
         let session = try await library()
+        guard activeScene?.trips.hasEditingSession != true else { throw TripDetailIntentError.editing }
         var plan = TripPlan(title: title)
         plan.startDate = Calendar.current.startOfDay(for: departure)
         plan.days = (1...min(max(days, 1), TripLimits.days)).map { TripDay(number: $0) }

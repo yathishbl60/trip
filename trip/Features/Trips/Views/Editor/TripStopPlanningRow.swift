@@ -1,6 +1,7 @@
 import TripLocalization
 import TripDomain
 import SwiftUI
+import AppIntents
 
 struct TripStopPlanningRow: View {
     let stop: TripStop
@@ -28,6 +29,7 @@ struct TripStopPlanningRow: View {
                               isComplete: controller.model.hasVisited(stop.id, dayID: dayID, tripID: tripID))
         }
         .padding(.vertical, AppTheme.Spacing.tight)
+        .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: stop.id))
     }
 
     private func visitTime(_ timing: TripTimelineEntry) -> some View {

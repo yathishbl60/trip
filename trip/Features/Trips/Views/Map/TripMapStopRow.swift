@@ -1,5 +1,6 @@
 import TripLocalization
 import SwiftUI
+import AppIntents
 import TripDomain
 
 struct TripMapStopRow: View {
@@ -22,6 +23,7 @@ struct TripMapStopRow: View {
                 .accessibilityLabel(TripText.actionsForValue(stop.place.name).resource)
             }
         }
+        .appEntityIdentifier(trips.detailEntityIdentifier(tripID: map.model.tripID, itemID: stop.id))
     }
 
     private var focusButton: some View {

@@ -18,9 +18,19 @@ struct TripLookupResultsSection: View {
     }
 
     private func row(_ result: TripDetailResult) -> some View {
-        TripLookupResultView(result: result)
+        Button { controller.editSavedDetail(result.id, tripID: tripID) } label: {
+            TripLookupResultView(result: result)
+                .frame(maxWidth: .infinity, minHeight: AppTheme.controlTarget, alignment: .leading)
+                .contentShape(.rect)
+        }
+            .buttonStyle(.plain)
+            .accessibilityHint(TripText.edit.resource)
             .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: result.id))
             .contextMenu {
+                Button(TripText.edit.resource, systemImage: "pencil") { controller.editSavedDetail(result.id, tripID: tripID) }
+                if let place = controller.savedDetailPlace(result.id, tripID: tripID) {
+                    Button(TripText.showOnMap.resource, systemImage: "map") { controller.showOnMap(place) }
+                }
                 ShareLink(item: result.shareText)
             } preview: {
                 TripLookupResultView(result: result).padding().frame(idealWidth: 320)

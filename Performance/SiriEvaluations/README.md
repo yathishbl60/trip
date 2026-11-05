@@ -12,6 +12,13 @@ This Debug build passed with Xcode 27.3 beta 1 on 2026-11-05. Xcode places the
 hosted bundle at `trip.app/PlugIns/TripSiriEvaluations.xctest` in the build products.
 This is compilation/link evidence only; the eight scenario results are unverified.
 
+The target also compiles five `TripWayfindingTests` using local preview services:
+stale Back binding protection, exact-day map handoff, unsaved-draft preservation,
+missing-trip recovery, and canonical saved-booking selection. These model checks
+do not call Siri or need a staged device fixture. They have not been executed.
+They compile only with the Debug app module available; the standalone API
+type-check command below does not check their app-owned dependencies.
+
 `bash scripts/check_siri_evaluations.sh` type-checks the public APIs and macros
 against the installed iPhoneOS SDK. It neither links a test bundle nor runs Siri.
 The script honors `DEVELOPER_DIR` and keeps its compiler cache under `.build`.

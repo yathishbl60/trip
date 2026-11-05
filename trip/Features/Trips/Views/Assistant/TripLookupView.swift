@@ -9,6 +9,20 @@ struct TripLookupView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
+        content
+            .navigationTitle(TripText.askMyTrip.resource)
+            .tripWayfinding(.details, tripID: tripID, controller: controller)
+            .searchable(text: lookup.searchText, prompt: Text(TripText.namePlaceOrBooking.resource))
+            #if os(iOS)
+            .scrollDismissesKeyboard(.interactively)
+            .scrollEdgeEffectStyle(.soft, for: .top)
+            #endif
+            .onDisappear(perform: lookup.cancel)
+            .onChange(of: controller.lookupSnapshot(tripID)) { _, plan in lookup.model.refresh(plan) }
+            .onChange(of: scenePhase) { _, phase in lookup.sceneChanged(phase) }
+    }
+
+    private var content: some View {
         List {
             TripAIProcessingSection(selection: lookup.processing, explanation: lookup.model.processing.lookupExplanation,
                                     availableModes: TripAIConfiguration.availableModes)
@@ -18,15 +32,6 @@ struct TripLookupView: View {
             }
             TripLookupResultsSection(tripID: tripID, controller: controller)
         }
-        .navigationTitle(TripText.askMyTrip.resource)
-        .searchable(text: lookup.searchText, prompt: Text(TripText.namePlaceOrBooking.resource))
-        #if os(iOS)
-        .scrollDismissesKeyboard(.interactively)
-        .scrollEdgeEffectStyle(.soft, for: .top)
-        #endif
-        .onDisappear(perform: lookup.cancel)
-        .onChange(of: controller.lookupSnapshot(tripID)) { _, plan in lookup.model.refresh(plan) }
-        .onChange(of: scenePhase) { _, phase in lookup.sceneChanged(phase) }
     }
 
 }

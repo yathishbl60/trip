@@ -31,6 +31,8 @@ extension OpenTripsIntent: ToolIntent {}
 
 extension NewTripIntent: ToolIntent {}
 
+extension CreateTripIntent: ToolIntent {}
+
 extension FindPlaceForTripIntent: ToolIntent {}
 
 extension StartTripDayIntent: ToolIntent {}

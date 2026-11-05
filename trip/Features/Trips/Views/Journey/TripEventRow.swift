@@ -1,4 +1,5 @@
 import SwiftUI
+import AppIntents
 import TripDomain
 
 struct TripEventRow: View {
@@ -22,6 +23,7 @@ struct TripEventRow: View {
         }
         .buttonStyle(.plain).accessibilityHint(model.accessibilityHint)
         .hoverEffect(.highlight)
+        .appEntityIdentifier(controller.detailEntityIdentifier(tripID: model.trip.id, itemID: model.event.id))
     }
 
     private var details: some View {

@@ -14,7 +14,8 @@ struct TripMapView: View {
 
     var body: some View {
         content
-            .navigationTitle(model.trip?.title ?? TripText.tripMap.text)
+            .navigationTitle(TripText.tripMap.resource)
+            .tripWayfinding(.map, tripID: model.tripID, controller: controller)
             #if os(iOS)
             .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbarBackground(.clear, for: .navigationBar)

@@ -1,6 +1,7 @@
 import TripLocalization
 import TripDomain
 import SwiftUI
+import AppIntents
 
 /// List dependencies stay separate from the library's navigation and toolbar.
 struct TripLibraryListView: View {
@@ -11,6 +12,7 @@ struct TripLibraryListView: View {
         List(selection: controller.selection) {
             ForEach(trips) { trip in
                 NavigationLink(value: trip.id) { TripRowView(trip: trip) }
+                    .appEntityIdentifier(controller.tripEntityIdentifier(trip.id))
                     .contextMenu { TripContextMenu(trip: trip, controller: controller) }
                     .swipeActions { deleteAction(trip) }
             }

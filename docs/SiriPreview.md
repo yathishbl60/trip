@@ -33,11 +33,19 @@ prerequisites, standard metrics, and per-turn report analysis.
 
 ## Delivered behavior
 
-The built app exposes 20 tools: opening Explore, Trips, a new-trip form, a saved
+The built app exposes 25 tools: opening Explore, Trips, a new-trip form, a saved
 trip, an exact detail, or a checklist; reading an itinerary, day, next step, or
 checklist; adding and setting checklist items; opening packing, itinerary-draft,
 booking-review, and place-search flows; starting day tracking; setting visit
-timing; marking an exact saved place visited; and directions to a saved place.
+timing; marking an exact saved place visited; directions to a saved place; creating
+a trip; opening a trip section, day tool, or trip review tool; and editing an exact
+saved detail. Existing intent identities and the ten automatic shortcuts are preserved.
+
+The new navigation tools cover itinerary, Today, map, checklist, collections,
+detail search, day schedules, planning previews, day weather, adding places,
+trip editing, and Calendar/Reminders export reviews. Day-map requests retain the
+requested saved day. Editor/export handoffs require the existing in-app review;
+they do not automatically save a draft or send data to another app.
 
 Set Visit Timing uses a generable value separate from the saved target entity.
 It preserves unspecified fields, validates minute ranges, checks destination-local
@@ -52,12 +60,26 @@ private notes. Lookup rows and next-step snippets provide exact on-screen entity
 identifiers through the app's existing composition boundary. Opening a trip from
 the library donates its matching intent; deletion removes matching donations.
 
-The three runtime skills cover day planning, departure preparation, and booking
-review. Stored-trip/detail entities have described properties, authentication,
+The four runtime skills cover day planning, departure preparation, booking review,
+and navigation. Stored-trip/detail entities have described properties, authentication,
 and safe transferable text. Checklist discovery enumerates the bounded canonical
 library without publishing checklist text to Spotlight or App Group snapshots.
 
-## Verification on 2026-11-05
+## Navigation update verification on 2026-11-05
+
+- Generic iOS Simulator Debug app/widget compilation passes with Xcode 27.3 beta 1.
+- Generic iPhoneOS Debug `build-for-testing` passes, including the existing eight
+  Siri scenarios and five new local-model wayfinding checks. No tests were executed.
+- English metadata analysis reports 42 actions, 25 tools, four entities, and four
+  compiled app skills, with zero errors/warnings. Six SMA701 suggestions compare
+  travel tools to unrelated schemas; the tool descriptions retain their travel meaning.
+- Source checks cover architecture, previews, localization, and file/member limits.
+  New Hindi/Kannada translations are present and marked `needs_review`.
+- The new title menus, native transitions, row editing, voice routing, and keyboard
+  behavior have not been exercised in a simulator or on a device. This update's
+  visionOS configuration is unchanged and has not been compiled.
+
+## Earlier baseline verification on 2026-11-05
 
 - `bash scripts/check.sh`: ownership, localization, previews, Swift/member limits,
   project skills, and platform contracts pass.

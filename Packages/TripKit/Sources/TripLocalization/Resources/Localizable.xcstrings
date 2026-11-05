@@ -1,6 +1,510 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Edit ${detail}": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit ${detail}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${detail} संपादित करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${detail} ಸಂಪಾದಿಸಿ"
+          }
+        }
+      }
+    },
+    "Open ${section} in ${trip}": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ${section} in ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} में ${section} खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ನಲ್ಲಿ ${section} ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "Open ${tool} for ${trip}": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ${tool} for ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} के लिए ${tool} खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ಗಾಗಿ ${tool} ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "Open ${tool} for day ${day} of ${trip}": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ${tool} for day ${day} of ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} के दिन ${day} के लिए ${tool} खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ನ ${day} ದಿನಕ್ಕಾಗಿ ${tool} ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "intent_day_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day Tool"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "दिन का उपकरण"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ದಿನದ ಸಾಧನ"
+          }
+        }
+      }
+    },
+    "intent_edit_saved_detail": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit Saved Trip Detail"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजा हुआ यात्रा विवरण संपादित करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸ ವಿವರ ಸಂಪಾದಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_edit_saved_detail_description": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the exact saved booking’s editor or place’s visit timing form. The person reviews and saves changes in Trip. Does not change a reservation with its provider."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "चुनी गई सहेजी बुकिंग का संपादक या स्थान का भ्रमण समय फ़ॉर्म खोलें। व्यक्ति Trip में समीक्षा करके बदलाव सहेजता है। प्रदाता के साथ आरक्षण नहीं बदलता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಆಯ್ದ ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಸಂಪಾದಕ ಅಥವಾ ಸ್ಥಳದ ಭೇಟಿ ಸಮಯದ ಫಾರ್ಮ್ ತೆರೆಯಿರಿ. ಬಳಕೆದಾರರು Trip ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸುತ್ತಾರೆ. ಪೂರೈಕೆದಾರರ ಕಾಯ್ದಿರಿಸುವಿಕೆಯನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_open_day_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Trip Day Tool"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा के दिन का उपकरण खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ದಿನದ ಸಾಧನ ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "intent_open_day_tool_description": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open an existing day’s schedule editor, planning preview, weather review, or place picker. Changes and new places require review and saving in Trip."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "मौजूदा दिन का समय संपादक, योजना पूर्वावलोकन, मौसम समीक्षा या स्थान चयन खोलें। बदलाव और नए स्थान Trip में समीक्षा के बाद सहेजे जाते हैं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈಗಿರುವ ದಿನದ ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಕ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಪರಿಶೀಲನೆ ಅಥವಾ ಸ್ಥಳ ಆಯ್ಕೆ ತೆರೆಯಿರಿ. ಬದಲಾವಣೆಗಳು ಮತ್ತು ಹೊಸ ಸ್ಥಳಗಳನ್ನು Trip ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ ಉಳಿಸಬೇಕು."
+          }
+        }
+      }
+    },
+    "intent_open_trip_section": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Trip Section"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा का भाग खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ವಿಭಾಗ ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "intent_open_trip_section_description": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a saved trip’s itinerary, today view, map, checklist, collections, or saved-detail search. Keeps the existing navigation hierarchy."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई यात्रा की योजना, आज का दृश्य, मानचित्र, चेकलिस्ट, संग्रह या विवरण खोज खोलें। मौजूदा नेविगेशन क्रम बना रहता है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸದ ಯೋಜನೆ, ಇಂದಿನ ನೋಟ, ನಕ್ಷೆ, ಪರಿಶೀಲನಾ ಪಟ್ಟಿ, ಸಂಗ್ರಹಗಳು ಅಥವಾ ವಿವರ ಹುಡುಕಾಟ ತೆರೆಯಿರಿ. ಈಗಿರುವ ನ್ಯಾವಿಗೇಶನ್ ಕ್ರಮ ಉಳಿಯುತ್ತದೆ."
+          }
+        }
+      }
+    },
+    "intent_open_trip_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Trip Tool"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा उपकरण खोलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ಸಾಧನ ತೆರೆಯಿರಿ"
+          }
+        }
+      }
+    },
+    "intent_open_trip_tool_description": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open trip editing or a Calendar or Reminders export review. The person reviews and confirms changes in Trip; opening a review does not export anything."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा संपादन या Calendar अथवा Reminders निर्यात समीक्षा खोलें। व्यक्ति Trip में बदलावों की समीक्षा और पुष्टि करता है; समीक्षा खोलने से निर्यात नहीं होता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ಸಂಪಾದನೆ ಅಥವಾ Calendar ಅಥವಾ Reminders ರಫ್ತು ಪರಿಶೀಲನೆ ತೆರೆಯಿರಿ. ಬಳಕೆದಾರರು Trip ನಲ್ಲಿ ಬದಲಾವಣೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ದೃಢೀಕರಿಸುತ್ತಾರೆ; ಪರಿಶೀಲನೆ ತೆರೆಯುವುದರಿಂದ ರಫ್ತು ಆಗುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_parameter_day_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose schedule editing, planning preview, weather, or adding places for the specified itinerary day."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "चुने हुए यात्रा दिन के लिए समय संपादन, योजना पूर्वावलोकन, मौसम या स्थान जोड़ना चुनें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನಿರ್ದಿಷ್ಟ ಪ್ರವಾಸದ ದಿನಕ್ಕೆ ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದನೆ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಅಥವಾ ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+          }
+        }
+      }
+    },
+    "intent_parameter_new_trip_days": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The number of itinerary days to create, from 1 to 30."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा योजना में बनाने वाले दिनों की संख्या, 1 से 30।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ರಚಿಸಬೇಕಾದ ಪ್ರವಾಸದ ದಿನಗಳ ಸಂಖ್ಯೆ, 1 ರಿಂದ 30."
+          }
+        }
+      }
+    },
+    "intent_parameter_new_trip_departure": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The departure date for the new trip, using the device’s current calendar and time zone."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "नई यात्रा की प्रस्थान तिथि, डिवाइस के वर्तमान कैलेंडर और समय क्षेत्र के अनुसार।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಾಧನದ ಪ್ರಸ್ತುತ ಕ್ಯಾಲೆಂಡರ್ ಮತ್ತು ಸಮಯ ವಲಯದ ಪ್ರಕಾರ ಹೊಸ ಪ್ರವಾಸದ ನಿರ್ಗಮನ ದಿನಾಂಕ."
+          }
+        }
+      }
+    },
+    "intent_parameter_new_trip_name": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A name for the new saved trip, from 1 to 80 characters."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "नई सहेजी यात्रा का नाम, 1 से 80 अक्षर।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಹೊಸ ಉಳಿಸಿದ ಪ್ರವಾಸದ ಹೆಸರು, 1 ರಿಂದ 80 ಅಕ್ಷರಗಳು."
+          }
+        }
+      }
+    },
+    "intent_parameter_section": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The section of the saved trip to open."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई यात्रा का वह भाग जिसे खोलना है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ತೆರೆಯಬೇಕಾದ ಉಳಿಸಿದ ಪ್ರವಾಸದ ವಿಭಾಗ."
+          }
+        }
+      }
+    },
+    "intent_parameter_trip_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit trip details, or review exporting saved bookings to Calendar or incomplete checklist items to Reminders."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा विवरण संपादित करें या सहेजी बुकिंग Calendar में अथवा अधूरे चेकलिस्ट आइटम Reminders में निर्यात करने की समीक्षा करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ವಿವರ ಸಂಪಾದಿಸಿ, ಅಥವಾ ಉಳಿಸಿದ ಬುಕಿಂಗ್‌ಗಳನ್ನು Calendar ಗೆ ಅಥವಾ ಅಪೂರ್ಣ ಪರಿಶೀಲನಾ ಅಂಶಗಳನ್ನು Reminders ಗೆ ರಫ್ತು ಮಾಡುವುದನ್ನು ಪರಿಶೀಲಿಸಿ."
+          }
+        }
+      }
+    },
+    "intent_trip_section": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trip Section"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा का भाग"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ವಿಭಾಗ"
+          }
+        }
+      }
+    },
+    "intent_trip_tool": {
+      "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trip Tool"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा उपकरण"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ಸಾಧನ"
+          }
+        }
+      }
+    },
     "intent_mark_saved_visit": {
       "comment": "Siri saved-place actions. Navigation and visit tracking remain separate.",
       "extractionState": "manual",

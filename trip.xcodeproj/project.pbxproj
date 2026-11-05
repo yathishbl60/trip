@@ -32,7 +32,7 @@
 		21000000000000000000000C /* trip/Shared/System/OpenTripControlIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000000C /* trip/Shared/System/OpenTripControlIntent.swift */; };
 		220000000000000000000001 /* TripDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000011 /* TripDomain */; };
 		220000000000000000000002 /* TripStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000013 /* TripStorage */; };
-		220000000000000000000003 /* TripWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 230000000000000000000001 /* TripWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		220000000000000000000003 /* TripWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 230000000000000000000001 /* TripWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		220000000000000000000004 /* TripRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000015 /* TripRouting */; };
 		310000000000000000000001 /* trip/DesignSystem/Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 310000000000000000000002 /* trip/DesignSystem/Colors.xcassets */; };
 /* End PBXBuildFile section */
@@ -45,7 +45,7 @@
 			remoteGlobalIDString = 250000000000000000000001;
 			remoteInfo = TripWidgets;
 		};
-		410000000000000000000009 /* Siri test host proxy */ = {
+		410000000000000000000009 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 000000000000000000000000 /* Project object */;
 			proxyType = 1;
@@ -55,14 +55,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		240000000000000000000003 /* Embed App Extensions */ = {
+		240000000000000000000003 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			dstPath = "";
 			dstSubfolder = PlugIns;
 			files = (
-				220000000000000000000003 /* TripWidgets.appex in Embed App Extensions */,
+				220000000000000000000003 /* TripWidgets.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -102,9 +102,11 @@
 			);
 			target = 250000000000000000000001 /* TripWidgets */;
 		};
-		410000000000000000000004 /* Siri evaluation documentation */ = {
+		410000000000000000000004 /* Exceptions for "Performance/SiriEvaluations" folder in "TripSiriEvaluations" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (README.md,);
+			membershipExceptions = (
+				README.md,
+			);
 			target = 410000000000000000000001 /* TripSiriEvaluations */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -126,9 +128,11 @@
 			path = TripWidgets;
 			sourceTree = "<group>";
 		};
-		410000000000000000000003 /* Siri evaluations */ = {
+		410000000000000000000003 /* Performance/SiriEvaluations */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (410000000000000000000004 /* Siri evaluation documentation */,);
+			exceptions = (
+				410000000000000000000004 /* Exceptions for "Performance/SiriEvaluations" folder in "TripSiriEvaluations" target */,
+			);
 			path = Performance/SiriEvaluations;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -156,11 +160,10 @@
 				220000000000000000000004 /* TripRouting in Frameworks */,
 			);
 		};
-		410000000000000000000006 /* Siri evaluation PBXFrameworksBuildPhase */ = {
+		410000000000000000000006 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = ();
-			runOnlyForDeploymentPostprocessing = 0;
+			files = (
+			);
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -171,7 +174,7 @@
 				120000000000000000000003 /* Packages/TripKit/Sources/TripLocalization/HostResources/InfoPlist.xcstrings */,
 				120000000000000000000002 /* Packages/TripKit/Sources/TripLocalization/HostResources/AppShortcuts.xcstrings */,
 				120000000000000000000001 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings */,
-				410000000000000000000003 /* Siri evaluations */,
+				410000000000000000000003 /* Performance/SiriEvaluations */,
 				000000000000000000000010 /* trip */,
 				260000000000000000000003 /* TripWidgets */,
 				280000000000000000000001 /* Shared system sources */,
@@ -226,7 +229,7 @@
 				000000000000000120000000 /* Sources */,
 				000000000000000130000000 /* Frameworks */,
 				000000000000000140000000 /* Resources */,
-				240000000000000000000003 /* Embed App Extensions */,
+				240000000000000000000003 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -276,15 +279,20 @@
 		};
 		410000000000000000000001 /* TripSiriEvaluations */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 410000000000000000000010 /* Siri evaluation configurations */;
+			buildConfigurationList = 410000000000000000000010 /* Build configuration list for PBXNativeTarget "TripSiriEvaluations" */;
 			buildPhases = (
-				410000000000000000000005 /* Siri evaluation sources */,
-				410000000000000000000006 /* Siri evaluation frameworks */,
-				410000000000000000000007 /* Siri evaluation resources */,
+				410000000000000000000005 /* Sources */,
+				410000000000000000000006 /* Frameworks */,
+				410000000000000000000007 /* Resources */,
 			);
-			buildRules = ();
-			dependencies = (410000000000000000000008 /* Siri test host dependency */,);
-			fileSystemSynchronizedGroups = (410000000000000000000003 /* Siri evaluations */,);
+			buildRules = (
+			);
+			dependencies = (
+				410000000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				410000000000000000000003 /* Performance/SiriEvaluations */,
+			);
 			name = TripSiriEvaluations;
 			productName = TripSiriEvaluations;
 			productReference = 410000000000000000000002 /* TripSiriEvaluations.xctest */;
@@ -298,12 +306,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2720;
+				LastUpgradeCheck = 2730;
 				TargetAttributes = {
-					410000000000000000000001 = {
-						CreatedOnToolsVersion = 27.3;
-						TestTargetID = 000000000000000100000000;
-					};
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
 						SystemCapabilities = {
@@ -311,6 +315,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					410000000000000000000001 = {
+						CreatedOnToolsVersion = 27.3;
+						TestTargetID = 000000000000000100000000;
 					};
 				};
 			};
@@ -356,11 +364,10 @@
 				310000000000000000000001 /* trip/DesignSystem/Colors.xcassets in Resources */,
 			);
 		};
-		410000000000000000000007 /* Siri evaluation PBXResourcesBuildPhase */ = {
+		410000000000000000000007 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = ();
-			runOnlyForDeploymentPostprocessing = 0;
+			files = (
+			);
 		};
 /* End PBXResourcesBuildPhase section */
 
@@ -386,11 +393,10 @@
 				21000000000000000000000C /* trip/Shared/System/OpenTripControlIntent.swift in Sources */,
 			);
 		};
-		410000000000000000000005 /* Siri evaluation PBXSourcesBuildPhase */ = {
+		410000000000000000000005 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = ();
-			runOnlyForDeploymentPostprocessing = 0;
+			files = (
+			);
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -400,10 +406,10 @@
 			target = 250000000000000000000001 /* TripWidgets */;
 			targetProxy = 240000000000000000000001 /* PBXContainerItemProxy */;
 		};
-		410000000000000000000008 /* Siri test host dependency */ = {
+		410000000000000000000008 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 000000000000000100000000 /* trip */;
-			targetProxy = 410000000000000000000009 /* Siri test host proxy */;
+			targetProxy = 410000000000000000000009 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -414,6 +420,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLETVOS_DEPLOYMENT_TARGET = 27.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -485,6 +492,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLETVOS_DEPLOYMENT_TARGET = 27.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -696,7 +704,7 @@
 			};
 			name = Release;
 		};
-		410000000000000000000011 /* Debug Siri evaluations */ = {
+		410000000000000000000011 /* Debug configuration for PBXNativeTarget "TripSiriEvaluations" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -704,9 +712,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.native.trip.siri-evaluations;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.native.trip.siri-evaluations";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -722,7 +734,7 @@
 			};
 			name = Debug;
 		};
-		410000000000000000000012 /* Release Siri evaluations */ = {
+		410000000000000000000012 /* Release configuration for PBXNativeTarget "TripSiriEvaluations" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -730,9 +742,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.native.trip.siri-evaluations;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.native.trip.siri-evaluations";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -775,11 +791,11 @@
 			);
 			defaultConfigurationName = Release;
 		};
-		410000000000000000000010 /* Siri evaluation configurations */ = {
+		410000000000000000000010 /* Build configuration list for PBXNativeTarget "TripSiriEvaluations" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				410000000000000000000011 /* Debug Siri evaluations */,
-				410000000000000000000012 /* Release Siri evaluations */,
+				410000000000000000000011 /* Debug configuration for PBXNativeTarget "TripSiriEvaluations" */,
+				410000000000000000000012 /* Release configuration for PBXNativeTarget "TripSiriEvaluations" */,
 			);
 			defaultConfigurationName = Release;
 		};

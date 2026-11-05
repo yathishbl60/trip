@@ -41,7 +41,9 @@ import AppIntents
             showDirections: { [weak self] in self?.showDayDirections($0) },
             maximumRoutePlaces: explore.directions.maximumPlaces,
             didOpenTrip: { [weak system] in system?.recordTripOpened($0) },
-            detailEntityIdentifier: { EntityIdentifier(for: SavedTripDetailEntity.self, identifier: $0.rawValue) }
+            detailEntityIdentifier: { EntityIdentifier(for: SavedTripDetailEntity.self, identifier: $0.rawValue) },
+            tripEntityIdentifier: { EntityIdentifier(for: SavedTripEntity.self, identifier: $0) },
+            checklistEntityIdentifier: { EntityIdentifier(for: SavedTripChecklistEntity.self, identifier: $0.rawValue) }
         )
     }
 }

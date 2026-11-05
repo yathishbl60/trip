@@ -40,6 +40,28 @@ New Trip keyboard commands are disabled while a draft or modal workflow is activ
 the model also rejects a second creation request without replacing the current draft.
 New navigation requests and tab selections cancel an older pending link resolution.
 
+Saved-trip sections share `TripSection` routes between Siri, keyboard commands,
+and the native navigation-title picker. The picker marks the current section;
+child sections show the trip name as an iOS navigation subtitle. Keep visionOS
+on its supported title menu and native Back path. A day-map route carries the
+saved day UUID, including when entered from the itinerary menu. Do not add a
+separate untracked push for the same destination. A stale dismissal binding must
+not remove a newer route. Explicit Open My Trips returns to the library; opening
+a saved trip returns to its itinerary, including when that trip was already selected.
+
+Foreground tool requests validate canonical records before queueing and protect
+editing again when delivered to a scene. Trip/day tools reuse the feature's existing
+review workflows. Saved detail search opens the current booking or visit editor,
+retaining search context after dismissal. Export review never performs an export.
+Onscreen trip, detail, and checklist identifiers are injected by App composition.
+Features do not construct app-owned entity types.
+
+This follows Apple's [toolbar guidance](https://developer.apple.com/design/human-interface-guidelines/toolbars)
+on useful titles, restrained controls, and standard Back behavior, and
+[Siri guidance](https://developer.apple.com/design/human-interface-guidelines/siri)
+on familiar task names and contextual entities. Runtime usability remains a
+separate verification step from the compile-only checks authorized for this change.
+
 ## Service composition
 
 `Dependencies/AppTripServices.swift` constructs production Trips models with

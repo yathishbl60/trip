@@ -14,6 +14,7 @@ struct TripChecklistView: View {
             else { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
         }
         .navigationTitle(TripText.checklist.resource)
+        .tripWayfinding(.checklist, tripID: tripID, controller: controller)
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif

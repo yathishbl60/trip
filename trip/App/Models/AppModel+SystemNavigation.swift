@@ -8,7 +8,7 @@ extension AppModel {
         guard allowNavigation() else { return }
         switch destination {
         case .explore: showExplore()
-        case .trips: navigation.tab = .trips
+        case .trips: openTripLibrary()
         case .savedTrip(let id): openSavedTrip(id)
         case .newTrip: createNewTrip()
         case .draftTrip(let id, let preferences, let days, let processing):
@@ -19,6 +19,7 @@ extension AppModel {
         case .checklist(let id, let preferences): openChecklist(id, preferences: preferences)
         case .searchPlace(let request): openPlaceSearch(request)
         case .importBooking(let request): openBookingImport(request)
+        default: openWorkspace(destination)
         }
     }
 
@@ -60,6 +61,7 @@ extension AppModel {
         navigation.tab = .trips
         trips.dismissAssistant()
         trips.selectTrip(id)
+        trips.presentation.detailRoute = nil
         return true
     }
 }

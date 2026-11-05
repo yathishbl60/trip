@@ -1,5 +1,6 @@
 import TripLocalization
 import SwiftUI
+import AppIntents
 import TripDomain
 
 struct TripTodayNextView: View {
@@ -19,6 +20,7 @@ struct TripTodayNextView: View {
                 .buttonStyle(.borderedProminent).controlSize(.large).tint(AppTheme.accentFill)
             }
             .padding(.vertical, AppTheme.Spacing.small)
+            .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: item.id))
         } header: { Text(TripText.upNext.resource) } footer: {
             if today.leaveText(item) != nil { Text(TripText.basedOnYourManualTravelAllowanceCheckCurrentTravel.resource) }
         }

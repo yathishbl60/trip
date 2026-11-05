@@ -16,6 +16,7 @@ struct TripCollectionsView: View {
             }
         }
         .navigationTitle(TripText.collections.resource)
+        .tripWayfinding(.collections, tripID: tripID, controller: controller)
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif

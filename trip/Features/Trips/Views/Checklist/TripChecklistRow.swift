@@ -1,5 +1,6 @@
 import TripLocalization
 import SwiftUI
+import AppIntents
 import TripDomain
 
 struct TripChecklistRow: View {
@@ -20,6 +21,7 @@ struct TripChecklistRow: View {
         .buttonStyle(.borderless)
         .accessibilityLabel(item.title)
         .accessibilityValue(item.isComplete ? TripText.done.text : TripText.notDone.text)
+        .appEntityIdentifier(controller.checklistEntityIdentifier(item.id, tripID: tripID))
         .contextMenu {
             Button(TripText.edit.resource, systemImage: "pencil") { controller.editChecklistItem(in: tripID, item: item) }
         }
