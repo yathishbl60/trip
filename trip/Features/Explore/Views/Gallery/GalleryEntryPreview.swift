@@ -4,7 +4,7 @@ struct GalleryEntryPreview: View {
     let photos: [GalleryPhoto]
 
     var body: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: AppTheme.Spacing.compact) {
             ForEach(photos.prefix(3)) { photo in
                 Image(photo.thumbnailName).resizable().scaledToFill()
                     .frame(width: 25, height: 52).clipped()

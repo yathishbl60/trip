@@ -8,10 +8,10 @@ struct TripDayHeaderView: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
                 Text(day.title).font(.headline).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 Text("\(trip.dateText(for: day)) · \(trip.journeySummary(on: day))")
-                    .font(.caption).fixedSize(horizontal: false, vertical: true)
+                    .font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             .layoutPriority(1)
             Spacer()

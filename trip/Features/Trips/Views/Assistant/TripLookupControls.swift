@@ -17,7 +17,7 @@ struct TripLookupControls: View {
     }
 
     private var question: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.medium) {
             TextField(TripText.askAboutYourItinerary.resource, text: controller.question, axis: .vertical)
                 .lineLimit(1...3).submitLabel(.search).onSubmit(controller.ask)
             if controller.model.isSearching {

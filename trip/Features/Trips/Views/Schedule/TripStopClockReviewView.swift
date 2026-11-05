@@ -10,7 +10,7 @@ struct TripStopClockReviewView: View {
         if let clock = draft.arrivalClock, clock.candidates.count > 1 {
             TripRepeatedTimePickerView(clock: clock, selection: controller.arrivalOccurrence(draft))
         }
-        if let issue = draft.arrivalClock?.issue { Label(issue, systemImage: "exclamationmark.circle").foregroundStyle(.orange) }
+        if let issue = draft.arrivalClock?.issue { TripWarningLabel(message: issue) }
     }
 }
 

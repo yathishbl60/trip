@@ -34,7 +34,7 @@ struct TripChecklistView: View {
             TripChecklistSection(title: TripText.done.text, items: trip.completedChecklistItems, tripID: tripID, controller: controller)
             if trip.checklist.isEmpty { starter }
         }
-        .animation(reduceMotion ? nil : .smooth(duration: 0.22), value: trip.completedChecklistCount)
+        .animation(AppTheme.Motion.selection(reduceMotion: reduceMotion), value: trip.completedChecklistCount)
         .toolbar {
             TripChecklistToolbar(trip: trip, controller: controller, reset: { confirmsReset = true })
         }

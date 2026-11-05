@@ -28,7 +28,7 @@ events. **Undo Last Trip Visit** is available in the Shortcuts editor for recove
 
 ## Siri AI preview and contextual sharing
 
-Trip now targets 27.3 and exposes 25 custom Siri tools, including exact saved-place
+Trip now targets 27.3 and exposes 28 custom Siri tools, including exact saved-place
 timing edits, visit completion, and Apple Maps directions. Three compiled app skills
 coordinate day planning, departure preparation, and booking review. Existing
 Shortcuts identities and phrases are preserved; configuration, snippet internals,

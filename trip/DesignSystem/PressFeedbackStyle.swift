@@ -7,7 +7,7 @@ struct PressFeedbackStyle: ButtonStyle {
         configuration.label
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.96 : 1)
             .opacity(configuration.isPressed ? 0.72 : 1)
-            .animation(.easeOut(duration: 0.16), value: configuration.isPressed)
+            .animation(AppTheme.Motion.press(reduceMotion: reduceMotion), value: configuration.isPressed)
     }
 }
 

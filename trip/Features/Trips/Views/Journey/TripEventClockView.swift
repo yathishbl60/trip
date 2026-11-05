@@ -19,7 +19,7 @@ struct TripEventClockView: View {
                 TripTimeZonePickerView(selection: controller.eventZone(draft, arrival: arrival))
             }
             if clock.candidates.count > 1 { occurrence }
-            if let issue = clock.issue { Label(issue, systemImage: "exclamationmark.circle").foregroundStyle(.orange) }
+            if let issue = clock.issue { TripWarningLabel(message: issue) }
         }
     }
 

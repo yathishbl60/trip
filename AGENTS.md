@@ -42,6 +42,7 @@ These are this project's defaults; explicit user instructions take precedence.
 ## Interface and data
 
 - Prefer native SwiftUI components, SF Symbols, and minimal customization.
+- Follow `docs/DesignSystem.md` for Trip's spacing, text roles, color roles, and motion recipes. Reuse the owning tokens and components; record geometry exceptions with a reason in `scripts/design_system_policy.json`. `bash scripts/check.sh` enforces this policy; source checks do not establish visual acceptance.
 - Keep stable marker identities and smooth zoom transitions; respect Reduce Motion.
 - Keep camera positioning responsive and expensive work outside view bodies.
 - Render interactive places with native MapKit annotations; overlays must not block map gestures.

@@ -5,9 +5,18 @@ import TripDomain
 extension TripModel {
     func beginEvent(dayID: UUID, tripID: UUID, eventID: UUID? = nil, kind: TripEventKind = .activity) {
         guard let trip = library.trip(tripID), trip.days.contains(where: { $0.id == dayID }) else { return }
+        guard eventID != nil || trip.events.count < TripLimits.events else { return }
         let event = trip.events.first { $0.id == eventID }
         guard eventID == nil || event != nil else { return }
         presentation.eventDraft = TripEventDraft(trip: trip, dayID: dayID, event: event, kind: kind)
+    }
+
+    func beginNewEvent(_ request: TripNewEventRequest) throws {
+        guard !hasEditingSession else { return }
+        guard let trip = library.trip(request.tripID) else { throw TripNewEventError.missingTrip }
+        try request.validate(in: trip)
+        beginEvent(dayID: request.dayID, tripID: trip.id, kind: request.kind)
+        if !request.title.isEmpty { presentation.eventDraft?.event.title = request.title }
     }
 
     func saveEvent(_ draft: TripEventDraft) {

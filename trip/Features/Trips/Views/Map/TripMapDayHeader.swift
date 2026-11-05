@@ -22,7 +22,7 @@ struct TripMapDayHeader: View {
     }
 
     private var actions: some View {
-        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: AppTheme.Spacing.small))
             : AnyLayout(HStackLayout(spacing: AppTheme.Spacing.medium))
         return layout {
             VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {

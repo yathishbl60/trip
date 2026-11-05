@@ -46,7 +46,7 @@ struct TripTimeBudgetView: View {
         HStack(alignment: .top, spacing: AppTheme.Spacing.tight) {
             Image(systemName: segment.symbol).foregroundStyle(segment.kind == .open ? .secondary : segment.color)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
                 Text(segment.title).foregroundStyle(.secondary)
                 Text(TripScheduleText.duration(segment.minutes)).monospacedDigit()
             }

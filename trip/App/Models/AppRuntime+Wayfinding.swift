@@ -29,6 +29,7 @@ extension AppRuntime {
 
     private static func navigationTrip(_ id: UUID) async throws -> TripPlan {
         let plan = try await trip(id)
+        try Task.checkCancellation()
         guard activeScene?.trips.hasEditingSession != true else { throw TripDetailIntentError.editing }
         return plan
     }

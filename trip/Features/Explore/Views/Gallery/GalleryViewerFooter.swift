@@ -8,7 +8,7 @@ struct GalleryViewerFooter: View {
     var body: some View {
         GalleryFilmstrip(controller: controller)
             .frame(maxWidth: 540)
-            .padding(.bottom, 8)
+            .padding(.bottom, AppTheme.Spacing.small)
             .opacity(isVisible ? 1 : 0)
             .allowsHitTesting(isVisible)
             .accessibilityHidden(!isVisible)

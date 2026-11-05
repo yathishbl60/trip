@@ -30,7 +30,7 @@ struct TripWidgetView: View {
     }
 
     private var accessory: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.compact) {
             Label(entry.title, systemImage: "suitcase.rolling").font(.headline).lineLimit(1)
             Text(entry.stopTitle).lineLimit(1)
             Text(entry.isTracking ? entry.progress : entry.detail).font(.caption).lineLimit(1)

@@ -5,14 +5,14 @@ struct TripActivityGlanceView: View {
     let presentation: TripActivityPresentation
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.tight) {
             Text(presentation.tripTitle).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
             Label(presentation.title, systemImage: presentation.symbol).font(.headline).lineLimit(2)
             if let detail = presentation.context { Text(detail).font(.caption2).lineLimit(1) }
             Text(presentation.subtitle).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(8)
+        .padding(WidgetTheme.Spacing.small)
         .privacySensitive()
     }
 }

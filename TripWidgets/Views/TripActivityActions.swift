@@ -9,7 +9,7 @@ struct TripActivityActions: View {
     let presentation: TripActivityPresentation
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: WidgetTheme.Spacing.small) {
             if let url = presentation.directionsURL {
                 Link(destination: url) { Image(systemName: "arrow.triangle.turn.up.right.diamond") }
                     .accessibilityLabel(TripText.directionsToValueInMaps(state.nextStopName).resource)

@@ -7,16 +7,16 @@ struct TripRowView: View {
 
     var body: some View {
         Group {
-            if typeSize.isAccessibilitySize { VStack(alignment: .leading, spacing: 12) { content } }
-            else { HStack(alignment: .top, spacing: 16) { content } }
+            if typeSize.isAccessibilitySize { VStack(alignment: .leading, spacing: AppTheme.Spacing.medium) { content } }
+            else { HStack(alignment: .top, spacing: AppTheme.Spacing.large) { content } }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, AppTheme.Spacing.small)
         .accessibilityElement(children: .combine)
     }
 
     @ViewBuilder private var content: some View {
         TripLibraryArtworkView(category: trip.coverCategory, date: trip.startDate, timeZone: trip.calendar.timeZone)
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
             Text(trip.title).font(.headline).foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
             Text(trip.dateSummary).font(.subheadline).foregroundStyle(.secondary)

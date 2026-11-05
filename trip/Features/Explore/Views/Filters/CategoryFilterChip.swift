@@ -9,6 +9,7 @@ struct CategoryFilterChip: View {
     var count: Int? = nil
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         #if os(visionOS)
@@ -23,25 +24,33 @@ struct CategoryFilterChip: View {
 
     private var button: some View {
         Button(action: action) { label }
-            .tripSymbolReplacement(value: symbol)
             .accessibilityLabel(title)
             .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var label: some View {
-        HStack(spacing: AppTheme.Spacing.small) {
-            Label(title, systemImage: symbol)
-                .font(.subheadline.weight(.medium))
-                .fixedSize(horizontal: false, vertical: true)
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: AppTheme.Spacing.tight))
+            : AnyLayout(HStackLayout(spacing: AppTheme.Spacing.small))
+        return layout {
+            identity
             if let count {
                 Text(count, format: .number).font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                    .contentTransition(.numericText()).fixedSize().accessibilityHidden(true)
+                    .contentTransition(reduceMotion ? .identity : .numericText()).fixedSize().accessibilityHidden(true)
             }
         }
         .padding(.horizontal, AppTheme.Spacing.medium)
         .padding(.vertical, AppTheme.Spacing.small)
         .frame(maxWidth: .infinity, minHeight: AppTheme.controlTarget)
         .foregroundStyle(isSelected ? AppTheme.accent : .primary)
+    }
+
+    private var identity: some View {
+        Label { Text(title) } icon: {
+            Image(systemName: symbol).tripSymbolReplacement(value: symbol)
+        }
+        .font(.subheadline.weight(.medium))
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

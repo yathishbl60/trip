@@ -6,7 +6,7 @@ struct GalleryViewerTitle: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: AppTheme.Spacing.tight) {
             if let photo = controller.model.focusedPhoto, !dynamicTypeSize.isAccessibilitySize {
                 Text(photo.title.resource).font(.headline).lineLimit(1)
             }

@@ -21,7 +21,7 @@ struct TripItineraryRail: View {
             else { Spacer(minLength: 0) }
         }
         .frame(width: badgeSize)
-        .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: isComplete)
+        .animation(AppTheme.Motion.selection(reduceMotion: reduceMotion), value: isComplete)
         .accessibilityHidden(true).allowsHitTesting(false)
     }
 

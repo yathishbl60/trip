@@ -44,7 +44,7 @@ struct TripTodayView: View {
             DisclosureGroup(TripText.restOfTheDayValue(TripText.number(today.rest.count)).text) {
                 ForEach(today.rest) { item in
                     Button { controller.openTodayItem(item, tripID: tripID) } label: {
-                        Label { VStack(alignment: .leading, spacing: 4) {
+                        Label { VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
                             Text(item.title).foregroundStyle(.primary)
                             Text(today.statusText(item)).font(.caption).foregroundStyle(.secondary)
                         } } icon: { Image(systemName: item.isVisited ? "checkmark.circle" : item.symbol) }

@@ -7,25 +7,32 @@ struct TripActivityView: View {
     let attributes: TripActivityAttributes
     let state: TripActivityAttributes.ContentState
     let isStale: Bool
+    @Environment(\.dynamicTypeSize) private var typeSize
     private var presentation: TripActivityPresentation {
         TripActivityPresentation(attributes: attributes, state: state, isStale: isStale)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.small) {
             Text(presentation.tripTitle).font(.caption.weight(.semibold)).foregroundStyle(.secondary).lineLimit(1)
             Text(presentation.title).font(.headline).lineLimit(2)
             if let detail = presentation.context { Text(detail).font(.caption).lineLimit(1) }
-            HStack(spacing: 12) {
-                Text(presentation.subtitle).font(.caption).foregroundStyle(.secondary)
-                Spacer(minLength: 0)
-                TripActivityActions(attributes: attributes, state: state, presentation: presentation)
-            }
+            footer
         }
         .padding()
         .privacySensitive()
     }
 
+    private var footer: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: WidgetTheme.Spacing.small))
+            : AnyLayout(HStackLayout(spacing: WidgetTheme.Spacing.medium))
+        return layout {
+            Text(presentation.subtitle).font(.caption).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            TripActivityActions(attributes: attributes, state: state, presentation: presentation)
+        }
+    }
 }
 
 #if DEBUG

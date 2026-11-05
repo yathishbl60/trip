@@ -54,6 +54,8 @@ global guidance into this project. Routes live in `scripts/factory/skill-routes.
    record for a new package, dependency edge, or persistence strategy.
 4. Implement a coherent vertical slice: value/contract → model → controller → view
    → local preview → host integration. Localize user-facing content.
+   For UI work, apply [Trip's visual contract](DesignSystem.md), record why the
+   text/color/spacing/motion roles fit, and review any new design-policy exception.
 5. Run source checks. Run relevant existing tests, builds, benchmarks, or runtime
    checks within the user's requested scope. State each result separately.
 6. Review data compatibility, async lifetime, accessibility, and adjacent flows.

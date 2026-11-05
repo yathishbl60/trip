@@ -9,7 +9,6 @@ struct TripSaveDestinationRow: View {
     let availability: TripStopAvailability
     var showsAddIndicator = false
     let action: () -> Void
-    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         Button(action: action) { content }
@@ -18,15 +17,8 @@ struct TripSaveDestinationRow: View {
     }
 
     private var content: some View {
-        HStack(spacing: 12) {
-            TripSymbolTile(symbol: symbol)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title).foregroundStyle(.primary)
-                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2).fixedSize(horizontal: false, vertical: true)
-                Text(subtitle).font(.caption).foregroundStyle(.secondary)
-                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2).fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 0)
+        HStack(spacing: AppTheme.Spacing.medium) {
+            TripPlaceLabel(title: title, subtitle: subtitle, symbol: symbol, color: AppTheme.accent)
             if availability == .alreadySaved { Image(systemName: "checkmark").accessibilityHidden(true) }
             else if showsAddIndicator, availability == .available {
                 Image(systemName: "plus.circle.fill").foregroundStyle(AppTheme.accent).accessibilityHidden(true)
@@ -43,6 +35,13 @@ struct TripSaveDestinationRow: View {
         case .full: TripText.fullValuePlaces(TripText.number(TripLimits.stops)).text
         }
     }
+}
+
+#Preview("Save destination · long name, accessibility") {
+    List {
+        TripSaveDestinationRow(title: "A weekend exploring the riverside", detail: "Friday, October 9",
+                               symbol: "calendar", availability: .available, action: {})
+    }.frame(width: 320).dynamicTypeSize(.accessibility3).preferredColorScheme(.dark)
 }
 
 #Preview("Save destinations") {

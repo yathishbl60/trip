@@ -13,7 +13,7 @@ struct TripDayScheduleView: View {
                 if let timeline = draft.preview(in: controller.model.library.trip(draft.tripID)) {
                     Section(TripText.yourDay.resource) { TripScheduleSummaryView(timeline: timeline, showsTarget: true) }
                 }
-                if let error = draft.error { Text(error).foregroundStyle(.red) }
+                if let error = draft.error { TripWarningLabel(message: error) }
             }
             .navigationTitle(TripText.valueSchedule(draft.title).resource).navigationBarTitleDisplayMode(.inline)
             #if os(iOS)
@@ -50,7 +50,7 @@ struct TripDayScheduleView: View {
             if let clock = draft.endClock, clock.candidates.count > 1 {
                 TripRepeatedTimePickerView(clock: clock, selection: controller.scheduleOccurrence(draft, end: true))
             }
-            if let issue = draft.clockIssue { Text(issue).foregroundStyle(.orange) }
+            if let issue = draft.clockIssue { TripWarningLabel(message: issue) }
         }.environment(\.timeZone, draft.utc.timeZone).environment(\.calendar, draft.utc)
     }
 

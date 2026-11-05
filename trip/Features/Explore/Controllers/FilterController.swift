@@ -20,17 +20,13 @@ import SwiftUI
     func dismiss() { model.filters.isPresented = false }
 
     func toggle(_ category: PlaceCategory) {
-        withAnimation(model.camera.reduceMotion ? nil : .smooth(duration: model.configuration.motion.morph)) {
-            model.filters.toggle(category)
-        }
+        model.filters.toggle(category)
         model.filterPlaces()
         model.scheduleSearch()
     }
 
     func clear() {
-        withAnimation(model.camera.reduceMotion ? nil : .smooth(duration: model.configuration.motion.morph)) {
-            model.filters.selected.removeAll()
-        }
+        model.filters.selected.removeAll()
         model.filterPlaces()
         model.scheduleSearch()
     }

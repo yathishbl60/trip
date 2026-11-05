@@ -26,26 +26,35 @@ and verification record; unchecked work is not a claim of delivered behavior.
 - [x] Record remaining preview/device limitations separately from compiled behavior.
 
 The [prepared evaluation sources](../Performance/SiriEvaluations/README.md) cover
-eight scenarios and type-check against iPhoneOS 27.3. The user authorized the
+ten Siri scenarios and compile against iPhoneOS 27.3. The user authorized the
 dedicated `TripSiriEvaluations` target, then explicitly requested compilation
 without execution. The global skill documents scenario authoring, device
 prerequisites, standard metrics, and per-turn report analysis.
 
 ## Delivered behavior
 
-The built app exposes 25 tools: opening Explore, Trips, a new-trip form, a saved
+The built app exposes 28 tools: opening Explore, Trips, a new-trip form, a saved
 trip, an exact detail, or a checklist; reading an itinerary, day, next step, or
 checklist; adding and setting checklist items; opening packing, itinerary-draft,
 booking-review, and place-search flows; starting day tracking; setting visit
 timing; marking an exact saved place visited; directions to a saved place; creating
 a trip; opening a trip section, day tool, or trip review tool; and editing an exact
-saved detail. Existing intent identities and the ten automatic shortcuts are preserved.
+saved detail; renaming checklist items; adding built-in packing presets; and
+preparing a new booking/activity draft. Existing intent identities and the ten
+automatic shortcuts are preserved.
 
 The new navigation tools cover itinerary, Today, map, checklist, collections,
 detail search, day schedules, planning previews, day weather, adding places,
 trip editing, and Calendar/Reminders export reviews. Day-map requests retain the
 requested saved day. Editor/export handoffs require the existing in-app review;
 they do not automatically save a draft or send data to another app.
+
+Preset additions and renaming share production domain operations with the UI.
+Presets preserve completed items and require enough capacity for every missing
+item. Explicit renaming preserves identity and completion. Checklist mutations
+protect active editing sessions and return canonical entities after persistence.
+New flight/train/stay/reservation/activity/free-time requests open existing forms
+and revalidate the saved day, event limit, and title before presentation.
 
 Set Visit Timing uses a generable value separate from the saved target entity.
 It preserves unspecified fields, validates minute ranges, checks destination-local
@@ -64,6 +73,14 @@ The four runtime skills cover day planning, departure preparation, booking revie
 and navigation. Stored-trip/detail entities have described properties, authentication,
 and safe transferable text. Checklist discovery enumerates the bounded canonical
 library without publishing checklist text to Spotlight or App Group snapshots.
+
+## Expanded coverage on 2026-11-05
+
+The existing evaluation target now contains ten Siri scenarios and 50 local-model
+cases covering navigation, preparation, booking drafts, day tools, saved-data
+privacy, timing, and persistence recovery. These sources compile and link in a
+generic iPhoneOS Debug `build-for-testing`; none have been executed. See the
+[coverage inventory](../Performance/SiriEvaluations/README.md) for scope and limitations.
 
 ## Navigation update verification on 2026-11-05
 

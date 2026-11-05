@@ -11,10 +11,10 @@ struct TripStopTimeView: View {
             Label(timing.timeText, systemImage: timing.fixedArrival == nil ? "clock" : "pin")
                 .font(.subheadline.weight(.medium)).foregroundStyle(.primary)
                 .contentTransition(reduceMotion ? .identity : .numericText())
-                .animation(reduceMotion ? nil : .smooth(duration: 0.18), value: timing.timeText)
+                .animation(AppTheme.Motion.feedback(reduceMotion: reduceMotion), value: timing.timeText)
             if showsDetails { details }
             if let conflict = timing.conflictText {
-                Label(conflict, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.primary)
+                TripWarningLabel(message: conflict).font(.footnote)
             }
         }
         .fixedSize(horizontal: false, vertical: true)

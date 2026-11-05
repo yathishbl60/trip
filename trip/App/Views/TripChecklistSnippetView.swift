@@ -8,7 +8,7 @@ struct TripChecklistSnippetView: View {
     let briefing: TripChecklistBriefing
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.medium) {
             Text(briefing.title).font(.headline)
             Text(briefing.summary).font(.subheadline).foregroundStyle(.secondary)
             ForEach(Array(briefing.pending.prefix(3))) { item in

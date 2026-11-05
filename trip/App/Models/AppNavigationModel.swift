@@ -12,6 +12,7 @@ nonisolated enum AppDestination: Hashable {
     case importBooking(TripBookingImportRequest)
     case section(UUID, TripSection), workspaceTool(UUID, TripWorkspaceTool)
     case dayTool(UUID, UUID, TripDayTool), editDetail(TripDetailIdentity)
+    case newEvent(TripNewEventRequest)
 }
 
 @MainActor @Observable final class AppNavigationModel {

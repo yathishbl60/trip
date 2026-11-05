@@ -1,6 +1,414 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "intent_checklist_preset": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packing Preset"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "पैकिंग सूची का प्रकार"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ವನಿಗದಿ"
+          }
+        }
+      }
+    },
+    "intent_new_event_kind": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Booking or Activity Type"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "बुकिंग या गतिविधि का प्रकार"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಬುಕಿಂಗ್ ಅಥವಾ ಚಟುವಟಿಕೆಯ ವಿಧ"
+          }
+        }
+      }
+    },
+    "intent_add_checklist_preset": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Packing Preset"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "पैकिंग सूची जोड़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ವನಿಗದಿ ಸೇರಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_rename_checklist_item": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename Checklist Item"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "चेकलिस्ट आइटम का नाम बदलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪರಿಶೀಲನಾ ಅಂಶದ ಹೆಸರು ಬದಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_new_trip_event": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepare a Trip Booking or Activity"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा बुकिंग या गतिविधि तैयार करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸ ಬುಕಿಂಗ್ ಅಥವಾ ಚಟುವಟಿಕೆ ಸಿದ್ಧಪಡಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_add_checklist_preset_description": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add missing tasks from a built-in packing preset to a saved trip. Keeps existing items and completion states, avoids duplicates, and requires room for the complete preset. Returns the matching saved items."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी यात्रा में पैकिंग सूची से छूटे हुए कार्य जोड़ें। मौजूदा आइटम और पूर्णता की स्थिति बनाए रखें, दोहराव से बचें और पूरी सूची के लिए जगह आवश्यक है। मेल खाते सहेजे आइटम लौटाता है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸಕ್ಕೆ ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ವನಿಗದಿಯಿಂದ ಕಾಣೆಯಾದ ಕಾರ್ಯಗಳನ್ನು ಸೇರಿಸಿ. ಈಗಿರುವ ಅಂಶಗಳು ಮತ್ತು ಪೂರ್ಣಗೊಳಿಸಿದ ಸ್ಥಿತಿ ಉಳಿಯುತ್ತವೆ; ನಕಲು ತಪ್ಪಿಸುತ್ತದೆ ಮತ್ತು ಸಂಪೂರ್ಣ ಪಟ್ಟಿಗೆ ಸ್ಥಳ ಬೇಕು. ಹೊಂದುವ ಉಳಿಸಿದ ಅಂಶಗಳನ್ನು ನೀಡುತ್ತದೆ."
+          }
+        }
+      }
+    },
+    "intent_rename_checklist_item_description": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change only the title of the exact saved checklist item. Preserves its identity, trip, and completion state. Repeating the same rename does not create another item."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "चुने हुए सहेजे चेकलिस्ट आइटम का केवल नाम बदलें। उसकी पहचान, यात्रा और पूर्णता की स्थिति बनाए रखें। वही नाम दोबारा देने से नया आइटम नहीं बनता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಆಯ್ದ ಉಳಿಸಿದ ಪರಿಶೀಲನಾ ಅಂಶದ ಶೀರ್ಷಿಕೆಯನ್ನು ಮಾತ್ರ ಬದಲಿಸಿ. ಅದರ ಗುರುತು, ಪ್ರವಾಸ ಮತ್ತು ಪೂರ್ಣಗೊಳಿಸಿದ ಸ್ಥಿತಿ ಉಳಿಯುತ್ತವೆ. ಅದೇ ಹೆಸರನ್ನು ಮತ್ತೆ ನೀಡಿದರೆ ಹೊಸ ಅಂಶ ರಚನೆಯಾಗುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_new_trip_event_description": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a new flight, train, stay, reservation, personal activity, or free-time draft on a saved itinerary day. Optionally prefill its title. The person reviews times and saves in Trip. Does not make a real reservation or save automatically."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजे यात्रा दिन पर उड़ान, ट्रेन, ठहरने, आरक्षण, निजी गतिविधि या खाली समय का मसौदा खोलें। चाहें तो नाम पहले भरें। व्यक्ति समय की समीक्षा करके Trip में सहेजता है। वास्तविक आरक्षण या अपने आप सेव नहीं करता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸದ ದಿನದಲ್ಲಿ ವಿಮಾನ, ರೈಲು, ವಾಸ್ತವ್ಯ, ಕಾಯ್ದಿರಿಸುವಿಕೆ, ವೈಯಕ್ತಿಕ ಚಟುವಟಿಕೆ ಅಥವಾ ಬಿಡುವಿನ ಸಮಯದ ಕರಡು ತೆರೆಯಿರಿ. ಐಚ್ಛಿಕವಾಗಿ ಶೀರ್ಷಿಕೆ ತುಂಬಿಸಿ. ಬಳಕೆದಾರರು ಸಮಯ ಪರಿಶೀಲಿಸಿ Trip ನಲ್ಲಿ ಉಳಿಸುತ್ತಾರೆ. ನಿಜವಾದ ಕಾಯ್ದಿರಿಸುವಿಕೆ ಅಥವಾ ಸ್ವಯಂ ಉಳಿಸುವಿಕೆ ಮಾಡುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_parameter_checklist_preset": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The built-in packing list: travel essentials, city break, beach days, or outdoors."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "तैयार पैकिंग सूची: यात्रा की ज़रूरी चीज़ें, शहर की छुट्टी, समुद्र तट या बाहर घूमना।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಿದ್ಧ ಪ್ಯಾಕಿಂಗ್ ಪಟ್ಟಿ: ಪ್ರವಾಸದ ಅಗತ್ಯಗಳು, ನಗರ ವಿರಾಮ, ಕಡಲತೀರದ ದಿನಗಳು ಅಥವಾ ಹೊರಾಂಗಣ."
+          }
+        }
+      }
+    },
+    "intent_parameter_checklist_new_title": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The replacement title, 1 to 80 characters on one line."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "नया नाम, एक पंक्ति में 1 से 80 अक्षर।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಹೊಸ ಶೀರ್ಷಿಕೆ, ಒಂದೇ ಸಾಲಿನಲ್ಲಿ 1 ರಿಂದ 80 ಅಕ್ಷರಗಳು."
+          }
+        }
+      }
+    },
+    "intent_parameter_new_event_kind": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the kind of saved booking or personal activity to prepare."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "तैयार करने के लिए सहेजी बुकिंग या निजी गतिविधि का प्रकार चुनें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಿದ್ಧಪಡಿಸಬೇಕಾದ ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಅಥವಾ ವೈಯಕ್ತಿಕ ಚಟುವಟಿಕೆಯ ವಿಧ ಆಯ್ಕೆಮಾಡಿ."
+          }
+        }
+      }
+    },
+    "intent_parameter_new_event_title": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An optional title up to 80 characters. Leave empty to name the draft in Trip."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "80 अक्षरों तक का वैकल्पिक नाम। Trip में मसौदे का नाम देने के लिए खाली छोड़ें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "80 ಅಕ್ಷರಗಳವರೆಗಿನ ಐಚ್ಛಿಕ ಶೀರ್ಷಿಕೆ. Trip ನಲ್ಲಿ ಕರಡು ಹೆಸರಿಸಲು ಖಾಲಿ ಬಿಡಿ."
+          }
+        }
+      }
+    },
+    "Add ${preset} to ${trip}": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add ${preset} to ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} में ${preset} जोड़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ಗೆ ${preset} ಸೇರಿಸಿ"
+          }
+        }
+      }
+    },
+    "Rename ${item} to ${title}": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename ${item} to ${title}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${item} का नाम ${title} करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${item} ಹೆಸರನ್ನು ${title} ಎಂದು ಬದಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "Prepare ${kind} for day ${day} of ${trip}": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepare ${kind} for day ${day} of ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} के दिन ${day} के लिए ${kind} तैयार करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ನ ${day} ದಿನಕ್ಕಾಗಿ ${kind} ಸಿದ್ಧಪಡಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_new_event_title_invalid": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.\n@symbol newEventTitleInvalid\n@group Siri\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a single-line booking or activity title of up to 80 characters."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "बुकिंग या गतिविधि के लिए एक पंक्ति में 80 अक्षरों तक का नाम दें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಬುಕಿಂಗ್ ಅಥವಾ ಚಟುವಟಿಕೆಗೆ ಒಂದೇ ಸಾಲಿನಲ್ಲಿ 80 ಅಕ್ಷರಗಳವರೆಗಿನ ಶೀರ್ಷಿಕೆ ಬಳಸಿ."
+          }
+        }
+      }
+    },
+    "intent_new_event_opening_review": {
+      "comment": "Siri preparation action. A new booking draft needs explicit in-app review and saving.\n@symbol newEventOpeningReview\n@group Siri\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening a draft in Trip. Review the details and save when ready."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip में मसौदा खोल रहे हैं। विवरण की समीक्षा करें और तैयार होने पर सहेजें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip ನಲ್ಲಿ ಕರಡು ತೆರೆಯಲಾಗುತ್ತಿದೆ. ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಸಿದ್ಧವಾದಾಗ ಉಳಿಸಿ."
+          }
+        }
+      }
+    },
     "Edit ${detail}": {
       "comment": "Siri navigation and review. Opening an editor does not save changes or export data.",
       "extractionState": "manual",
@@ -200,19 +608,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open an existing day’s schedule editor, planning preview, weather review, or place picker. Changes and new places require review and saving in Trip."
+            "value": "Open an existing day’s map, schedule editor, planning preview, weather review, or place picker. Changes and new places require review and saving in Trip."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "मौजूदा दिन का समय संपादक, योजना पूर्वावलोकन, मौसम समीक्षा या स्थान चयन खोलें। बदलाव और नए स्थान Trip में समीक्षा के बाद सहेजे जाते हैं।"
+            "value": "मौजूदा दिन का मानचित्र, समय संपादक, योजना पूर्वावलोकन, मौसम समीक्षा या स्थान चयन खोलें। बदलाव और नए स्थान Trip में समीक्षा के बाद सहेजे जाते हैं।"
           }
         },
         "kn": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ಈಗಿರುವ ದಿನದ ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಕ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಪರಿಶೀಲನೆ ಅಥವಾ ಸ್ಥಳ ಆಯ್ಕೆ ತೆರೆಯಿರಿ. ಬದಲಾವಣೆಗಳು ಮತ್ತು ಹೊಸ ಸ್ಥಳಗಳನ್ನು Trip ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ ಉಳಿಸಬೇಕು."
+            "value": "ಈಗಿರುವ ದಿನದ ನಕ್ಷೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಕ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಪರಿಶೀಲನೆ ಅಥವಾ ಸ್ಥಳ ಆಯ್ಕೆ ತೆರೆಯಿರಿ. ಬದಲಾವಣೆಗಳು ಮತ್ತು ಹೊಸ ಸ್ಥಳಗಳನ್ನು Trip ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ ಉಳಿಸಬೇಕು."
           }
         }
       }
@@ -320,19 +728,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choose schedule editing, planning preview, weather, or adding places for the specified itinerary day."
+            "value": "Choose the map, schedule editing, planning preview, weather, or adding places for the specified itinerary day."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "चुने हुए यात्रा दिन के लिए समय संपादन, योजना पूर्वावलोकन, मौसम या स्थान जोड़ना चुनें।"
+            "value": "चुने हुए यात्रा दिन के लिए मानचित्र, समय संपादन, योजना पूर्वावलोकन, मौसम या स्थान जोड़ना चुनें।"
           }
         },
         "kn": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ನಿರ್ದಿಷ್ಟ ಪ್ರವಾಸದ ದಿನಕ್ಕೆ ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದನೆ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಅಥವಾ ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+            "value": "ನಿರ್ದಿಷ್ಟ ಪ್ರವಾಸದ ದಿನಕ್ಕೆ ನಕ್ಷೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದನೆ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಅಥವಾ ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
           }
         }
       }

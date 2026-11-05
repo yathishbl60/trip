@@ -11,8 +11,8 @@ struct TripCompletionSymbol: View {
             Image(systemName: "circle").foregroundStyle(.secondary)
             if isComplete { checkmark.id(revision) }
         }
-        .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: isComplete)
-        .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: revision)
+        .animation(AppTheme.Motion.selection(reduceMotion: reduceMotion), value: isComplete)
+        .animation(AppTheme.Motion.selection(reduceMotion: reduceMotion), value: revision)
         .accessibilityHidden(true)
     }
 

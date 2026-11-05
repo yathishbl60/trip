@@ -40,8 +40,7 @@ struct TripEditView: View {
     }
 
     private func errorMessage(_ error: String) -> some View {
-        Label(error, systemImage: "exclamationmark.triangle")
-            .foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+        TripWarningLabel(message: error)
     }
 
     private var tripDetails: some View {
@@ -55,7 +54,7 @@ struct TripEditView: View {
                 TripTimeZoneReviewView(draft: draft, controller: controller)
             }
         } footer: {
-            if let message = draft.validationMessage { Text(message).foregroundStyle(.red) }
+            if let message = draft.validationMessage { TripWarningLabel(message: message) }
         }
     }
 

@@ -3,13 +3,14 @@ import SwiftUI
 struct TripSymbolTile: View {
     let symbol: String
     var color: Color = AppTheme.accent
+    @ScaledMetric(relativeTo: .title3) private var size = 44.0
 
     var body: some View {
         Image(systemName: symbol)
             .font(.title3.weight(.medium))
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(color)
-            .frame(width: 44, height: 44)
+            .frame(width: size, height: size)
             .background(color.opacity(0.12), in: .rect(cornerRadius: 12))
             .accessibilityHidden(true)
     }
@@ -24,4 +25,7 @@ struct TripSymbolTile: View {
 }
 #Preview("Navigation symbols · dark", traits: .sizeThatFitsLayout) {
     TripSymbolTile(symbol: "square.stack").padding().preferredColorScheme(.dark)
+}
+#Preview("Navigation symbols · accessibility", traits: .sizeThatFitsLayout) {
+    TripSymbolTile(symbol: "checklist").padding().dynamicTypeSize(.accessibility5)
 }

@@ -9,13 +9,13 @@ struct PlaceDetailPhotoView: View {
     var body: some View {
         if !gallery.photos.isEmpty {
             Button(action: PlaceGalleryController(model: gallery).present) {
-                HStack(spacing: 12) {
+                HStack(spacing: AppTheme.Spacing.medium) {
                     GalleryEntryPreview(photos: gallery.photos)
                     Text(TripText.gallerySamplePhotos.resource).foregroundStyle(.primary)
-                    Spacer(minLength: 8)
+                    Spacer(minLength: AppTheme.Spacing.small)
                     Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(.tertiary)
                 }
-                .padding(.vertical, 4).contentShape(.rect)
+                .padding(.vertical, AppTheme.Spacing.tight).contentShape(.rect)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(TripText.gallerySamplePhotos.resource)

@@ -6,7 +6,7 @@ import TripDomain
 extension AppRuntime {
     static func addChecklistItem(_ title: String, tripID: UUID) async throws -> SavedTripChecklistEntity {
         guard let title = TripChecklistEditing.title(title) else { throw TripChecklistIntentError.invalidTitle }
-        let library = try await library()
+        let library = try await editableChecklistLibrary()
         guard let plan = library.trip(tripID) else { throw TripIntentError.missingTrip }
         let key = TripChecklistEditing.key(title)
         if let existing = plan.checklist.first(where: { TripChecklistEditing.key($0.title) == key }) {
@@ -22,7 +22,7 @@ extension AppRuntime {
 
     static func setChecklistItem(_ rawValue: String, complete: Bool) async throws -> SavedTripChecklistEntity {
         guard let identity = TripChecklistIdentity(rawValue) else { throw TripChecklistIntentError.missingItem }
-        let library = try await library()
+        let library = try await editableChecklistLibrary()
         guard let plan = library.trip(identity.tripID), identity.resolve(in: plan) != nil else { throw TripChecklistIntentError.missingItem }
         library.update(identity.tripID) { plan in
             guard let index = plan.checklist.firstIndex(where: { $0.id == identity.itemID }),
@@ -34,14 +34,14 @@ extension AppRuntime {
         return try checklistEntity(identity.itemID, tripID: identity.tripID, library: library)
     }
 
-    private static func checklistEntity(_ id: UUID, tripID: UUID, library: TripLibraryModel) throws -> SavedTripChecklistEntity {
+    static func checklistEntity(_ id: UUID, tripID: UUID, library: TripLibraryModel) throws -> SavedTripChecklistEntity {
         guard let current = library.trip(tripID), let item = current.checklist.first(where: { $0.id == id }) else {
             throw TripChecklistIntentError.missingItem
         }
         return SavedTripChecklistEntity(item, plan: current)
     }
 
-    private static func saveChecklist(_ library: TripLibraryModel) async throws {
+    static func saveChecklist(_ library: TripLibraryModel) async throws {
         await library.flush()
         guard library.saveError == nil else { throw TripIntentError.saveFailed }
         TripChecklistSnippetIntent.reload()

@@ -5,13 +5,13 @@ struct TripLookupResultView: View {
     let result: TripDetailResult
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
             Label(result.item.title, systemImage: result.item.symbol).font(.headline)
             Text(result.item.timeText).font(.subheadline)
             if !result.item.detail.isEmpty { Text(result.item.detail).font(.subheadline).textSelection(.enabled) }
             Text(result.source).font(.caption).foregroundStyle(.secondary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, AppTheme.Spacing.tight)
         .accessibilityElement(children: .combine)
     }
 }

@@ -8,6 +8,7 @@ import Foundation
 struct DirectionsStepsView: View {
     let controller: DirectionsController
     @Environment(\.dismiss) private var dismiss
+    @ScaledMetric(relativeTo: .subheadline) private var badgeSize = 32.0
 
     var body: some View {
         NavigationStack {
@@ -34,11 +35,11 @@ struct DirectionsStepsView: View {
     }
 
     private func instruction(_ step: DirectionsStep, number: Int) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: DirectionsSpacing.medium) {
             Text(number, format: .number).font(.subheadline.monospacedDigit().weight(.semibold))
-                .frame(minWidth: 32, minHeight: 32).background(.quaternary, in: .circle)
+                .frame(minWidth: badgeSize, minHeight: badgeSize).background(.quaternary, in: .circle)
                 .accessibilityLabel(TripText.stepValue(TripText.number(number)).resource)
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: DirectionsSpacing.tight) {
                 Text(step.instruction).font(.headline)
                 if step.distance > 0 {
                     Text(Measurement(value: step.distance, unit: UnitLength.meters), format: .measurement(width: .abbreviated))
@@ -47,7 +48,7 @@ struct DirectionsStepsView: View {
                 if let notice = step.notice { Text(notice).font(.caption).foregroundStyle(.secondary) }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DirectionsSpacing.tight)
         .accessibilityElement(children: .combine)
     }
 }

@@ -34,7 +34,7 @@ extension AppModel {
     }
 
     func openDetail(_ identity: TripDetailIdentity) {
-        guard openSavedTrip(identity.tripID) else { return }
+        guard validateDetail(identity), openSavedTrip(identity.tripID, resetDestination: false) else { return }
         trips.openLookup(identity.tripID)
         trips.lookup.chooseDetail(identity.itemID)
     }
@@ -48,20 +48,13 @@ extension AppModel {
         trips.generatePlan(id)
     }
 
-    @discardableResult func openSavedTrip(_ id: UUID) -> Bool {
+    @discardableResult func openSavedTrip(_ id: UUID, resetDestination: Bool = true) -> Bool {
         guard allowNavigation() else { return false }
-        guard trips.library.isReady else {
-            navigation.notice = TripIntentError.libraryUnavailable.errorDescription
-            return false
-        }
-        guard trips.library.trip(id) != nil else {
-            navigation.notice = TripIntentError.missingTrip.errorDescription
-            return false
-        }
+        guard navigationPlan(id) != nil else { return false }
         navigation.tab = .trips
         trips.dismissAssistant()
         trips.selectTrip(id)
-        trips.presentation.detailRoute = nil
+        if resetDestination { trips.presentation.detailRoute = nil }
         return true
     }
 }

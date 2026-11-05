@@ -1,0 +1,30 @@
+{
+  "roots": ["trip", "TripWidgets", "Packages/TripKit/Sources/TripRouting"],
+  "exceptions": {
+    "fixed_font": {
+      "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": "Bounded map annotation metadata; the complete place label is exposed to accessibility.",
+      "trip/Features/Explore/Views/Markers/MarkerCaptionView.swift": "MapEngine owns the measured annotation footprint and zoom scaling.",
+      "trip/Features/Explore/Views/Markers/MarkerArtworkView.swift": "Decorative SF Symbol geometry inside a measured annotation.",
+      "trip/Features/Explore/Views/Markers/CategoryBadge.swift": "Decorative SF Symbol scales with its supplied badge diameter."
+    },
+    "raw_spacing": {
+      "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": "Optical three-point spacing in the bounded map rating.",
+      "trip/Features/Explore/Views/Markers/MarkerCaptionView.swift": "Measured map caption geometry.",
+      "trip/Features/Explore/Views/Markers/RatingView.swift": "Optical spacing between the rating glyph and its value."
+    },
+    "raw_inset": {
+      "trip/Features/Explore/Views/Map/MapCanvasView.swift": "Map attribution and native bottom-control clearance, not content padding."
+    },
+    "literal_motion": {
+      "trip/DesignSystem/AppTheme+Motion.swift": "Owns the shared ordinary-control animation recipes.",
+      "trip/Features/Explore/Controllers/Gallery/GalleryPhotoZoomController.swift": "Direct image manipulation and gesture settling; Reduce Motion is supplied by the host.",
+      "trip/Features/Explore/Controllers/Gallery/PlaceGalleryController.swift": "Interruptible gallery paging and dismissal with explicit Reduce Motion input.",
+      "trip/Features/Trips/Models/Map/TripMapModel.swift": "Map fitting has its own camera duration and caller-provided animation policy.",
+      "trip/Features/Trips/Models/Map/TripMapModel+Camera.swift": "Map camera updates use the caller-provided animation policy.",
+      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsPresentationModel.swift": "Independent package owns its presentation animation and observes Reduce Motion."
+    },
+    "literal_color": {
+      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsAppearance.swift": "Host-injectable route callout fill paired with white text; package cannot access app assets."
+    }
+  }
+}

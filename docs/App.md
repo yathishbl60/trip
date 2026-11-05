@@ -56,6 +56,12 @@ retaining search context after dismissal. Export review never performs an export
 Onscreen trip, detail, and checklist identifiers are injected by App composition.
 Features do not construct app-owned entity types.
 
+Repeated section requests preserve the current lookup query and filters. Validate
+day/detail destinations before replacing the visible route, and recheck new-event
+day identity and capacity at delivery. Draft creation stays in the Trips model;
+App only selects the trip and delivers the validated request. Opening an export
+review keeps the current section so Cancel returns to the same context.
+
 This follows Apple's [toolbar guidance](https://developer.apple.com/design/human-interface-guidelines/toolbars)
 on useful titles, restrained controls, and standard Back behavior, and
 [Siri guidance](https://developer.apple.com/design/human-interface-guidelines/siri)

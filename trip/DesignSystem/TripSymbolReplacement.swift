@@ -8,7 +8,7 @@ private struct TripSymbolReplacement<Value: Equatable>: ViewModifier {
     func body(content: Content) -> some View {
         content
             .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace))
-            .animation(reduceMotion ? nil : .smooth(duration: 0.2), value: value)
+            .animation(AppTheme.Motion.feedback(reduceMotion: reduceMotion), value: value)
     }
 }
 
@@ -30,7 +30,7 @@ extension View {
     }.padding()
 }
 
-#Preview("Replacement · Reduce Motion", traits: .sizeThatFitsLayout) {
+#Preview("Replacement · dark, follows system motion setting", traits: .sizeThatFitsLayout) {
     @Previewable @State var selected = false
     Button { selected.toggle() } label: {
         Image(systemName: selected ? "checkmark.circle.fill" : "circle")

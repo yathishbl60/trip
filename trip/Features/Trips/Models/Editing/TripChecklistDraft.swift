@@ -17,5 +17,5 @@ import TripDomain
 
     var normalizedTitle: String { title.trimmingCharacters(in: .whitespacesAndNewlines) }
     var navigationTitle: String { itemID == nil ? TripText.addToChecklist.text : TripText.editChecklistItem.text }
-    var canSave: Bool { (1...TripLimits.titleCharacters).contains(normalizedTitle.count) }
+    var canSave: Bool { TripChecklistEditing.title(title) != nil }
 }

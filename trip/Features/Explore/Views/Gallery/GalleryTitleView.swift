@@ -6,7 +6,7 @@ struct GalleryTitleView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: AppTheme.Spacing.tight) {
             Text(TripText.gallerySamplePhotos.resource).font(.headline)
             if !dynamicTypeSize.isAccessibilitySize {
                 Text(placeName).font(.caption).foregroundStyle(.secondary).lineLimit(1)

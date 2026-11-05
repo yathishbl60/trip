@@ -8,7 +8,7 @@ struct TripDayBriefingView: View {
     var includeWeather = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.medium) {
             Text(briefing.plan.title).font(.headline)
             Text(briefing.heading).font(.subheadline).foregroundStyle(.secondary)
             if briefing.items.isEmpty { Text(TripText.nothingPlannedForThisDate.resource) }
@@ -23,7 +23,7 @@ struct TripDayBriefingView: View {
     @ViewBuilder private func detailLink(_ item: TripSurfaceItem) -> some View {
         if let url = TripSystemData.detailURL(tripID: briefing.plan.id, itemID: item.id) {
             Link(destination: url) {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
                     Label(item.title, systemImage: item.symbol).font(.subheadline.weight(.semibold))
                     Text(item.timeText).font(.caption).foregroundStyle(.secondary)
                 }

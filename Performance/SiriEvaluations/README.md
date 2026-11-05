@@ -10,12 +10,12 @@ and test bundle with `build-for-testing`, an explicit iPhoneOS SDK, and signing
 disabled. It does not install an app, select a physical device, or execute tests.
 This Debug build passed with Xcode 27.3 beta 1 on 2026-11-05. Xcode places the
 hosted bundle at `trip.app/PlugIns/TripSiriEvaluations.xctest` in the build products.
-This is compilation/link evidence only; the eight scenario results are unverified.
+This is compilation/link evidence only; the ten Siri scenario results are unverified.
 
-The target also compiles five `TripWayfindingTests` using local preview services:
-stale Back binding protection, exact-day map handoff, unsaved-draft preservation,
-missing-trip recovery, and canonical saved-booking selection. These model checks
-do not call Siri or need a staged device fixture. They have not been executed.
+The target also compiles 50 local-model cases across seven suites, including
+parameterized sections, day tools, event kinds, presets, and invalid inputs.
+These checks use local services, do not call Siri, and need no device fixture.
+They have not been executed.
 They compile only with the Debug app module available; the standalone API
 type-check command below does not check their app-owned dependencies.
 
@@ -23,22 +23,39 @@ type-check command below does not check their app-owned dependencies.
 against the installed iPhoneOS SDK. It neither links a test bundle nor runs Siri.
 The script honors `DEVELOPER_DIR` and keeps its compiler cache under `.build`.
 
-## Eight scenarios
+## Ten Siri scenarios
 
 | Group | Observable requirement |
 | --- | --- |
 | Navigation, two scenarios | Open the requested Trips or Explore surface |
+| Saved navigation, two scenarios | Open Today or the day-two map using the exact saved trip, enum value, and day; do not start Maps directions |
 | Saved reads, two scenarios | Read itinerary/checklist for the exact staged UUID and find that entity |
 | On-screen context, one scenario | Resolve “this trip” to the visible staged UUID |
 | App skills, three scenarios | Load each shipped skill for its intended planning, preparation, or booking-review task |
 
-Each scenario checks for nine forbidden mutation/tracking intents. These checks
+Each scenario checks for twelve forbidden mutation/tracking/draft intents. These checks
 observe behavior; they do not prevent an incorrectly selected action from running.
 Use dedicated fixture data for actual evaluation. Skill loading and
 intent correctness have separate metrics. Only facets with expectations are gated;
 an ignored or missing metric is never treated as a passing result. These scenarios
 do not prove timing-write correctness, exact visit advancement, Maps handoff, or
 native sharing. The deterministic harness covers timing values and privacy.
+
+## Local-model coverage (compiled, not executed)
+
+| Suite | Cases | Scope |
+| --- | ---: | --- |
+| Wayfinding | 5 | Native Back state, day identity, drafts, missing trips, exact booking selection |
+| Sections | 11 | All sections, retained search filters, deleted targets, export review context |
+| Preparation | 11 | Every preset, atomic capacity checks, rename identity/completion, invalid titles, shared UI behavior |
+| Booking drafts | 10 | Every event kind, cancellation, stale day/capacity checks, wrong trip, invalid title, draft protection |
+| Day tools | 6 | Every day tool and timezone-review recovery |
+| Saved data | 4 | Private-note exclusion, combined filters, entity identity, idempotent timing edits |
+| Persistence | 3 | Save failure/retry, publication timing, obsolete loads, repeated flushes |
+
+These checks do not replace accessibility, animation, gesture, or navigation
+presentation review on a running app. The Siri conversation tests and local-model
+tests are distinct suites in the existing target; no additional target is needed.
 
 ## Device preparation and fixture
 

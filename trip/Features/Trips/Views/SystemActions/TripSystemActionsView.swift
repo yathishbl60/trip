@@ -31,7 +31,7 @@ struct TripSystemActionsView: View {
     @ViewBuilder private var status: some View {
         if model.isWorking { Section { ProgressView(model.actionTitle) } }
         if let error = model.presentation?.error {
-            Section { Label(error, systemImage: "exclamationmark.triangle").foregroundStyle(.red) }
+            Section { TripWarningLabel(message: error) }
         }
         if let recovery = model.presentation?.recovery { Section { Text(recovery) } }
         if let result = model.presentation?.result {

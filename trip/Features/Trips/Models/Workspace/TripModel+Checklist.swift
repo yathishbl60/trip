@@ -13,7 +13,7 @@ extension TripModel {
         let saved = library.update(draft.tripID) { trip in
             if let id = draft.itemID {
                 guard let index = trip.checklist.firstIndex(where: { $0.id == id }) else { return false }
-                trip.checklist[index].title = draft.normalizedTitle
+                TripChecklistEditing.rename(trip.checklist[index].id, to: draft.normalizedTitle, in: &trip)
             } else {
                 guard trip.checklist.count < TripLimits.checklistItems else { return false }
                 trip.checklist.append(TripChecklistItem(title: draft.normalizedTitle))
@@ -38,14 +38,12 @@ extension TripModel {
     }
 
     func addChecklistTemplate(_ template: TripChecklistTemplate, tripID: UUID) {
+        var count: Int?
         let added = library.update(tripID) { trip in
-            let titles = Set(trip.checklist.map { $0.title.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current) })
-            let missing = template.items.filter { !titles.contains($0.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)) }
-            let space = max(0, TripLimits.checklistItems - trip.checklist.count)
-            guard !missing.isEmpty, space > 0 else { return false }
-            trip.checklist += missing.prefix(space).map { TripChecklistItem(title: $0) }
-            return true
+            count = TripChecklistEditing.appendTemplate(template, to: &trip)
+            return (count ?? 0) > 0
         }
+        if count == nil { feedback.show(TripText.thisChecklistIsFullRemoveAnItemBeforeAdding.text); return }
         feedback.show(added ? TripText.addedToYourChecklist.text : TripText.theseItemsAreAlreadyAddedOrYourChecklistIs.text)
     }
 

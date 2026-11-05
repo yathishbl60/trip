@@ -10,7 +10,7 @@ struct DirectionsSummaryView: View {
     let controller: DirectionsController
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.medium) {
             DirectionsEstimateView(estimate: estimate, routeLabel: route.map { controller.model.label(for: $0) },
                                    hasTolls: route?.hasTolls == true, isTransit: route == nil && controller.model.mode == .transit)
                 .animation(controller.model.presentation.animation, value: estimate.travelTime)
@@ -18,7 +18,7 @@ struct DirectionsSummaryView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 8)
+        .padding(.vertical, DirectionsSpacing.small)
         .fixedSize(horizontal: false, vertical: true)
     }
 

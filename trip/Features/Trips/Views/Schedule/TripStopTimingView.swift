@@ -28,7 +28,7 @@ struct TripStopTimingView: View {
             if let timing = draft.preview(in: controller.model.library.trip(draft.tripID)) {
                 Section(TripText.plannedVisit.resource) { TripStopTimeView(timing: timing, showsDetails: true) }
             }
-            if let error = draft.error { Text(error).foregroundStyle(.red) }
+            if let error = draft.error { TripWarningLabel(message: error) }
         }
     }
 

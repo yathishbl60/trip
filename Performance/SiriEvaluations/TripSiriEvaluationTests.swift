@@ -4,6 +4,10 @@ import Testing
 @Suite("Trip Siri", .serialized)
 struct TripSiriEvaluationTests {
     static let navigation = TripSiriEvaluation(name: "Trip navigation", dataset: TripSiriReadScenarios.navigation)
+    static let savedNavigation = TripSiriEvaluation(name: "Saved trip wayfinding", dataset: SiriScenarioLoader {
+        TripSiriNavigationScenarios.today
+        TripSiriNavigationScenarios.dayMap
+    }, requiresFixture: true)
     static let savedData = TripSiriEvaluation(name: "Saved trip reads", dataset: SiriScenarioLoader {
         TripSiriReadScenarios.itinerary
         TripSiriReadScenarios.checklist
@@ -20,6 +24,13 @@ struct TripSiriEvaluationTests {
     @Test("Navigation uses the requested surface", .evaluates(navigation))
     func navigationTools() {
         #expect(EvaluationContext.current.result.aggregateValue(.mean(of: .intentsAllPass)) == 1.0)
+    }
+
+    @Test("Saved navigation uses the exact trip, section and day", .evaluates(savedNavigation))
+    func savedNavigationTools() {
+        let result = EvaluationContext.current.result
+        #expect(result.aggregateValue(.mean(of: .intentsAllPass)) == 1.0)
+        #expect(result.aggregateValue(.mean(of: .foundEntitiesAllPass)) == 1.0)
     }
 
     @Test("Read-only requests resolve the exact trip", .evaluates(savedData))

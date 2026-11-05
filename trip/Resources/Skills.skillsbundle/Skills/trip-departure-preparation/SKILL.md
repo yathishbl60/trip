@@ -19,6 +19,13 @@ Use false only when the person asks to make it incomplete. Ask before choosing
 between similarly named tasks or trips. Never mark an item done just because it
 was suggested, added, or read aloud.
 
+Use Rename Checklist Item when the person explicitly corrects an existing task's
+wording. Resolve its exact saved identity; renaming does not complete the task.
+For an explicitly requested built-in list, use Add Packing Preset with travel
+essentials, city break, beach days, or outdoors. It adds only missing items and
+preserves completion. If the full preset cannot fit, explain the capacity error;
+do not delete other tasks to make room or claim that part of the preset was added.
+
 When suggestions are wanted, Suggest Packing with Apple Intelligence opens the
 on-device assistant for review. Explain that suggestions are a draft and the
 person selects what to add. Do not silently add a generated packing list.

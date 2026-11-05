@@ -27,4 +27,17 @@ public nonisolated enum TripChecklistEditing {
         plan.checklist += additions.map(TripChecklistItem.init)
         return additions.count
     }
+
+    @discardableResult public static func rename(_ itemID: UUID, to text: String, in plan: inout TripPlan) -> Bool {
+        guard let value = title(text), let index = plan.checklist.firstIndex(where: { $0.id == itemID }),
+              plan.checklist[index].title != value else { return false }
+        plan.checklist[index].title = value
+        return true
+    }
+
+    public static func appendTemplate(_ template: TripChecklistTemplate, to plan: inout TripPlan) -> Int? {
+        let additions = missing(template.items, from: plan.checklist)
+        guard additions.count <= max(0, TripLimits.checklistItems - plan.checklist.count) else { return nil }
+        return append(additions, to: &plan)
+    }
 }

@@ -9,7 +9,7 @@ struct TripLibraryArtworkView: View {
     @ScaledMetric(relativeTo: .body) private var size = 64.0
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: AppTheme.Spacing.compact) {
             Text(date, format: Date.FormatStyle(timeZone: timeZone).month(.abbreviated)).font(.caption.weight(.semibold))
             Text(date, format: Date.FormatStyle(timeZone: timeZone).day()).font(.title2.bold().monospacedDigit())
         }

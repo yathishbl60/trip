@@ -12,9 +12,7 @@ struct TripScheduleSummaryView: View {
             if showsTarget { Text(timeline.targetText).font(.footnote).foregroundStyle(.secondary) }
             if showsTarget { TripTimeBudgetView(timeline: timeline) }
             ForEach(timeline.warnings, id: \.self) { warning in
-                Label(warning, systemImage: "exclamationmark.triangle")
-                    .font(.footnote).foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
+                TripWarningLabel(message: warning).font(.footnote)
             }
         }
         .accessibilityElement(children: .combine)

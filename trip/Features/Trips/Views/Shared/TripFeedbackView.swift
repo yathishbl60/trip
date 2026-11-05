@@ -8,14 +8,14 @@ struct TripFeedbackView: View {
         Group {
             if let message = model.message {
                 Label { Text(message) } icon: { confirmationSymbol }
-                    .font(.caption.weight(.medium))
-                    .padding(.horizontal, 12).padding(.vertical, 8)
-                    .tripGlassSurface().padding(.horizontal, 24)
+                    .font(.subheadline.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, AppTheme.Spacing.medium).padding(.vertical, AppTheme.Spacing.small)
+                    .tripGlassSurface().padding(.horizontal, AppTheme.Spacing.edge)
                     .transition(.opacity)
                     .accessibilityAddTraits(.updatesFrequently)
             }
         }
-        .animation(reduceMotion ? nil : .smooth(duration: 0.2), value: model.message)
+        .animation(AppTheme.Motion.feedback(reduceMotion: reduceMotion), value: model.message)
         .sensoryFeedback(.success, trigger: model.revision)
         .allowsHitTesting(false)
     }

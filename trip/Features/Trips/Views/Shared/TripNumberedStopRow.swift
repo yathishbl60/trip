@@ -7,6 +7,7 @@ struct TripNumberedStopRow: View {
     let number: Int
     var isSelected = false
     var showsNumber = true
+    @ScaledMetric(relativeTo: .subheadline) private var badgeSize = 32.0
 
     var body: some View {
         HStack(alignment: .top, spacing: AppTheme.Spacing.medium) {
@@ -23,7 +24,7 @@ struct TripNumberedStopRow: View {
     private var numberBadge: some View {
         Text(number, format: .number).font(.subheadline.monospacedDigit().weight(.semibold))
             .foregroundStyle(isSelected ? AppTheme.onAccentFill : AppTheme.accent)
-            .frame(minWidth: 32, minHeight: 32)
+            .frame(minWidth: badgeSize, minHeight: badgeSize)
             .background(isSelected ? AppTheme.accentFill : AppTheme.accent.opacity(0.12), in: .circle)
     }
 

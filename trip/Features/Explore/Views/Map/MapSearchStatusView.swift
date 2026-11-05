@@ -48,7 +48,7 @@ struct MapSearchStatusView: View {
             }
         }
         .font(.caption)
-        .padding(.horizontal, AppTheme.Spacing.medium).padding(.vertical, 6)
+        .padding(.horizontal, AppTheme.Spacing.medium).padding(.vertical, AppTheme.Spacing.tight)
         .tripGlassSurface()
         .frame(maxWidth: 420)
         .padding(.horizontal, AppTheme.spacing)

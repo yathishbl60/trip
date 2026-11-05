@@ -6,7 +6,7 @@ struct TripWidgetGlanceView: View {
     let entry: TripWidgetEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.small) {
             Label(entry.title, systemImage: "suitcase.rolling")
                 .font(.headline).foregroundStyle(.secondary).lineLimit(1)
             Text(entry.stopTitle).font(.title2.bold()).lineLimit(2)

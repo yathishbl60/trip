@@ -8,7 +8,7 @@ struct DirectionsResultsView: View {
     let controller: DirectionsController
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DirectionsSpacing.medium) {
             if controller.model.estimate != nil {
                 results.disabled(controller.model.status != .ready)
                 if controller.model.isLoading { ProgressView(TripText.updatingRoutes.resource).font(.subheadline) }
@@ -26,12 +26,12 @@ struct DirectionsResultsView: View {
     }
 
     private var chooseOrigin: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.medium) {
             Text(TripText.whereAreYouStarting.resource).font(.headline)
             Button(TripText.chooseAPlace.resource, systemImage: "magnifyingglass", action: controller.changeOrigin)
                 .buttonStyle(.bordered)
         }
-        .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, DirectionsSpacing.small)
     }
 
     @ViewBuilder private var results: some View {
@@ -43,14 +43,14 @@ struct DirectionsResultsView: View {
     }
 
     private func unavailable(_ message: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.medium) {
             Label(TripText.directionsUnavailable.resource, systemImage: "map").font(.headline)
             Text(message).font(.subheadline).foregroundStyle(.secondary)
             Button(TripText.tryAgain.resource, action: controller.retry).buttonStyle(.bordered)
             DirectionsMapsButton(controller: controller)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 8)
+        .padding(.vertical, DirectionsSpacing.small)
     }
 }
 

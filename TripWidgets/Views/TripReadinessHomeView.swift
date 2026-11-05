@@ -6,7 +6,7 @@ struct TripReadinessHomeView: View {
     let presentation: TripReadinessPresentation
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.small) {
             Label(presentation.countdown, systemImage: "suitcase.rolling").font(.caption.weight(.semibold))
                 .foregroundStyle(WidgetTheme.accent).lineLimit(2).widgetAccentable()
             Text(presentation.entry.title).font(.headline).lineLimit(2)

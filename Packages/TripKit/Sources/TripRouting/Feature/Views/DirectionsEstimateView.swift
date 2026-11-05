@@ -11,7 +11,7 @@ struct DirectionsEstimateView: View {
     var isTransit = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.tight) {
             Text(estimate.durationText).font(.title.bold()).contentTransition(.numericText())
             Text(TripText.valueEtaValue(estimate.arrivalText, estimate.distanceText).resource)
                 .font(.subheadline).foregroundStyle(.secondary)

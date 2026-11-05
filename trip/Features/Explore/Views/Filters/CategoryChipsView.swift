@@ -6,31 +6,37 @@ struct CategoryChipsView: View {
     let controller: FilterController
     @Namespace private var namespace
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @ScaledMetric(relativeTo: .subheadline) private var columnWidth: CGFloat = 145
 
     var body: some View {
         container
-            .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: controller.model.filters.selected)
+            .animation(AppTheme.Motion.selection(reduceMotion: reduceMotion), value: controller.model.filters.selected)
     }
 
     @ViewBuilder private var container: some View {
         #if os(visionOS)
         controls
         #else
-        GlassEffectContainer(spacing: 12) { controls }
+        GlassEffectContainer(spacing: AppTheme.Spacing.medium) { controls }
         #endif
     }
 
     private var controls: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: AppTheme.Spacing.medium) {
             CategoryFilterChip(title: TripText.allCategories.text,
                                symbol: controller.model.filters.allSelected ? "checkmark" : "square.grid.2x2",
                                id: "all", namespace: namespace,
                                isSelected: controller.model.filters.allSelected, action: controller.clear)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: columnWidth), spacing: 12)], spacing: 12) {
+            LazyVGrid(columns: columns, spacing: AppTheme.Spacing.medium) {
                 ForEach(controller.model.filters.rows) { row in chip(row) }
             }
         }
+    }
+
+    private var columns: [GridItem] {
+        [GridItem(typeSize.isAccessibilitySize ? .flexible() : .adaptive(minimum: columnWidth),
+                  spacing: AppTheme.Spacing.medium)]
     }
 
     private func chip(_ row: CategoryRow) -> some View {
@@ -55,5 +61,9 @@ struct CategoryChipsView: View {
 #Preview("Category choices · compact, large text") {
     CategoryChipsView(controller: FilterController(model: PreviewFixtures.explore()))
         .padding().frame(width: 320).dynamicTypeSize(.xxxLarge)
+}
+#Preview("Category choices · narrow, accessibility") {
+    CategoryChipsView(controller: FilterController(model: PreviewFixtures.explore()))
+        .padding().frame(width: 320).dynamicTypeSize(.accessibility5).preferredColorScheme(.dark)
 }
 #endif

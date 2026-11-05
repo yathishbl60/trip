@@ -8,7 +8,7 @@ struct DirectionsRouteLabel: View {
     var appearance = DirectionsAppearance()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.tight) {
             Text(route.estimate.durationText).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
             Text(label).font(.subheadline).lineLimit(1).minimumScaleFactor(0.8)
         }

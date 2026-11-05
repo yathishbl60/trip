@@ -12,7 +12,7 @@ struct TripDurationControl: View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.small) {
             Text(label)
                 .contentTransition(reduceMotion ? .identity : .numericText())
-                .animation(reduceMotion ? nil : .smooth(duration: 0.18), value: minutes)
+                .animation(AppTheme.Motion.feedback(reduceMotion: reduceMotion), value: minutes)
             slider
                 .accessibilityLabel(label)
                 .accessibilityValue(TripScheduleText.duration(Int(minutes)))

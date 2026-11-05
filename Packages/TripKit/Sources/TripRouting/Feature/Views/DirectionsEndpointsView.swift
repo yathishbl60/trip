@@ -32,14 +32,14 @@ struct DirectionsEndpointsView: View {
     }
 
     private func row(_ title: String, symbol: String, color: Color, editable: Bool = false) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DirectionsSpacing.medium) {
             Image(systemName: symbol).font(.body.weight(.semibold)).foregroundStyle(.primary)
                 .frame(width: 36, height: 36).background(color.opacity(0.14), in: .circle)
             Text(title).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             if editable { Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(.tertiary) }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DirectionsSpacing.tight)
         .frame(minHeight: controlTarget)
         .contentShape(.rect)
     }

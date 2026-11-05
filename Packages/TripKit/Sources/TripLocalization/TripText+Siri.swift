@@ -2,6 +2,14 @@
 import Foundation
 
 public nonisolated extension TripText {
+    static var newEventOpeningReview: TripText {
+        TripText("intent_new_event_opening_review")
+    }
+
+    static var newEventTitleInvalid: TripText {
+        TripText("intent_new_event_title_invalid")
+    }
+
     static var siriTimingClockNeedsReview: TripText {
         TripText("siri_timing_clock_needs_review")
     }

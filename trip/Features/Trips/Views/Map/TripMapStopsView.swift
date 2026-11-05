@@ -39,7 +39,7 @@ struct TripMapStopsView: View {
 
     private func revealSelection(using proxy: ScrollViewProxy) {
         guard let id = map.model.selectedStopID else { return }
-        withAnimation(reduceMotion ? nil : .smooth(duration: 0.2)) { proxy.scrollTo(id, anchor: .center) }
+        withAnimation(AppTheme.Motion.selection(reduceMotion: reduceMotion)) { proxy.scrollTo(id, anchor: .center) }
     }
 }
 

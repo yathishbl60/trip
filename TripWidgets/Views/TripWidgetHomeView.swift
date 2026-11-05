@@ -9,7 +9,7 @@ struct TripWidgetHomeView: View {
     let expanded: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.tight) {
             Label(entry.title, systemImage: "suitcase.rolling")
                 .font(.caption.weight(.semibold)).foregroundStyle(.secondary).lineLimit(1)
             Label(entry.stopTitle, systemImage: entry.item?.symbol ?? "suitcase.rolling")
@@ -24,7 +24,7 @@ struct TripWidgetHomeView: View {
 
     private var progress: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: WidgetTheme.Spacing.tight) {
                 ProgressView(value: Double(entry.visited), total: Double(max(entry.total, 1)))
                     .accessibilityHidden(true)
                 Text(entry.progress).font(.caption2).foregroundStyle(.secondary)
@@ -48,7 +48,7 @@ struct TripWidgetHomeView: View {
     }
 
     private var plannedPlaces: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: WidgetTheme.Spacing.tight) {
             ForEach(entry.remaining) { item in
                 if let plan = entry.plan, let url = TripSystemData.detailURL(tripID: plan.id, itemID: item.id) {
                     Link(destination: url) {

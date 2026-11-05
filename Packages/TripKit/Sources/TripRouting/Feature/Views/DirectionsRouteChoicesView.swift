@@ -9,7 +9,7 @@ struct DirectionsRouteChoicesView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DirectionsSpacing.medium) {
             routePicker
             if let route = controller.model.selectedRoute {
                 DirectionsSummaryView(estimate: route.estimate, route: route, controller: controller)

@@ -10,7 +10,7 @@ struct TripPersistenceStatusView: View {
                 Label(TripText.valueTryAgain(error).resource, systemImage: "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90")
                     .font(.caption).multilineTextAlignment(.leading)
             }
-            .buttonStyle(TripButtonStyles.regular).padding(12)
+            .buttonStyle(TripButtonStyles.regular).padding(AppTheme.Spacing.medium)
         }
     }
 }

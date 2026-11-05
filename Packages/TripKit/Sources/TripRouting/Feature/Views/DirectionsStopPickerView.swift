@@ -9,6 +9,8 @@ struct DirectionsStopPickerView: View {
     let controller: DirectionsController
     let session: DirectionsPlacePicker
     var showsCancel = false
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .body) private var symbolSize = 36.0
 
     var body: some View {
         List { searchRows }
@@ -42,7 +44,6 @@ struct DirectionsStopPickerView: View {
             Button { controller.useMyLocation(session: session) } label: {
                 Label(TripText.myLocation.resource, systemImage: "location.fill")
             }
-            .tint(.primary)
         }
         if controller.model.stopSearch.isLoading { ProgressView(TripText.searching.resource) }
         DirectionsSearchStatusView(controller: controller, session: session)
@@ -52,16 +53,18 @@ struct DirectionsStopPickerView: View {
     }
 
     private func placeLabel(_ place: Place) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: DirectionsSpacing.medium) {
             Image(systemName: place.category.symbol).foregroundStyle(.primary)
-                .frame(width: 36, height: 36)
+                .frame(width: symbolSize, height: symbolSize)
                 .background(controller.model.environment.placeTint(place).opacity(0.14), in: .circle)
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DirectionsSpacing.tight) {
                 Text(place.name).font(.headline)
-                if let address = place.address { Text(address).font(.subheadline).foregroundStyle(.secondary).lineLimit(2) }
+                if let address = place.address {
+                    Text(address).font(.subheadline).foregroundStyle(.secondary).lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+                }
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, DirectionsSpacing.tight)
     }
 }
 
@@ -84,14 +87,14 @@ struct DirectionsStopPickerView: View {
         }
     }
 }
-#Preview("Starting point · no location permission") {
+#Preview("Starting point · no permission, accessibility") {
     let model = DirectionsPreviewFixtures.withoutLocation()
     model.changeOrigin()
     return NavigationStack {
         if let session = model.presentation.placePicker {
             DirectionsStopPickerView(controller: DirectionsController(model: model), session: session)
         }
-    }
+    }.dynamicTypeSize(.accessibility3).preferredColorScheme(.dark)
 }
 #endif
 #endif
