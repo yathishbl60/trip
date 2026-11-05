@@ -15,6 +15,7 @@ events. **Undo Last Trip Visit** is available in the Shortcuts editor for recove
 
 ## Contents
 
+- [Siri AI preview and contextual sharing](#siri-ai-preview-and-contextual-sharing)
 - [Native travel services](#native-travel-services)
 - [Next item and direct actions](#next-item-and-direct-actions)
 - [Find a place from another app](#find-a-place-from-another-app)
@@ -24,6 +25,23 @@ events. **Undo Last Trip Visit** is available in the Shortcuts editor for recove
 - [Ownership and signing](#ownership-and-signing)
 - [Verification](#verification)
 - [Apple references](#apple-references)
+
+## Siri AI preview and contextual sharing
+
+Trip now targets 27.3 and exposes 20 custom Siri tools, including exact saved-place
+timing edits, visit completion, and Apple Maps directions. Three compiled app skills
+coordinate day planning, departure preparation, and booking review. Existing
+Shortcuts identities and phrases are preserved; configuration, snippet internals,
+and redundant saved-record search actions do not become additional tools.
+
+Long-press a result in **Ask my trip** for a native preview and Share action.
+The share sheet can hand saved detail text to Messages or another chosen app;
+Trip never sends it automatically. Visible result rows and next-step snippets
+provide exact entity context to Siri. Private notes remain excluded.
+
+[Siri preview adoption](docs/SiriPreview.md) records the tool inventory, canonical
+mutation rules, metadata results, preview distribution limits, and remaining
+device/evaluation verification. Successful compilation does not prove Siri routing.
 
 ## Native travel services
 

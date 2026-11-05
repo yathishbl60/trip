@@ -5,10 +5,11 @@ import TripDomain
 struct SavedTripChecklistEntity: AppEntity, Sendable {
     static var typeDisplayRepresentation: TypeDisplayRepresentation { TypeDisplayRepresentation(name: "trip_checklist_item") }
     static var defaultQuery: SavedTripChecklistQuery { SavedTripChecklistQuery() }
+    static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     let id: String
-    @Property(title: "title") var title: String
-    @Property(title: "trip") var tripName: String
-    @Property(title: "complete") var isComplete: Bool
+    @Property(title: "title", description: "intent_property_checklist_title") var title: String
+    @Property(title: "trip", description: "intent_property_detail_trip") var tripName: String
+    @Property(title: "complete", description: "intent_property_checklist_complete") var isComplete: Bool
 
     init(_ item: TripChecklistItem, plan: TripPlan) {
         id = TripChecklistIdentity(tripID: plan.id, itemID: item.id).rawValue
@@ -23,8 +24,15 @@ struct SavedTripChecklistEntity: AppEntity, Sendable {
     }
 }
 
-nonisolated struct SavedTripChecklistQuery: EntityStringQuery {
+nonisolated struct SavedTripChecklistQuery: EntityStringQuery, EnumerableEntityQuery {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
+
+    @MainActor func allEntities() async throws -> [SavedTripChecklistEntity] {
+        let plans = try await AppRuntime.library().trips
+        return plans.flatMap { plan in
+            plan.checklist.map { SavedTripChecklistEntity($0, plan: plan) }
+        }
+    }
 
     @MainActor func entities(for identifiers: [String]) async throws -> [SavedTripChecklistEntity] {
         let library = try await AppRuntime.library()

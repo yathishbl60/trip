@@ -18,7 +18,7 @@ Platform API evidence lives in global `app-development`; this skill owns Trip's 
 - Keep MapProxy inside its reader; follow [map safe areas](../trip-map-decluttering/references/directions-and-safe-areas.md).
 - Preserve all safe-area edges and reserved-region updates; do not replace measured geometry with device tables.
 - iOS top scroll styling remains guarded; visionOS uses its supported native equivalent.
-- Retain iOS 27.0 baseline and member-level 27.1+ gates without weakening other platform targets.
+- Trip targets iOS/iPadOS and visionOS 27.3+ by explicit user decision; align TripKit platforms and gate only newer APIs.
 
 ## Window and platform ownership
 

@@ -57,6 +57,12 @@ Git revision and dirty flag, timestamp, CPU, macOS, architecture, SDK, and compi
 Build products, module caches, and raw reports stay in ignored `.build/performance`.
 Keep the source unchanged during a run and avoid concurrent benchmark runs.
 
+Saved-data coverage includes Siri visit timing edits: preserving omitted fields
+and notes, repeat-call idempotency, next-day/flexible arrivals, invalid bounds,
+booking/deleted targets, and missing/repeated daylight-saving clocks. Shared saved
+details retain their source day and exclude private notes. These deterministic
+checks do not execute Siri, Maps handoff, or the native share sheet.
+
 `system-check` runs projection/privacy, saved-action identity, exact-date briefing,
 legacy migration, civil-clock/DST/date-line, scheduling, journey mutation, and
 Today regression checks. It compiles the same production source manifest with

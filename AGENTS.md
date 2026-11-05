@@ -20,7 +20,7 @@ These are this project's defaults; explicit user instructions take precedence.
 ## Implementation
 
 - Use SwiftUI and MapKit with current APIs supported by the installed SDK.
-- Target iOS/iPadOS 27.0+; use available native APIs directly and guard 27.1+ additions. Do not add pre-27 compatibility paths or silently raise the minimum.
+- Target iOS/iPadOS and visionOS 27.3+ (user-approved 2026-11-04); use available native APIs directly and guard only newer additions. Keep TripKit's configured platforms aligned at 27.3. Do not add older compatibility paths or silently raise the minimum.
 - Use the task-to-skill map in `docs/Skills.md`; load only relevant Trip skills and installed global framework topics. Verify exact signatures and member availability against the installed SDK; preserve other configured platform targets.
 - Do not introduce UIKit, UIKit bridges, or UIKit image types.
 - Keep every authored Swift file at most 100 physical lines, including previews.

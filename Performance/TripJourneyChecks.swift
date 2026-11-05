@@ -9,6 +9,7 @@ enum TripJourneyChecks {
         try validation()
         try TripJourneyPersistenceChecks.run()
         try TripStopTransferChecks.run()
+        try TripVisitTimingChecks.run()
     }
 
     private static func coexistence() throws {

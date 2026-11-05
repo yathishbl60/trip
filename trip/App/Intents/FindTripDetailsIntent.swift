@@ -7,7 +7,7 @@ struct FindTripDetailsIntent: AppIntent {
     static var title: LocalizedStringResource { "find_saved_trip_details" }
     static var description: IntentDescription { IntentDescription("find_stays_flights_reservations_places_and_times_in_your") }
     static var supportedModes: IntentModes { .foreground }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     @Parameter(title: "question", default: "") var question: String
     static var parameterSummary: some ParameterSummary {
         Summary("Find details in \(\FindTripDetailsIntent.$trip as KeyPath<FindTripDetailsIntent, Parameter<SavedTripEntity>>)") {

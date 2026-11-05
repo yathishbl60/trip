@@ -39,12 +39,14 @@ extension AppRuntime {
     }
 }
 
-nonisolated enum TripNextStepError: LocalizedError {
+nonisolated enum TripNextStepError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case noCurrentTrip, multipleTrips
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .noCurrentTrip: TripText.noTripIsPlannedForTodayChooseATrip.text
-        case .multipleTrips: TripText.moreThanOneTripIsPlannedForTodayChoose.text
+        case .noCurrentTrip: TripText.noTripIsPlannedForTodayChooseATrip.resource
+        case .multipleTrips: TripText.moreThanOneTripIsPlannedForTodayChoose.resource
         }
     }
 }

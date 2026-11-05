@@ -46,6 +46,11 @@ Packages/TripKit/Sources/MapEngine/Catalog/PlaceCollection.swift
 Packages/TripKit/Sources/TripDomain/Places/SearchArea.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripLimits.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripDay.swift
+Packages/TripKit/Sources/TripDomain/Collections/IdentifiedListEdit.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripStopAvailability.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripDayReordering.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripPlaceInsertion.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripBookingConflict.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripPlan.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripEvent.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripEvent+Validation.swift
@@ -64,6 +69,8 @@ Packages/TripKit/Sources/TripDomain/Trips/TripItineraryRevision.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripDaySchedule.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripDaySchedule+ZonedTimes.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripStopTiming.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripVisitTimingChange.swift
+Packages/TripKit/Sources/TripDomain/Trips/TripVisitTimingError.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripScheduleClock.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripTimelineEntry.swift
 Packages/TripKit/Sources/TripDomain/Trips/TripDayTimeline.swift
@@ -119,6 +126,7 @@ Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel3.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel4.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Planning.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Planning2.swift
+Packages/TripKit/Sources/TripLocalization/TripText+Siri.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips10.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips11.swift

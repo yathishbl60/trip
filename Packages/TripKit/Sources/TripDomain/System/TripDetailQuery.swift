@@ -69,6 +69,10 @@ public nonisolated struct TripDetailResult: Identifiable, Sendable {
     public var source: String {
         TripText.dayValueValue(TripText.number(day.number), day.dateText).text
     }
+
+    public var shareText: String {
+        [item.title, source, item.timeText, item.detail].filter { !$0.isEmpty }.joined(separator: "\n")
+    }
 }
 
 public nonisolated protocol TripDetailSearching: Sendable {

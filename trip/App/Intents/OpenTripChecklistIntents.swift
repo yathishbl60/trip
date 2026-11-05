@@ -5,8 +5,9 @@ import TripDomain
 
 struct OpenTripChecklistIntent: AppIntent {
     static var title: LocalizedStringResource { "open_trip_checklist" }
+    static var description: IntentDescription { IntentDescription("intent_open_checklist_description") }
     static var supportedModes: IntentModes { .foreground }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     static var parameterSummary: some ParameterSummary {
         Summary("Open the checklist for \(\OpenTripChecklistIntent.$trip as KeyPath<OpenTripChecklistIntent, Parameter<SavedTripEntity>>)")
     }
@@ -22,8 +23,8 @@ struct SuggestTripPackingIntent: AppIntent {
     static var title: LocalizedStringResource { "suggest_packing_with_apple_intelligence" }
     static var description: IntentDescription { IntentDescription("open_the_on_device_packing_assistant_review_and_select") }
     static var supportedModes: IntentModes { .foreground }
-    @Parameter(title: "trip") var trip: SavedTripEntity
-    @Parameter(title: "preferences", default: "") var preferences: String
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
+    @Parameter(title: "preferences", description: "intent_parameter_preferences", default: "") var preferences: String
     static var parameterSummary: some ParameterSummary {
         Summary("Suggest packing for \(\SuggestTripPackingIntent.$trip as KeyPath<SuggestTripPackingIntent, Parameter<SavedTripEntity>>)") {
             \SuggestTripPackingIntent.$preferences as KeyPath<SuggestTripPackingIntent, Parameter<String>>

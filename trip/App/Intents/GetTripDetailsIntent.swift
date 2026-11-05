@@ -19,7 +19,7 @@ struct GetTripDetailsIntent: AppIntent {
     static var supportedModes: IntentModes { .background }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     @Parameter(title: "filter", default: .all) var filter: TripDetailFilter
     @Parameter(title: "day_number0_for_all", default: 0, inclusiveRange: (0, 30)) var day: Int
     @Parameter(title: "name_or_location", default: "") var search: String

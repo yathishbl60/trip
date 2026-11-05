@@ -35,18 +35,20 @@ import Foundation
     }
 }
 
-nonisolated enum TripIntentError: LocalizedError {
+nonisolated enum TripIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case libraryUnavailable, missingTrip, missingDay, invalidTitle, tooManyTrips, saveFailed, noPlaces
 
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .libraryUnavailable: TripText.couldnTOpenSavedTripsOpenTripAndTry.text
-        case .missingTrip: TripText.thisTripIsNoLongerAvailable.text
-        case .missingDay: TripText.thisDayIsNoLongerAvailable.text
-        case .invalidTitle: TripText.useATripNameWith1To80Characters.text
-        case .tooManyTrips: TripText.yourTripLibraryIsFullDeleteATripTo.text
-        case .saveFailed: TripText.couldnTSaveThisTripOpenTripAndTry.text
-        case .noPlaces: TripText.savePlacesToThisTripBeforeCreatingADraft.text
+        case .libraryUnavailable: TripText.couldnTOpenSavedTripsOpenTripAndTry.resource
+        case .missingTrip: TripText.thisTripIsNoLongerAvailable.resource
+        case .missingDay: TripText.thisDayIsNoLongerAvailable.resource
+        case .invalidTitle: TripText.useATripNameWith1To80Characters.resource
+        case .tooManyTrips: TripText.yourTripLibraryIsFullDeleteATripTo.resource
+        case .saveFailed: TripText.couldnTSaveThisTripOpenTripAndTry.resource
+        case .noPlaces: TripText.savePlacesToThisTripBeforeCreatingADraft.resource
         }
     }
 }

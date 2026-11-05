@@ -60,16 +60,18 @@ public actor TripSurfaceStore {
     }
 }
 
-public nonisolated enum TripSurfaceError: LocalizedError {
+public nonisolated enum TripSurfaceError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case unavailable, noJourney, missingTrip, missingDay, finishedDay
 
-    public var errorDescription: String? {
+    public var errorDescription: String? { String(localized: localizedStringResource) }
+
+    public var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .unavailable: TripText.tripSSystemFeaturesAreUnavailableOpenTripAnd.text
-        case .noJourney: TripText.startTrackingADayInTripFirst.text
-        case .missingTrip: TripText.thisTripIsNoLongerAvailable.text
-        case .missingDay: TripText.thisDayIsNoLongerAvailable.text
-        case .finishedDay: TripText.allPlacesVisited2.text
+        case .unavailable: TripText.tripSSystemFeaturesAreUnavailableOpenTripAnd.resource
+        case .noJourney: TripText.startTrackingADayInTripFirst.resource
+        case .missingTrip: TripText.thisTripIsNoLongerAvailable.resource
+        case .missingDay: TripText.thisDayIsNoLongerAvailable.resource
+        case .finishedDay: TripText.allPlacesVisited2.resource
         }
     }
 }

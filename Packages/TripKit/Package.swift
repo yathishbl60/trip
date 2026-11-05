@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "TripKit",
     defaultLocalization: "en",
-    platforms: [.iOS("27.0"), .macOS("27.0"), .visionOS("27.0")],
+    platforms: [.iOS("27.3"), .macOS("27.3"), .visionOS("27.3")],
     products: [
         .library(name: "TripLocalization", targets: ["TripLocalization"]),
         .library(name: "TripDomain", targets: ["TripDomain"]),

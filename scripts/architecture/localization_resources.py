@@ -48,7 +48,8 @@ def check_resources(root, destination):
 
 def native_keys(root):
     """Yield the bundle table and literal key required by native metadata."""
-    patterns = [r'@(?:Parameter|Property)\(title: "([^"]+)"',
+    patterns = [r'@(?:Parameter|Property|ComputedProperty|DeferredProperty)\(title: "([^"]+)"',
+                r'@(?:Parameter|Property|ComputedProperty|DeferredProperty)\([^)]*?\bdescription: "([^"]+)"',
                 r'(?:IntentDescription|TypeDisplayRepresentation)\((?:name: )?"([^"]+)"',
                 r'DisplayRepresentation\(title: "([^"]+)"', r'shortTitle: "([^"]+)"',
                 r'\.(?:displayName|configurationDisplayName|description)\("([^"]+)"',

@@ -9,6 +9,13 @@ extension TripModel {
 
     var selectedTripID: UUID? { presentation.selectedTripID }
 
+    func selectTripFromLibrary(_ id: UUID?) {
+        let previous = selectedTripID
+        selectTrip(id)
+        guard let id, id != previous, selectedTripID == id, let trip = library.trip(id) else { return }
+        environment.didOpenTrip(trip)
+    }
+
     func selectTrip(_ id: UUID?) {
         if let id, library.trip(id) == nil { return }
         presentation.compactColumn = id == nil ? .sidebar : .detail

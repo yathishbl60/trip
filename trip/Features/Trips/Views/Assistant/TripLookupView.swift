@@ -16,7 +16,7 @@ struct TripLookupView: View {
             if let error = lookup.model.error {
                 Section { Label(error, systemImage: "exclamationmark.circle").foregroundStyle(.secondary) }
             }
-            results
+            TripLookupResultsSection(tripID: tripID, controller: controller)
         }
         .navigationTitle(TripText.askMyTrip.resource)
         .searchable(text: lookup.searchText, prompt: Text(TripText.namePlaceOrBooking.resource))
@@ -29,27 +29,6 @@ struct TripLookupView: View {
         .onChange(of: scenePhase) { _, phase in lookup.sceneChanged(phase) }
     }
 
-    private var results: some View {
-        Section {
-            if lookup.model.results.isEmpty {
-                emptyResults
-            } else {
-                ForEach(lookup.model.results) { TripLookupResultView(result: $0) }
-            }
-        } header: { Text(lookup.model.heading) } footer: {
-            Text(TripText.savedItineraryTimesUseSavedTimeZonesConfirmBooking.resource)
-        }
-    }
-
-    private var emptyResults: some View {
-        ContentUnavailableView {
-            Label(TripText.noMatchingDetails.resource, systemImage: "text.magnifyingglass")
-        } description: {
-            Text(lookup.model.emptyMessage)
-        } actions: {
-            if lookup.model.hasFilters { Button(TripText.showAllDetails.resource, action: lookup.resetFilters) }
-        }
-    }
 }
 
 #if DEBUG

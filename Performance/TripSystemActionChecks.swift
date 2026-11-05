@@ -55,6 +55,8 @@ enum TripSystemActionChecks {
         try require(answer.results.count == 1 && answer.results[0].id == trip.events[1].id, "Answer lost spanning stay")
         try require(answer.summary.contains(trip.events[1].title), "Spoken answer omitted saved title")
         try require(!answer.summary.contains("PRIVATE_"), "Private notes leaked into answer")
+        let shared = answer.results[0].shareText
+        try require(!shared.contains("PRIVATE_") && shared.contains(answer.results[0].source), "Shared detail lost provenance or privacy")
         let missing = TripDetailAnswer(plan: plan, query: TripDetailQuery(dayNumber: 29))
         try require(missing.results.isEmpty, "Answer substituted a missing day")
         let unsupported = TripDetailAnswer(plan: plan, query: TripDetailQuery(category: .unsupported))

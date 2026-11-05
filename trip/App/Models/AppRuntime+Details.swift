@@ -11,12 +11,14 @@ extension AppRuntime {
     }
 }
 
-nonisolated enum TripDetailIntentError: LocalizedError {
+nonisolated enum TripDetailIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case missingDetail, editing
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .missingDetail: TripText.thisSavedDetailIsNoLongerAvailableOpenTrip.text
-        case .editing: TripText.finishOrCancelYourCurrentEditInTripThen.text
+        case .missingDetail: TripText.thisSavedDetailIsNoLongerAvailableOpenTrip.resource
+        case .editing: TripText.finishOrCancelYourCurrentEditInTripThen.resource
         }
     }
 }

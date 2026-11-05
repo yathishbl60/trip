@@ -11,7 +11,7 @@ struct OpenTripBookingAlarmIntent: LiveActivityIntent {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     @Parameter(title: "trip_identifier") var tripIdentifier: String
-    @Parameter(title: "detail") var eventIdentifier: String
+    @Parameter(title: "detail", description: "intent_parameter_saved_detail") var eventIdentifier: String
 
     init() {}
 

@@ -7,8 +7,8 @@ struct AddTripChecklistItemIntent: AppIntent {
     static var supportedModes: IntentModes { .background }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
-    @Parameter(title: "item") var title: String
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
+    @Parameter(title: "item", description: "intent_parameter_checklist_title") var title: String
     static var parameterSummary: some ParameterSummary {
         Summary("Add \(\AddTripChecklistItemIntent.$title as KeyPath<AddTripChecklistItemIntent, Parameter<String>>) to \(\AddTripChecklistItemIntent.$trip as KeyPath<AddTripChecklistItemIntent, Parameter<SavedTripEntity>>)")
     }
@@ -25,8 +25,8 @@ struct SetTripChecklistItemIntent: AppIntent {
     static var supportedModes: IntentModes { .background }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "item") var item: SavedTripChecklistEntity
-    @Parameter(title: "complete", default: true) var complete: Bool
+    @Parameter(title: "item", description: "intent_parameter_checklist_item") var item: SavedTripChecklistEntity
+    @Parameter(title: "complete", description: "intent_parameter_checklist_complete", default: true) var complete: Bool
     static var parameterSummary: some ParameterSummary {
         Summary("Set \(\SetTripChecklistItemIntent.$item as KeyPath<SetTripChecklistItemIntent, Parameter<SavedTripChecklistEntity>>) completion to \(\SetTripChecklistItemIntent.$complete as KeyPath<SetTripChecklistItemIntent, Parameter<Bool>>)")
     }

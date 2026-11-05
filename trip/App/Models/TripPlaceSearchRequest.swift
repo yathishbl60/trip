@@ -19,14 +19,16 @@ nonisolated struct TripPlaceSearchRequest: Hashable {
     }
 }
 
-nonisolated enum TripPlaceSearchIntentError: LocalizedError {
+nonisolated enum TripPlaceSearchIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case invalidText, linkInput, editing
 
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .invalidText: TripText.enterOnePlaceNameOrAddressUpTo200.text
-        case .linkInput: TripText.useAPlaceNameOrAddressInsteadOfA.text
-        case .editing: TripText.finishOrCancelYourCurrentEditInTripThen2.text
+        case .invalidText: TripText.enterOnePlaceNameOrAddressUpTo200.resource
+        case .linkInput: TripText.useAPlaceNameOrAddressInsteadOfA.resource
+        case .editing: TripText.finishOrCancelYourCurrentEditInTripThen2.resource
         }
     }
 }

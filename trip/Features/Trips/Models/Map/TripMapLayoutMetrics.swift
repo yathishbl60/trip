@@ -33,7 +33,6 @@ nonisolated struct TripMapLayoutMetrics {
 
     static func division(in geometry: GeometryProxy) -> CGRect? {
         #if os(iOS)
-        guard #available(iOS 27.1, *) else { return nil }
         return geometry.reservedRegions(kind: .division).first(where: \.isActive)?.frame
         #else
         return nil

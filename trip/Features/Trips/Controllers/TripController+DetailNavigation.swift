@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import TripDomain
+import AppIntents
 
 extension TripController {
     func openDetail(_ destination: TripDetailRoute.Destination, tripID: UUID) {
@@ -12,6 +13,10 @@ extension TripController {
     }
 
     func lookupSnapshot(_ tripID: UUID) -> TripSurfacePlan? { model.lookupSnapshot(tripID) }
+
+    func detailEntityIdentifier(tripID: UUID, itemID: UUID) -> EntityIdentifier? {
+        model.environment.detailEntityIdentifier(TripDetailIdentity(tripID: tripID, itemID: itemID))
+    }
 
     func detailRoute(for tripID: UUID) -> Binding<TripDetailRoute?> {
         let presented = model.presentation.detailRoute

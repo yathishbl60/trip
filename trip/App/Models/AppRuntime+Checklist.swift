@@ -48,13 +48,15 @@ extension AppRuntime {
     }
 }
 
-nonisolated enum TripChecklistIntentError: LocalizedError {
+nonisolated enum TripChecklistIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case invalidTitle, full, missingItem
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .invalidTitle: TripText.useASingleChecklistItemWith1To80.text
-        case .full: TripText.thisChecklistIsFullRemoveAnItemBeforeAdding.text
-        case .missingItem: TripText.thisChecklistItemIsNoLongerAvailable.text
+        case .invalidTitle: TripText.useASingleChecklistItemWith1To80.resource
+        case .full: TripText.thisChecklistIsFullRemoveAnItemBeforeAdding.resource
+        case .missingItem: TripText.thisChecklistItemIsNoLongerAvailable.resource
         }
     }
 }

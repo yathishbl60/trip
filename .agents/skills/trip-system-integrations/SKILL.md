@@ -47,4 +47,4 @@ system-integration topics in global `app-development` after verifying current SD
 
 Read [Intelligence policy](references/intelligence-policy.md) before adding Intelligence or Siri features.
 Keep selected-model privacy and manual planning intact. Read [Trip intent contracts](references/intent-contracts.md) for saved identifiers and canonical mutations.
-For preparation or system launch surfaces, read [packing and controls](references/packing-controls.md).
+For preparation/controls read [packing contracts](references/packing-controls.md); for Siri tools and app skills read [preview adoption](references/siri-preview.md).

@@ -23,7 +23,7 @@ struct GetTripChecklistIntent: AppIntent {
     static var supportedModes: IntentModes { .background }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     @Parameter(title: "filter", default: .pending) var filter: TripChecklistFilter
     static var parameterSummary: some ParameterSummary {
         Summary("Get checklist items from \(\GetTripChecklistIntent.$trip as KeyPath<GetTripChecklistIntent, Parameter<SavedTripEntity>>)") {

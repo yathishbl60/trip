@@ -8,6 +8,11 @@ import Foundation
     private let spotlight = TripSpotlightModel()
     var error: String?
 
+    func recordTripOpened(_ trip: TripPlan) {
+        let entity = SavedTripEntity(TripSurfaceSummary(TripSurfacePlan(trip)))
+        IntentDonationManager.shared.donate(intent: OpenSavedTripIntent(trip: entity))
+    }
+
     func publish(_ plans: [TripPlan]) async {
         generation += 1
         let token = generation

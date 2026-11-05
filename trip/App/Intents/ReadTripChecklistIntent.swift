@@ -9,7 +9,7 @@ struct ReadTripChecklistIntent: AppIntent {
     static var supportedModes: IntentModes { .background }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     static var parameterSummary: some ParameterSummary {
         Summary("Read the checklist for \(\ReadTripChecklistIntent.$trip as KeyPath<ReadTripChecklistIntent, Parameter<SavedTripEntity>>)")
     }

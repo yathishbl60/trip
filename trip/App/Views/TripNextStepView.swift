@@ -1,6 +1,7 @@
 import TripLocalization
 import SwiftUI
 import TripDomain
+import AppIntents
 
 struct TripNextStepView: View {
     let next: TripNextStep
@@ -13,6 +14,8 @@ struct TripNextStepView: View {
                 Text(item.title).font(.headline)
                 Text(TripText.dayValueValue(TripText.number(day.number), item.timeText).resource).font(.subheadline).foregroundStyle(.secondary)
                 actions(item)
+                    .appEntityIdentifier(EntityIdentifier(for: SavedTripDetailEntity.self,
+                        identifier: TripDetailIdentity(tripID: next.plan.id, itemID: item.id).rawValue))
             } else {
                 Text(next.summary).font(.headline)
                 if let url = TripSystemData.tripURL(next.plan.id) { Link(TripText.openItinerary.text, destination: url) }

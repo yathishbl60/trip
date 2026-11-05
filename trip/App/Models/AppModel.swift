@@ -1,6 +1,7 @@
 import TripRouting
 import Observation
 import TripDomain
+import AppIntents
 
 /// The only owner of cross-feature composition and application navigation.
 @MainActor @Observable final class AppModel {
@@ -38,7 +39,9 @@ import TripDomain
             showExplore: { [weak self] in self?.showExplore() },
             showPlace: { [weak self] in self?.showPlace($0) },
             showDirections: { [weak self] in self?.showDayDirections($0) },
-            maximumRoutePlaces: explore.directions.maximumPlaces
+            maximumRoutePlaces: explore.directions.maximumPlaces,
+            didOpenTrip: { [weak system] in system?.recordTripOpened($0) },
+            detailEntityIdentifier: { EntityIdentifier(for: SavedTripDetailEntity.self, identifier: $0.rawValue) }
         )
     }
 }

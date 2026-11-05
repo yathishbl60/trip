@@ -8,9 +8,9 @@ struct ReadTripDayIntent: AppIntent {
     static var description: IntentDescription { IntentDescription("get_aday_briefing_with_saved_places_travel_stays") }
     static var supportedModes: IntentModes { .background }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
-    @Parameter(title: "date") var date: Date?
-    @Parameter(title: "include_weather", default: false) var includeWeather: Bool
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
+    @Parameter(title: "date", description: "intent_parameter_trip_date") var date: Date?
+    @Parameter(title: "include_weather", description: "intent_parameter_weather", default: false) var includeWeather: Bool
     static var parameterSummary: some ParameterSummary {
         Summary("Read a day in \(\ReadTripDayIntent.$trip as KeyPath<ReadTripDayIntent, Parameter<SavedTripEntity>>)") {
             \ReadTripDayIntent.$date as KeyPath<ReadTripDayIntent, Parameter<Date?>>

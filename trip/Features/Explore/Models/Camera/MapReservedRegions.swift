@@ -5,7 +5,6 @@ import CoreGraphics
 nonisolated enum MapReservedRegions {
     static func frames(in geometry: GeometryProxy) -> [CGRect] {
         #if os(iOS)
-        guard #available(iOS 27.1, *) else { return [] }
         let origin = geometry.frame(in: .global).origin
         let regions = geometry.reservedRegions(kind: .division, layoutDirectionBehavior: .fixed)
             + geometry.reservedRegions(kind: .occlusion, layoutDirectionBehavior: .fixed)

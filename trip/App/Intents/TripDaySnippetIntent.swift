@@ -9,8 +9,8 @@ struct TripDaySnippetIntent: SnippetIntent {
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     @Parameter(title: "trip_identifier") var tripIdentifier: String
-    @Parameter(title: "date") var date: Date
-    @Parameter(title: "include_weather", default: false) var includeWeather: Bool
+    @Parameter(title: "date", description: "intent_parameter_trip_date") var date: Date
+    @Parameter(title: "include_weather", description: "intent_parameter_weather", default: false) var includeWeather: Bool
 
     init() {}
     init(tripID: UUID, date: Date, includeWeather: Bool = false) {
@@ -37,8 +37,8 @@ struct ShowTripDaySnippetIntent: AppIntent {
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     @Parameter(title: "trip_identifier") var tripIdentifier: String
-    @Parameter(title: "date") var date: Date
-    @Parameter(title: "include_weather", default: false) var includeWeather: Bool
+    @Parameter(title: "date", description: "intent_parameter_trip_date") var date: Date
+    @Parameter(title: "include_weather", description: "intent_parameter_weather", default: false) var includeWeather: Bool
 
     init() {}
     init(tripID: UUID, date: Date, includeWeather: Bool = false) {

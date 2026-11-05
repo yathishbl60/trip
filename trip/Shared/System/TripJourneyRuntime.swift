@@ -65,13 +65,15 @@ import Foundation
     }
 }
 
-nonisolated enum TripJourneyError: LocalizedError {
+nonisolated enum TripJourneyError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case busy, disabled
 
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .busy: TripText.tripIsUpdatingTryAgainInAMoment.text
-        case .disabled: TripText.allowLiveActivitiesForTripInSettingsToTrack.text
+        case .busy: TripText.tripIsUpdatingTryAgainInAMoment.resource
+        case .disabled: TripText.allowLiveActivitiesForTripInSettingsToTrack.resource
         }
     }
 }

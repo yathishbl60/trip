@@ -10,9 +10,9 @@ struct FindPlaceForTripIntent: AppIntent {
     static var supportedModes: IntentModes { .foreground }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "place_or_address") var text: String
-    @Parameter(title: "trip") var trip: SavedTripEntity
-    @Parameter(title: "day_number", inclusiveRange: (1, 30)) var day: Int
+    @Parameter(title: "place_or_address", description: "intent_parameter_place_search") var text: String
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
+    @Parameter(title: "day_number", description: "intent_parameter_day_number", inclusiveRange: (1, 30)) var day: Int
 
     static var parameterSummary: some ParameterSummary {
         Summary("Find \(\FindPlaceForTripIntent.$text as KeyPath<FindPlaceForTripIntent, Parameter<String>>) for \(\FindPlaceForTripIntent.$trip as KeyPath<FindPlaceForTripIntent, Parameter<SavedTripEntity>>)") {

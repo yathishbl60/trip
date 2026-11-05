@@ -10,7 +10,7 @@ extension TripController {
         Binding(get: { model.presentation.sortOrder }, set: { model.presentation.sortOrder = $0 })
     }
 
-    var selection: Binding<UUID?> { Binding(get: { model.selectedTripID }, set: model.selectTrip) }
+    var selection: Binding<UUID?> { Binding(get: { model.selectedTripID }, set: model.selectTripFromLibrary) }
     var compactColumn: Binding<NavigationSplitViewColumn> {
         Binding(get: { model.presentation.compactColumn }, set: { model.presentation.compactColumn = $0 })
     }

@@ -13,7 +13,7 @@ def check_package_manifest(source, graph):
         errors.append("Package.swift library products disagree with modules.json")
     required = ['swiftLanguageModes: [.v6]', '.defaultIsolation(MainActor.self)',
                 '.enableUpcomingFeature("MemberImportVisibility")',
-                '.iOS("27.0")', '.macOS("27.0")', '.visionOS("27.0")']
+                '.iOS("27.3")', '.macOS("27.3")', '.visionOS("27.3")']
     for setting in required:
         if setting not in source:
             errors.append(f"Package compiler/platform contract missing: {setting}")
@@ -27,7 +27,7 @@ def check_compiler_settings(objects):
     required = {"SWIFT_VERSION": "6.0", "SWIFT_STRICT_CONCURRENCY": "complete",
                 "SWIFT_DEFAULT_ACTOR_ISOLATION": "MainActor",
                 "SWIFT_APPROACHABLE_CONCURRENCY": "YES", "SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY": "YES",
-                "IPHONEOS_DEPLOYMENT_TARGET": "27.0", "XROS_DEPLOYMENT_TARGET": "27.0"}
+                "IPHONEOS_DEPLOYMENT_TARGET": "27.3", "XROS_DEPLOYMENT_TARGET": "27.3"}
     for target in objects.values():
         if target.get("isa") != "PBXNativeTarget":
             continue

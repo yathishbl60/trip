@@ -10,9 +10,9 @@ struct ImportTripBookingIntent: AppIntent {
     static var supportedModes: IntentModes { .foreground }
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "booking_document", supportedContentTypes: [.pdf, .image, .plainText]) var file: IntentFile
-    @Parameter(title: "trip") var trip: SavedTripEntity
-    @Parameter(title: "day_number", inclusiveRange: (1, 30)) var day: Int
+    @Parameter(title: "booking_document", description: "intent_parameter_booking_file", supportedContentTypes: [.pdf, .image, .plainText]) var file: IntentFile
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
+    @Parameter(title: "day_number", description: "intent_parameter_day_number", inclusiveRange: (1, 30)) var day: Int
 
     static var parameterSummary: some ParameterSummary {
         Summary("Import \(\ImportTripBookingIntent.$file as KeyPath<ImportTripBookingIntent, Parameter<IntentFile>>) into \(\ImportTripBookingIntent.$trip as KeyPath<ImportTripBookingIntent, Parameter<SavedTripEntity>>)") {

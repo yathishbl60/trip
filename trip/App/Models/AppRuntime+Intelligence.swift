@@ -13,9 +13,12 @@ extension AppRuntime {
     }
 }
 
-nonisolated enum TripIntelligenceError: LocalizedError {
+nonisolated enum TripIntelligenceError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case unavailable(String)
-    var errorDescription: String? {
-        switch self { case .unavailable(let reason): reason }
+
+    var errorDescription: String? { String(localized: localizedStringResource) }
+
+    var localizedStringResource: LocalizedStringResource {
+        switch self { case .unavailable(let reason): "\(reason)" }
     }
 }

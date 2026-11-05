@@ -25,6 +25,10 @@ import Foundation
         let previous = Set((defaults?.stringArray(forKey: "spotlightTripIDs") ?? []).compactMap(UUID.init(uuidString:)))
         let current = Set(plans.map(\.id))
         do {
+            for id in previous.subtracting(current) {
+                let entity = EntityIdentifier(for: SavedTripEntity.self, identifier: id)
+                try await IntentDonationManager.shared.deleteDonations(matching: .entityIdentifier(entity))
+            }
             try await CSSearchableIndex.default().deleteAppEntities(identifiedBy: Array(previous.subtracting(current)),
                                                                    ofType: SavedTripEntity.self)
             try await CSSearchableIndex.default().indexAppEntities(entities)

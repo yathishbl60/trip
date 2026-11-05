@@ -7,7 +7,7 @@ struct ReadTripItineraryIntent: AppIntent {
     static var description: IntentDescription { IntentDescription("read_asaved_trip_splaces_flights_stays_reservations") }
     static var supportedModes: IntentModes { .background }
     static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
-    @Parameter(title: "trip") var trip: SavedTripEntity
+    @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     static var parameterSummary: some ParameterSummary {
         Summary("Read the itinerary for \(\ReadTripItineraryIntent.$trip as KeyPath<ReadTripItineraryIntent, Parameter<SavedTripEntity>>)")
     }
