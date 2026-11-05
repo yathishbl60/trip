@@ -1,8 +1,16 @@
 # Test seams and future coverage
 
 The repository has routing package tests and standalone performance checks.
-There is no app test target. Source audits parse
-Swift and enforce contracts; they do not execute application behavior.
+The dedicated `TripSiriEvaluations` target exercises public system integration
+contracts; there is no general app-model test target. Source audits parse Swift
+and enforce contracts; they do not execute application behavior.
+
+Prepared [Siri evaluation sources](../Performance/SiriEvaluations/README.md) use
+the public SiriEvaluations runner, exact fixture identities, and all three runtime
+skills. `bash scripts/check_siri_evaluations.sh` type-checks them;
+`bash scripts/build_siri_evaluations.sh Debug` builds the app, widget, and test
+bundle for iPhoneOS without running tests. The user requested build-only
+verification; actual device evaluation requires a renewed execution request.
 
 ## Where later tests belong
 

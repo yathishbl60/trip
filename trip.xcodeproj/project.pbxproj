@@ -45,6 +45,13 @@
 			remoteGlobalIDString = 250000000000000000000001;
 			remoteInfo = TripWidgets;
 		};
+		410000000000000000000009 /* Siri test host proxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = trip;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,6 +84,7 @@
 		20000000000000000000000C /* trip/Shared/System/OpenTripControlIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trip/Shared/System/OpenTripControlIntent.swift; sourceTree = SOURCE_ROOT; };
 		230000000000000000000001 /* TripWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TripWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		310000000000000000000002 /* trip/DesignSystem/Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = trip/DesignSystem/Colors.xcassets; sourceTree = SOURCE_ROOT; };
+		410000000000000000000002 /* TripSiriEvaluations.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSiriEvaluations.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -93,6 +101,11 @@
 				Info.plist,
 			);
 			target = 250000000000000000000001 /* TripWidgets */;
+		};
+		410000000000000000000004 /* Siri evaluation documentation */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (README.md,);
+			target = 410000000000000000000001 /* TripSiriEvaluations */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -112,6 +125,12 @@
 			);
 			path = TripWidgets;
 			sourceTree = "<group>";
+		};
+		410000000000000000000003 /* Siri evaluations */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (410000000000000000000004 /* Siri evaluation documentation */,);
+			path = Performance/SiriEvaluations;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -137,6 +156,12 @@
 				220000000000000000000004 /* TripRouting in Frameworks */,
 			);
 		};
+		410000000000000000000006 /* Siri evaluation PBXFrameworksBuildPhase */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -146,6 +171,7 @@
 				120000000000000000000003 /* Packages/TripKit/Sources/TripLocalization/HostResources/InfoPlist.xcstrings */,
 				120000000000000000000002 /* Packages/TripKit/Sources/TripLocalization/HostResources/AppShortcuts.xcstrings */,
 				120000000000000000000001 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings */,
+				410000000000000000000003 /* Siri evaluations */,
 				000000000000000000000010 /* trip */,
 				260000000000000000000003 /* TripWidgets */,
 				280000000000000000000001 /* Shared system sources */,
@@ -159,6 +185,7 @@
 			children = (
 				000000000000000000000120 /* trip.app */,
 				230000000000000000000001 /* TripWidgets.appex */,
+				410000000000000000000002 /* TripSiriEvaluations.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,6 +274,22 @@
 			productReference = 230000000000000000000001 /* TripWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		410000000000000000000001 /* TripSiriEvaluations */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 410000000000000000000010 /* Siri evaluation configurations */;
+			buildPhases = (
+				410000000000000000000005 /* Siri evaluation sources */,
+				410000000000000000000006 /* Siri evaluation frameworks */,
+				410000000000000000000007 /* Siri evaluation resources */,
+			);
+			buildRules = ();
+			dependencies = (410000000000000000000008 /* Siri test host dependency */,);
+			fileSystemSynchronizedGroups = (410000000000000000000003 /* Siri evaluations */,);
+			name = TripSiriEvaluations;
+			productName = TripSiriEvaluations;
+			productReference = 410000000000000000000002 /* TripSiriEvaluations.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -257,6 +300,10 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2720;
 				TargetAttributes = {
+					410000000000000000000001 = {
+						CreatedOnToolsVersion = 27.3;
+						TestTargetID = 000000000000000100000000;
+					};
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
 						SystemCapabilities = {
@@ -286,6 +333,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				410000000000000000000001 /* TripSiriEvaluations */,
 				000000000000000100000000 /* trip */,
 				250000000000000000000001 /* TripWidgets */,
 			);
@@ -307,6 +355,12 @@
 				130000000000000000000004 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings in Resources */,
 				310000000000000000000001 /* trip/DesignSystem/Colors.xcassets in Resources */,
 			);
+		};
+		410000000000000000000007 /* Siri evaluation PBXResourcesBuildPhase */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
@@ -332,6 +386,12 @@
 				21000000000000000000000C /* trip/Shared/System/OpenTripControlIntent.swift in Sources */,
 			);
 		};
+		410000000000000000000005 /* Siri evaluation PBXSourcesBuildPhase */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -339,6 +399,11 @@
 			isa = PBXTargetDependency;
 			target = 250000000000000000000001 /* TripWidgets */;
 			targetProxy = 240000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		410000000000000000000008 /* Siri test host dependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* trip */;
+			targetProxy = 410000000000000000000009 /* Siri test host proxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -631,6 +696,58 @@
 			};
 			name = Release;
 		};
+		410000000000000000000011 /* Debug Siri evaluations */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.native.trip.siri-evaluations;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/trip";
+			};
+			name = Debug;
+		};
+		410000000000000000000012 /* Release Siri evaluations */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.native.trip.siri-evaluations;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/trip";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -655,6 +772,14 @@
 			buildConfigurations = (
 				290000000000000000000002 /* Debug configuration for PBXNativeTarget "TripWidgets" */,
 				290000000000000000000003 /* Release configuration for PBXNativeTarget "TripWidgets" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		410000000000000000000010 /* Siri evaluation configurations */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				410000000000000000000011 /* Debug Siri evaluations */,
+				410000000000000000000012 /* Release Siri evaluations */,
 			);
 			defaultConfigurationName = Release;
 		};

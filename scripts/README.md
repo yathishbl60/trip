@@ -55,5 +55,11 @@ references and is part of the normal source gate.
 See [Skill ownership and selection](../docs/Skills.md) for task-specific context.
 Global SDK review and specialist synchronization tools live with the global skill.
 Repository checks do not require or edit personal skills or access the network.
+`bash scripts/check_siri_evaluations.sh` is an optional, requested compilation of
+the [prepared Siri scenarios](../Performance/SiriEvaluations/README.md). It uses
+the iPhoneOS SDK and Swift Testing macros without creating a target or driving Siri.
+`bash scripts/build_siri_evaluations.sh Debug` compiles and links their dedicated
+target plus the host and widgets for generic iOS using `build-for-testing`.
+Neither script executes scenarios. Device testing requires its own request.
 Use `workspace.py locate <path> --json` for exact source ownership.
 `workspace.py context <Owner> --json` includes dependency guides and conditional skill suggestions.

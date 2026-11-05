@@ -20,14 +20,16 @@ and verification record; unchecked work is not a claim of delivered behavior.
 - [x] Keep snippets and onscreen entities connected to durable records and exact actions.
 - [x] Run source checks, authorized builds, and Siri metadata analysis for en/hi/kn.
 - [x] Add focused deterministic regression checks for new mutation behavior.
-- [ ] Create and compile SiriEvaluations scenarios grounded in actual metadata.
-- [ ] Run evaluations on supported physical hardware and inspect per-scenario reports.
+- [x] Prepare, type-check, compile, and link SiriEvaluations scenarios grounded in actual metadata.
+- [x] Honor the latest build-only instruction; leave physical evaluations and
+  per-scenario runtime reports deferred until execution is requested again.
 - [x] Record remaining preview/device limitations separately from compiled behavior.
 
-The two unchecked evaluation items are future verification work, not delivered
-test coverage. There is no app test target; adding one remains subject to the
-repository's explicit-request rule. The global skill now documents scenario
-authoring, device prerequisites, standard metrics, and per-turn report analysis.
+The [prepared evaluation sources](../Performance/SiriEvaluations/README.md) cover
+eight scenarios and type-check against iPhoneOS 27.3. The user authorized the
+dedicated `TripSiriEvaluations` target, then explicitly requested compilation
+without execution. The global skill documents scenario authoring, device
+prerequisites, standard metrics, and per-turn report analysis.
 
 ## Delivered behavior
 
@@ -61,6 +63,10 @@ library without publishing checklist text to Spotlight or App Group snapshots.
   project skills, and platform contracts pass.
 - `bash scripts/build.sh app Debug`: generic iOS Simulator build passes with
   Xcode 27.3 beta 1, including TripWidgets and App Intents metadata extraction.
+- `bash scripts/build_siri_evaluations.sh Debug`: generic iPhoneOS 27.3
+  `build-for-testing` passes. The app, widgets, and hosted test bundle compile and
+  link with strict Swift 6 concurrency; the log reports `TEST BUILD SUCCEEDED`
+  without compiler errors or warnings. Tests were not executed.
 - The app contains `Metadata.appintents/Skills.skillsc`; all three skills appear
   in the public metadata analyzer output.
 - Analyzer en/hi/kn: 38 actions, 20 tools, four entities, zero errors/warnings.
@@ -74,11 +80,13 @@ library without publishing checklist text to Spotlight or App Group snapshots.
   review was not completed because Device Hub computer-use access was not approved.
 - Physical Siri conversations/evaluations, donation delivery, sharing presentation,
   actual Maps handoff, and this revision's visionOS compilation remain unverified.
+  The latest user instruction is build-only; no additional runtime checks run.
 
 Logs and analyzer reports are local ignored artifacts under `.build/siri-preview`.
 Global skill edits live outside this Git repository; only Trip adoption guidance
-is committed here. The global quick validator could not run because PyYAML is
-not installed; the skill installer checked links, hashes, and project file limits.
+is committed here. The global quick validator passes using an isolated, SHA-256
+verified PyYAML dependency from PyPI; no system Python installation was changed.
+The skill installer also checked links, hashes, and project file limits.
 
 ## Adoption decisions
 
