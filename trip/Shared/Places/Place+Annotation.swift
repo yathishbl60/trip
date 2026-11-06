@@ -5,9 +5,10 @@ import TripDomain
 import Foundation
 
 extension Place {
-    var hasAnnotationPhoto: Bool { !isLive && category != .place }
-    var annotationRatingText: String { rating == nil ? TripText.viewDetails.text : ratingText }
-    var annotationRatingSymbol: String { rating == nil ? "chevron.right" : "star.fill" }
+    /// The app bundles no place photographs; saved/sample places use category artwork too.
+    var hasAnnotationPhoto: Bool { false }
+    var annotationSubtitle: String { rating == nil ? category.annotationTitle : ratingText }
+    var annotationSubtitleSymbol: String { rating == nil ? category.symbol : "star.fill" }
 }
 
 extension PlaceCategory {

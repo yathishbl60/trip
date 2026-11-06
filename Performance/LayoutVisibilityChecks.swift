@@ -9,6 +9,7 @@ enum LayoutVisibilityChecks {
         try await customLadder(engine)
         try await selectedFallback(engine)
         try await edgeOverlap(engine)
+        try await LayoutVisualBoundsChecks.run(engine)
         print("PASS: offscreen candidates preserve the visible budget at every zoom and during movement")
     }
 
@@ -36,7 +37,7 @@ enum LayoutVisibilityChecks {
         let card = try await engine.arrange(request(zoom: .street, x: -60))
         try require(card.first?.place.id == "offscreen" && card.first?.style == .card,
                     "A partially visible card was removed before collision layout")
-        let dot = try await engine.arrange(request(zoom: .region, x: -10))
+        let dot = try await engine.arrange(request(zoom: .region, x: -8))
         try require(dot.first?.place.id == "offscreen", "An edge-overlapping dot was discarded")
     }
 

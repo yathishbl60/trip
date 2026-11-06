@@ -20,6 +20,7 @@ public nonisolated struct PlaceCollection {
     }
 
     public mutating func merge(_ incoming: [Place]) throws -> [Place] {
+        try Task.checkCancellation()
         matched.removeAll(keepingCapacity: true)
         for place in incoming where place.coordinate.isValid {
             try Task.checkCancellation()
@@ -52,9 +53,16 @@ public nonisolated struct PlaceCollection {
         guard let radius = policy.nameMatchRadius else { return nil }
         let name = place.matchingName
         guard !name.isEmpty else { return nil }
-        return names[name, default: []].compactMap { indexed[$0] }
-            .filter { $0.coordinate.distance(to: place.coordinate) < radius }
-            .min { $0.id < $1.id }
+        var nearest: (place: Place, distance: Double)?
+        for id in names[name, default: []] {
+            guard let candidate = indexed[id] else { continue }
+            let distance = candidate.coordinate.distance(to: place.coordinate)
+            guard distance < radius else { continue }
+            if let nearest, distance > nearest.distance
+                || (distance == nearest.distance && candidate.id > nearest.place.id) { continue }
+            nearest = (candidate, distance)
+        }
+        return nearest?.place
     }
 
     private func precedes(_ lhs: Place, _ rhs: Place) -> Bool {

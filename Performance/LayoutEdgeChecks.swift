@@ -15,6 +15,7 @@ enum LayoutEdgeChecks {
         try await reservation(engine)
         try await candidateBudget(engine)
         try await LayoutVisibilityChecks.run(engine)
+        try await LayoutObstructionChecks.run(engine)
     }
 
     private static func invalidBounds(_ engine: MarkerLayoutEngine) async throws {

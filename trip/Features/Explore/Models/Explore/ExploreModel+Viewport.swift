@@ -24,12 +24,14 @@ extension ExploreModel {
               selection.revision == revision, camera.sheetFrame != frame else { return }
         camera.sheetFrame = frame
         selection.viewportChanged()
-        layout.viewportSettled()
+        if !isSuspended { layout.viewportSettled() }
     }
 
     func noticeAreaChanged(_ frame: CGRect) {
         guard camera.noticeFrame != frame else { return }
         camera.noticeFrame = frame
+        guard !isSuspended else { return }
+        layout.viewportSettled()
     }
 
     func updateAccessibility(scale: CGFloat, reduceMotion: Bool) {

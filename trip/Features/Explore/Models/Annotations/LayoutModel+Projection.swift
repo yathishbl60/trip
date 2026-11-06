@@ -20,6 +20,7 @@ extension LayoutModel {
     }
 
     func viewportSettled() {
+        cancelPending()
         viewportTask?.cancel()
         viewportTask = Task { [weak self] in
             try? await Task.sleep(for: ProjectionScheduling.sheetSettlingDelay)

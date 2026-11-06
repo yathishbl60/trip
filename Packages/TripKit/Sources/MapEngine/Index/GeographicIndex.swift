@@ -31,7 +31,7 @@ public nonisolated struct GeographicIndex: Sendable {
         guard bounds.minX.isFinite, bounds.minY.isFinite, bounds.maxX.isFinite, bounds.maxY.isFinite,
               bounds.width > 0, bounds.height > 0, !bounds.isNull else { return }
         for slice in candidateSlices(in: bounds) {
-            for candidate in slice where candidate.isNear(bounds)
+            for candidate in slice where candidate.isNearValidatedBounds(bounds)
                 && (categories.isEmpty || categories.contains(candidate.place.category)) { visit(candidate) }
         }
     }

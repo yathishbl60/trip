@@ -9,7 +9,7 @@ struct MarkerCaptionView: View {
     let style: MarkerStyle
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: MarkerStyle.captionSpacing) {
             title
             AnnotationRatingView(place: place, showsReviews: true)
         }
@@ -23,8 +23,9 @@ struct MarkerCaptionView: View {
             .multilineTextAlignment(.leading)
             .lineLimit(style.titleLines)
             .allowsTightening(true)
-            .minimumScaleFactor(0.78)
-            .frame(maxWidth: .infinity, minHeight: 32, maxHeight: 32, alignment: .leading)
+            .truncationMode(.tail)
+            .frame(maxWidth: .infinity, minHeight: MarkerStyle.captionTitleHeight,
+                   maxHeight: MarkerStyle.captionTitleHeight, alignment: .leading)
     }
 }
 
@@ -35,10 +36,20 @@ struct MarkerCaptionView: View {
         MarkerCaptionView(place: PreviewFixtures.longName, style: .card)
         MarkerCaptionView(place: PreviewFixtures.unrated, style: .card)
     }
-    .frame(width: 104).padding(24)
+    .frame(width: MarkerStyle.card.captionWidth).padding(24)
 }
 #Preview("Dark label", traits: .sizeThatFitsLayout) {
     MarkerCaptionView(place: PreviewFixtures.hotel, style: .card)
-        .frame(width: 104).padding(24).preferredColorScheme(.dark)
+        .frame(width: MarkerStyle.card.captionWidth).padding(24).preferredColorScheme(.dark)
+}
+#Preview("Complex scripts · fixed card caption") {
+    VStack(spacing: 24) {
+        ForEach(["พิพิธภัณฑ์และหอศิลป์กรุงเทพ", "कला और इतिहास संग्रहालय", "ಕಲೆ ಮತ್ತು ಇತಿಹಾಸ ಸಂಗ್ರಹಾಲಯ"], id: \.self) { name in
+            let place = Place(id: name, name: name, coordinate: .bangkok, category: .museum,
+                              importance: 1, rating: nil, reviews: nil, isLive: true)
+            MarkerCaptionView(place: place, style: .card)
+                .frame(width: MarkerStyle.card.captionWidth, height: MarkerStyle.card.contentHeight)
+        }
+    }.padding().preferredColorScheme(.dark)
 }
 #endif

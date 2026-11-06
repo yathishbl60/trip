@@ -8,8 +8,6 @@
       "trip/Features/Explore/Views/Markers/CategoryBadge.swift": "Decorative SF Symbol scales with its supplied badge diameter."
     },
     "raw_spacing": {
-      "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": "Optical three-point spacing in the bounded map rating.",
-      "trip/Features/Explore/Views/Markers/MarkerCaptionView.swift": "Measured map caption geometry.",
       "trip/Features/Explore/Views/Markers/RatingView.swift": "Optical spacing between the rating glyph and its value."
     },
     "raw_inset": {

@@ -16,6 +16,7 @@ enum DataChecks {
     }
 
     static func identity() throws {
+        try PlaceCollectionChecks.run()
         var collection = PlaceCollection([], policy: MapDataPolicy(nameMatchRadius: nil))
         let result = try collection.merge([CheckFixtures.place("a", name: "Same"), CheckFixtures.place("b", name: "Same")])
         try require(result.count == 2, "Identity-only policy merged distinct records")

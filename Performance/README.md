@@ -110,6 +110,17 @@ comparison command requires an explicit override when the recorded machine diffe
 
 ## Coverage
 
+The 2026-11-05 MapEngine pass adds `LayoutVisualBoundsChecks`,
+`LayoutObstructionChecks`, `MapOcclusionChecks`, and `PlaceCollectionChecks` to
+the existing `check`/`all` entry points. They cover every edge at -0.25/0/+0.25-point
+overlap across all three stages and both supported scale endpoints, malformed
+obstructions, finite full-cover/owner reservations, floating sheets and notices,
+phantom empty-sheet clearance, and nearest same-name branch identity. Projection
+readiness also checks immediate stale-work cancellation before coalesced refresh.
+The updated suite passed on 2026-11-06. All 11 benchmark workloads matched their
+baseline checksums and passed the 20% regression threshold.
+[MapEngine review and paired measurements](../docs/MapEngineReview.md)
+
 Map checks include `CameraGroundScaleChecks`,
 `LayoutVisibilityChecks`, and `MarkerRetirementChecks` through the standard check
 entry points. They cover calibrated menu stages and dot selection after newer

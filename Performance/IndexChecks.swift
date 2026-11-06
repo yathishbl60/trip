@@ -31,8 +31,14 @@ enum IndexChecks {
         try require(index.query(.world, categories: []).count == count, "World query omitted places")
         try require(index.query(nil, categories: []).count == count, "High-pitch fallback omitted places")
         let invalid = [MKMapRect.null, MKMapRect(x: .nan, y: 0, width: 1, height: 1),
-                       MKMapRect(x: 0, y: 0, width: 0, height: 1)]
-        for rect in invalid { try require(index.query(rect, categories: []).isEmpty, "Invalid bounds returned places") }
+                       MKMapRect(x: 0, y: 0, width: 0, height: 1),
+                       MKMapRect(x: 0, y: 0, width: 1, height: -1),
+                       MKMapRect(x: 0, y: 0, width: .infinity, height: 1)]
+        let candidate = MapCandidate(CheckFixtures.place("bounds"))
+        for rect in invalid {
+            try require(index.query(rect, categories: []).isEmpty, "Invalid bounds returned places")
+            try require(!candidate.isNear(rect), "Public proximity check accepted invalid bounds")
+        }
         try require(GeographicIndex().query(.world, categories: []).isEmpty, "Empty index is not empty")
     }
 }

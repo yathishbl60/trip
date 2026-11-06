@@ -20,6 +20,13 @@ public nonisolated struct MapCandidate: Sendable {
     }
 
     public func isNear(_ rect: MKMapRect) -> Bool {
+        guard rect.minX.isFinite, rect.minY.isFinite, rect.maxX.isFinite, rect.maxY.isFinite,
+              rect.width > 0, rect.height > 0, !rect.isNull else { return false }
+        return isNearValidatedBounds(rect)
+    }
+
+    /// The index validates bounds once before visiting its candidate slice.
+    func isNearValidatedBounds(_ rect: MKMapRect) -> Bool {
         guard point.x.isFinite, point.y.isFinite else { return false }
         let world = MKMapSize.world.width
         let offset = abs(point.x - rect.midX).truncatingRemainder(dividingBy: world)

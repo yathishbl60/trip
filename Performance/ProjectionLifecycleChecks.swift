@@ -14,6 +14,7 @@ import Synchronization
         try await gestureCancelsSettledWork()
         try await suspensionCancelsWork()
         try await ProjectionReadinessChecks.run()
+        try await MapOcclusionChecks.run()
         print("PASS: projection invalidation notifies observers, cancels queued work, and permits a fresh layout")
     }
 

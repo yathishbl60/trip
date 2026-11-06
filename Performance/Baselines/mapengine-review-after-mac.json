@@ -1,0 +1,107 @@
+{
+  "checksPassed": true,
+  "dirty": true,
+  "environment": {
+    "architecture": "arm64",
+    "compiler": "swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)\nTarget: arm64-apple-macosx27.3.0",
+    "cpu": "Apple M5 Max",
+    "flags": "-D TRIP_STANDALONE -O -whole-module-optimization -parse-as-library -swift-version 6 -strict-concurrency=complete -default-isolation MainActor -enable-upcoming-feature MemberImportVisibility",
+    "macOS": "27.3",
+    "sdk": "27.3"
+  },
+  "metrics": [
+    {
+      "checksum": 31860,
+      "medianMicroseconds": 22.834,
+      "name": "lookup/2000/0.4deg/scan",
+      "p95Microseconds": 27.875,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 31860,
+      "medianMicroseconds": 4.75,
+      "name": "lookup/2000/0.4deg/index",
+      "p95Microseconds": 5.959,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 0,
+      "medianMicroseconds": 18.584,
+      "name": "lookup/2000/6.0deg/scan",
+      "p95Microseconds": 22.542,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 0,
+      "medianMicroseconds": 0.416,
+      "name": "lookup/2000/6.0deg/index",
+      "p95Microseconds": 0.459,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 787080,
+      "medianMicroseconds": 560.958,
+      "name": "lookup/50000/0.4deg/scan",
+      "p95Microseconds": 608.833,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 787080,
+      "medianMicroseconds": 113.083,
+      "name": "lookup/50000/0.4deg/index",
+      "p95Microseconds": 136.583,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 3420,
+      "medianMicroseconds": 513.458,
+      "name": "lookup/50000/6.0deg/scan",
+      "p95Microseconds": 563.625,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 3420,
+      "medianMicroseconds": 6.458,
+      "name": "lookup/50000/6.0deg/index",
+      "p95Microseconds": 7.625,
+      "sampleCount": 1000,
+      "warmupCount": 200
+    },
+    {
+      "checksum": 24200,
+      "medianMicroseconds": 2678.416,
+      "name": "layout/Overview",
+      "p95Microseconds": 2817.708,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 24200,
+      "medianMicroseconds": 2731.75,
+      "name": "layout/Places",
+      "p95Microseconds": 2864.5,
+      "sampleCount": 200,
+      "warmupCount": 20
+    },
+    {
+      "checksum": 22658,
+      "medianMicroseconds": 2773.167,
+      "name": "layout/Details",
+      "p95Microseconds": 2975.667,
+      "sampleCount": 200,
+      "warmupCount": 20
+    }
+  ],
+  "recordedAt": "2026-11-06T01:58:43.554757+00:00",
+  "revision": "b30a519b23e8eb4f5b088776f237d757ff407a77",
+  "schemaVersion": 1,
+  "sourceDigest": "e81682bcb0a4aabb5d6a1f09d63508833619d0419ce5d1d597df15994709a67c",
+  "workloadVersion": 2
+}

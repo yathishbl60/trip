@@ -1,19 +1,26 @@
 import TripLocalization
 import SwiftUI
 import MapEngine
+import CoreGraphics
 
 struct MapSearchStatusView: View {
     let model: CatalogModel
     var showsProgress = true
     var motion = MapMotion()
     var retry: (() -> Void)? = nil
+    var areaChanged: (CGRect) -> Void = { _ in }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        Group {
+        ZStack {
             if isVisible { content.transition(.opacity) }
         }
+        .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { areaChanged(isVisible ? $0 : .null) }
+        .onChange(of: isVisible) { _, visible in if !visible { areaChanged(.null) } }
+        .onDisappear { areaChanged(.null) }
+        .frame(maxWidth: 420)
+        .padding(.horizontal, AppTheme.Spacing.edge)
         .animation(animation, value: isVisible)
         .animation(animation, value: message)
         .allowsHitTesting(!model.isSearching && model.canRetrySearch && retry != nil)
@@ -27,7 +34,7 @@ struct MapSearchStatusView: View {
         if !model.isSearching, model.canRetrySearch, let retry {
             Button(action: retry) {
                 // Keep the tap target outside the compact glass surface.
-                notice.frame(minHeight: AppTheme.controlTarget).contentShape(.rect)
+                notice.frame(minWidth: AppTheme.controlTarget, minHeight: AppTheme.controlTarget).contentShape(.rect)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(TripText.tryAgainValue(message).resource)
@@ -50,8 +57,6 @@ struct MapSearchStatusView: View {
         .font(.caption)
         .padding(.horizontal, AppTheme.Spacing.medium).padding(.vertical, AppTheme.Spacing.tight)
         .tripGlassSurface()
-        .frame(maxWidth: 420)
-        .padding(.horizontal, AppTheme.spacing)
     }
 }
 

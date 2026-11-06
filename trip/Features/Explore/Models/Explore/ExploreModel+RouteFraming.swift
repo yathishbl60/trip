@@ -6,6 +6,7 @@ extension ExploreModel {
     func directionsFrameChanged(_ frame: CGRect) {
         guard directions.isPresented, frame != camera.sheetFrame else { return }
         camera.sheetFrame = frame
+        if !isSuspended { layout.viewportSettled() }
         directionsViewportChanged()
     }
 

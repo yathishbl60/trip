@@ -32,7 +32,13 @@ import Foundation
 
     private static func viewport(_ model: LayoutModel) async throws {
         let revision = model.projectionRevision
+        let generation = model.generation
+        let refinement = Task<Void, Never> { try? await Task.sleep(for: .seconds(1)) }
+        model.refinementTask = refinement
         model.viewportSettled()
+        try require(model.generation > generation && refinement.isCancelled,
+                    "Sheet movement retained layout/refinement for obsolete exclusions")
+        try require(model.projectionRevision == revision, "Sheet movement projected before geometry settled")
         let superseded = model.viewportTask
         model.viewportSettled()
         let latest = model.viewportTask

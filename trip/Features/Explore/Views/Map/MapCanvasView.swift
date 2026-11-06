@@ -22,9 +22,8 @@ struct MapCanvasView: View {
         MapSearchStatusView(model: controller.model.catalog,
                             showsProgress: controller.model.mapSheet == nil && !controller.model.catalog.isSearchPresented,
                             motion: controller.model.configuration.motion,
-                            retry: CatalogController(model: controller.model).search)
-            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) },
-                              action: controller.noticeAreaChanged)
+                            retry: CatalogController(model: controller.model).search,
+                            areaChanged: controller.noticeAreaChanged)
             .padding(.bottom, 32)
     }
 }

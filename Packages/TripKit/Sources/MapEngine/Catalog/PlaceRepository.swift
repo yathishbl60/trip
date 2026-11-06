@@ -14,11 +14,13 @@ public actor PlaceRepository {
     }
 
     public func merge(_ incoming: [Place], into places: [Place], preserving id: String?) throws -> CatalogSnapshot {
+        try Task.checkCancellation()
         var collection = PlaceCollection(places, preserving: id, policy: policy)
         return try CatalogSnapshot(collection.merge(incoming))
     }
 
     public func mergeSearch(_ incoming: [Place], into places: [Place], preserving id: String?) throws -> CatalogSearchUpdate {
+        try Task.checkCancellation()
         var collection = PlaceCollection(places, preserving: id, policy: policy)
         let catalog = try CatalogSnapshot(collection.merge(incoming))
         return CatalogSearchUpdate(catalog: catalog, matches: CatalogSnapshot(collection.matchingPlaces))

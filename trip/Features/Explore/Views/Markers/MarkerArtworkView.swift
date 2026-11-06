@@ -9,13 +9,15 @@ struct MarkerArtworkView: View {
     let place: Place
     let style: MarkerStyle
     var includesPhoto = true
+    private var showsPhoto: Bool { includesPhoto && place.hasAnnotationPhoto }
+    private var symbolSize: CGFloat { style.hasLabel ? 22 : 16 }
 
     var body: some View {
         artwork
             .frame(width: style.photoSize.width, height: style.photoSize.height)
             .clipShape(.rect(cornerRadius: style.photoRadius))
             .overlay(alignment: .bottomTrailing) {
-                if includesPhoto { badge.transition(.opacity) }
+                if showsPhoto { badge.transition(.opacity) }
             }
             .accessibilityHidden(true)
     }
@@ -23,7 +25,7 @@ struct MarkerArtworkView: View {
     private var artwork: some View {
         ZStack {
             place.category.color.opacity(style == .dot ? 1 : 0.2)
-            if includesPhoto {
+            if showsPhoto {
                 Image(decorative: place.category.photoName)
                     .resizable().scaledToFill()
                     .opacity(style.photoOpacity)
@@ -32,9 +34,9 @@ struct MarkerArtworkView: View {
             Image(systemName: place.category.symbol)
                 .symbolVariant(.fill)
                 .symbolRenderingMode(.monochrome)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: symbolSize, weight: .semibold))
                 .foregroundStyle(.primary)
-                .opacity(!includesPhoto && style != .dot ? 1 : 0)
+                .opacity(!showsPhoto && style != .dot ? 1 : 0)
         }
     }
 

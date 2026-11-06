@@ -1,6 +1,10 @@
 import CoreGraphics
 
 public extension MarkerStyle {
+    static let captionSpacing: CGFloat = 3
+    static let metadataHeight: CGFloat = 14
+    static var captionTitleHeight: CGFloat { card.contentHeight - captionSpacing - metadataHeight }
+
     var contentInset: CGFloat {
         switch self {
         case .dot: 2

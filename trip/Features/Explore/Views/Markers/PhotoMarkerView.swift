@@ -48,4 +48,12 @@ struct PhotoMarkerView: View, Equatable {
 #Preview("Unrated card", traits: .sizeThatFitsLayout) {
     PhotoMarkerView(place: PreviewFixtures.unrated, style: .card).padding(28)
 }
+#Preview("Saved sample · missing photo uses category artwork") {
+    PhotoMarkerView(place: PreviewFixtures.hotel, style: .card)
+        .padding().preferredColorScheme(.dark)
+}
+#Preview("Long name · full card footprint, accessibility scale") {
+    PlaceMarkerView(place: PreviewFixtures.longName, style: .card, scale: 1.5)
+        .padding().frame(width: 320).preferredColorScheme(.dark)
+}
 #endif

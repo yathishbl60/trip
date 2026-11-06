@@ -11,7 +11,7 @@ public actor MarkerLayoutEngine {
     public func arrange(_ request: LayoutRequest) throws -> [MarkerPlacement] {
         try Task.checkCancellation()
         guard request.isValid else { return [] }
-        var grid = collisionGrid(for: request)
+        var grid = try collisionGrid(for: request)
         var result: [MarkerPlacement] = []
         var photoCount = 0
         let zoomStyles = request.policy.styles(at: request.zoom)
@@ -28,13 +28,17 @@ public actor MarkerLayoutEngine {
         return result
     }
 
-    private func collisionGrid(for request: LayoutRequest) -> CollisionGrid {
+    private func collisionGrid(for request: LayoutRequest) throws -> CollisionGrid {
         var grid = CollisionGrid()
         for rect in request.exclusions {
+            try Task.checkCancellation()
+            guard rect.isFinite, !rect.isEmpty else { continue }
             let clipped = rect.intersection(request.viewport)
             if clipped.isFinite && !clipped.isEmpty { grid.insert(clipped) }
         }
         for reservation in request.reservations {
+            try Task.checkCancellation()
+            guard reservation.rect.isFinite, !reservation.rect.isEmpty else { continue }
             let clipped = reservation.rect.intersection(request.viewport)
             if clipped.isFinite && !clipped.isEmpty { grid.insert(clipped, id: reservation.id) }
         }
@@ -64,11 +68,11 @@ public actor MarkerLayoutEngine {
     }
 
     func fitsViewport(_ candidate: ProjectedPlace, style: MarkerStyle, in request: LayoutRequest) -> Bool {
-        let rect = collisionBounds(for: candidate, style: style, in: request)
-        guard request.viewport.intersects(rect) else { return false }
+        let artwork = MarkerGeometry(style: style, scale: request.scale).visualBounds(at: candidate.point)
+        guard !request.viewport.intersection(artwork).isEmpty else { return false }
         // A selected label must be fully readable; smaller appearances can overlap the edge.
         if candidate.place.id == request.selectedID, style.hasLabel {
-            return request.viewport.contains(rect)
+            return request.viewport.contains(collisionBounds(for: candidate, style: style, in: request))
         }
         return true
     }

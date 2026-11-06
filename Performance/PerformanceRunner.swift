@@ -27,6 +27,7 @@ import Foundation
         try SpatialChecks.searchAndZoom()
         try IndexChecks.run()
         try dataChecks()
+        try await PlaceCollectionChecks.cancellation()
         try SearchCoverageChecks.run()
         try AnnotationChoiceChecks.run()
         try CameraFeedbackChecks.run()

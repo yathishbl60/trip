@@ -14,8 +14,15 @@ public nonisolated struct MarkerGeometry: Sendable {
         return CGRect(x: point.x - size.width / 2, y: point.y - size.height / 2,
                       width: size.width, height: size.height)
     }
+
+    /// Visible surface only; larger touch targets and collision clearance do not make artwork visible.
+    public func visualBounds(at point: CGPoint) -> CGRect {
+        let size = CGSize(width: style.size.width * scale, height: style.size.height * scale)
+        return CGRect(x: point.x - size.width / 2, y: point.y - size.height / 2,
+                      width: size.width, height: size.height)
+    }
 }
 
 public nonisolated extension CGRect {
-    var isFinite: Bool { minX.isFinite && minY.isFinite && maxX.isFinite && maxY.isFinite }
+    var isFinite: Bool { !isInfinite && minX.isFinite && minY.isFinite && maxX.isFinite && maxY.isFinite }
 }

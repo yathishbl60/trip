@@ -129,11 +129,29 @@ changed pitch, or failed projection use the existing distance presets until a ne
 measurement is available. Zoom state also updates when the catalog is empty.
 Calibration is a local estimate; native MapKit projection remains authoritative.
 
-Layout ranking uses the same viewport footprint and permitted styles as placement
-before applying its candidate cutoff. This preserves budget for visible candidates
+Layout ranking uses the visible artwork footprint and permitted styles before
+applying its candidate cutoff. Invisible touch padding, collision clearance, and
+zero-area edge tangency cannot consume a visible marker slot. Partially visible
+artwork remains eligible, including subpoint edge overlap. This preserves budget for visible candidates
 without changing coordinates or dropping partly visible edge markers. The earlier
 geographic projection budget still applies; this does not guarantee every visible
 place can be considered in a dense tilted map.
+
+Collision and hit-test bounds remain separate from visual eligibility. Selected
+labels still require full readable clearance; they can fall back to compact artwork
+at an edge. Invalid/nonfinite exclusions and reservations are rejected before
+clipping, including CoreGraphics' infinite-rectangle sentinel. Finite covering
+obstacles and a marker's ability to ignore its own reservation remain authoritative.
+
+Measured place/directions sheets and search notices join safe-area and native
+reserved-region exclusions in map-local coordinates. Empty sheets are checked
+before clearance inflation, off-map rectangles are discarded, and each obstacle
+is clipped to the live map frame. Geometry updates cancel obsolete placement and
+refinement immediately while coalescing the fresh projection. They do not change
+native safe areas, attribution, map controls, or camera positioning.
+Search notices report their content/control bounds before the outer centering
+frame and padding. The retry target remains at least the platform control size,
+while blank space around the pill remains available to map interaction.
 
 Annotations superseded before native appearance release their reservations and
 are removed immediately. Appeared annotations retain their fade, collision space,
@@ -153,7 +171,8 @@ stage/visibility decisions. Ordinary geometry such as half a width stays local.
 | Collision spacing, image density, continuity ranking | `MarkerLayoutPolicy+Placement` |
 | Camera distance bounds, dot-selection zoom, 3D focus | `CameraNavigationPolicy` |
 | Overscan, ground-scale sampling, movement sensitivity | `CameraProjectionPolicy` |
-| Sheet/location exclusions and selection edge spacing | `MapViewportPolicy` in `CameraModel+Viewport` |
+| Sheet/location exclusions and selection edge spacing | `MapViewportPolicy.swift` |
+| Global-to-local obstruction clipping | `MapViewportOcclusion.swift` |
 | Fade/morph duration and settling allowances | `MapMotion` |
 | Adaptive camera animation timing | `CameraTransitionTiming` in `CameraModel+Motion` |
 
@@ -170,6 +189,25 @@ appearance per window. Changing a style updates the existing Map rather than
 recreating its camera, annotations, or selected route. The style menu remains
 available above a place or directions sheet; search and save presentations retain
 their existing toolbar behavior.
+
+Detailed annotations preserve a 184×64-point surface and a 110×52-point caption
+area before map accessibility scaling. The shared caption metrics allocate 35
+points to the two-line name, a three-point gap, and 14 points to metadata. Long
+names truncate rather than shrinking below the intended font size; the complete
+name/category remains in the annotation's accessibility label and place details.
+Unrated places show their category instead of a repeated View details prompt.
+Category symbols grow within the existing artwork area at the detailed stage.
+No place photographs are bundled, so live, saved, and sample annotations use
+category artwork; the leaf artwork view enforces that fallback as well as its host.
+
+Catalog name matching uses the nearest existing place inside the configured
+radius, with a stable ID tie-break; an exact provider ID takes precedence. A
+refresh near one branch must not move another same-name branch's annotation.
+Cancelled merges stop before snapshot preparation, including empty-input merges.
+Public proximity queries reject malformed rectangles; indexed queries validate
+the viewport once before visiting the retained candidate slice.
+
+See [the MapEngine review](MapEngineReview.md) for concrete findings and verification scope.
 
 Place details keep the native sheet background and detents. Directions and Save
 remain the primary actions; Share is directly in the toolbar. Information rows
