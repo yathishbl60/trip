@@ -1,13 +1,16 @@
 import TripLocalization
 import SwiftUI
 import TripDomain
+import CoreGraphics
 
 struct TripMapView: View {
     let controller: TripController
+    private let reservedDivision: CGRect?
     @State private var model: TripMapModel
 
-    init(tripID: UUID, initialDayID: UUID? = nil, controller: TripController) {
+    init(tripID: UUID, initialDayID: UUID? = nil, controller: TripController, reservedDivision: CGRect? = nil) {
         self.controller = controller
+        self.reservedDivision = reservedDivision
         _model = State(initialValue: TripMapModel(tripID: tripID, initialDayID: initialDayID,
                                                 library: controller.model.library))
     }
@@ -22,29 +25,40 @@ struct TripMapView: View {
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
             #endif
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { TripMapToolbar(controller: TripMapController(model: model)) }
             .onChange(of: model.stops, initial: true) { TripMapController(model: model).reconcile() }
             .onChange(of: model.day?.id) { TripMapController(model: model).reconcile() }
     }
 
     @ViewBuilder private var content: some View {
-        if model.trip != nil {
-            if model.stops.isEmpty { TripMapEmptyDayView() }
-            else if model.mappedStops.isEmpty { stops }
-            else {
-                TripMapLayout {
-                    TripMapCanvas(controller: TripMapController(model: model))
-                } detail: { stops }
+        if model.mappedStops.isEmpty {
+            unmappedContent.toolbar { TripMapToolbar(controller: map) }
+        } else {
+            TripMapLayout(reservedDivision: reservedDivision) {
+                TripMapCanvas(controller: map)
+            } detail: { dayPickerInList in
+                TripMapStopsView(map: map, trips: controller, dayPickerInList: dayPickerInList)
+                    .toolbar { TripMapToolbar(controller: map, showsDayPicker: !dayPickerInList) }
             }
-        } else { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
+        }
     }
 
-    private var stops: some View {
-        TripMapStopsView(map: TripMapController(model: model), trips: controller)
+    @ViewBuilder private var unmappedContent: some View {
+        if model.trip == nil { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
+        else if model.stops.isEmpty { TripMapEmptyDayView() }
+        else { TripMapStopsView(map: map, trips: controller) }
     }
+
+    private var map: TripMapController { TripMapController(model: model) }
 }
 
 #if DEBUG
+#Preview("Trip map · Duo tabletop day selection, live map tiles") {
+    let model = TripMapPreview.planner()
+    NavigationStack {
+        TripMapView(tripID: model.library.trips[0].id, controller: TripController(model: model),
+                    reservedDivision: CGRect(x: 0, y: 300, width: 600, height: 20))
+    }.frame(width: 600, height: 650).environment(\.tripHingePartiallyOpen, true)
+}
 #Preview("Trip map · local stops, live map tiles") {
     let model = TripMapPreview.planner()
     NavigationStack {

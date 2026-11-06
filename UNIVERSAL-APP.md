@@ -1,8 +1,7 @@
 # Adaptive app and window contract
 
 Trip has native iOS/iPadOS and visionOS host and widget configurations. Shared
-TripKit modules declare iOS 27, macOS 27, and visionOS 27 deployment support.
-Use the installed Xcode SDK; deployment targets and strict concurrency remain unchanged.
+TripKit modules declare iOS, macOS, and visionOS 27.3 deployment support.
 
 ## Contents
 
@@ -36,18 +35,28 @@ Use the installed Xcode SDK; deployment targets and strict concurrency remain un
 ## Resizing and reserved regions
 
 Navigation, bars, sheets, menus, map controls, and attribution use system components.
-MapReader reprojects when container geometry changes. iOS 27.1 reserved
-regions are queried with availability guards and translated into global coordinates;
-only value rectangles cross into map collision and camera logic. Frames include
+MapReader reprojects when container geometry changes. On iOS the map translates
+reserved regions into global coordinates and passes their rectangles to collision
+and camera logic. Frames include
 system margins already. Route and selection framing choose an exposed rectangle
 outside the fold, occlusions, and sheet. The map stays one continuous native surface.
 
+Trip Map and Today observe SwiftUI's hinge context while their destination is
+mounted. A partially open hinge enables the folded treatments when an active
+division crosses the destination. Closed and fully open poses use native window
+adaptation, as do windows without hinge data. Moving the hinge within a pose
+leaves navigation and camera state alone.
+
 Trip map uses AnyLayout inside the existing NavigationSplitView. It keeps both
-the map and stop list present when the navigation columns collapse. On iOS 27.1,
+the map and stop list present when the navigation columns collapse. On iOS,
 an active interior division region determines the pane axis, lengths, and gap.
 Without a division, the current container aspect ratio determines the layout.
 Pane identity stays stable without device-width tables or nested ArrangementView.
 Map controls remain native and within safe areas.
+When both panes fit on a partial fold, the day picker is the day title in the
+scrollable stop list. Today uses independently scrollable panes for the next
+commitment and the remaining itinerary. A narrow sliver sends the content to
+the larger usable side. See [Today](docs/TripTimeAndToday.md).
 Vertical day maps use a text-scaled preferred list height instead of assigning a
 fixed percentage to the map; the fallback caps the list at half the available height.
 Place actions use ViewThatFits and native buttonSizing; full labels stack when

@@ -4,27 +4,19 @@ import TripDomain
 
 struct TripMapToolbar: ToolbarContent {
     let controller: TripMapController
+    var showsDayPicker = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            dayMenu
-        }.horizontalToolbarItem()
+        if showsDayPicker {
+            ToolbarItem(placement: .topBarTrailing) { TripMapDayPicker(controller: controller) }
+                .horizontalToolbarItem()
+        }
         ToolbarItem(placement: .topBarTrailing) {
             Button(TripText.showAllPlaces.resource, systemImage: "arrow.up.left.and.arrow.down.right") {
                 controller.fit(reduceMotion: reduceMotion)
             }.disabled(controller.model.mappedStops.isEmpty)
         }
-    }
-
-    private var dayMenu: some View {
-        Picker(selection: controller.daySelection(reduceMotion: reduceMotion)) {
-            ForEach(controller.model.trip?.days ?? []) { day in
-                Text("\(day.title) · \(day.placeCountText)").tag(Optional(day.id))
-            }
-        } label: { Label(controller.model.day?.title ?? TripText.day.text, systemImage: "calendar") }
-        .pickerStyle(.menu)
-        .disabled(controller.model.trip == nil)
     }
 
 }

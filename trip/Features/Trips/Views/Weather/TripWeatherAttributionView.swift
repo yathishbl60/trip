@@ -45,7 +45,7 @@ struct TripWeatherAttributionView: View {
         AsyncImage(url: colorScheme == .dark ? attribution.darkMarkURL : attribution.lightMarkURL) { image in
             image.resizable().scaledToFit()
         } placeholder: {
-            Text(" Weather").font(.headline)
+            Text(verbatim: " Weather").font(.headline)
         }
         .frame(width: Self.markSize.width, height: Self.markSize.height)
         .accessibilityLabel(TripText.weatherAppleWeather.resource)

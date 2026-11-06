@@ -37,6 +37,13 @@ the remaining day in a disclosure group. Upcoming timed commitments precede
 flexible plans; ongoing hotel stays do not hide the next place. Visit completion
 uses explicit progress for the same trip and day, never inferred location.
 
+On a partially open Duo, a fold across Today lets the traveler keep **Up Next**
+in view while scrolling **Rest of the Day** independently. A horizontal fold places
+the next commitment above the agenda. A vertical fold puts it on the leading side.
+The destination uses the measured division in its own window. If either side is
+too small for readable rows, or only one section has content to show, the list
+uses the larger side. Returning to one list restores its prior disclosure choice.
+
 Directions opens the existing route flow for exactly the selected place. Saved
 events open their existing detail editor. Their saved location and notes also
 appear directly in Today, including without a connection. A standalone host

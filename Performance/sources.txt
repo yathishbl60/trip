@@ -19,6 +19,8 @@ trip/Features/Explore/Models/Camera/CameraNavigationPolicy.swift
 trip/Features/Explore/Models/Camera/CameraProjectionPolicy.swift
 trip/Features/Explore/Models/Camera/MapViewportOcclusion.swift
 trip/Features/Explore/Models/Camera/MapViewportPolicy.swift
+trip/Features/Trips/Models/Layout/TripPaneDivision.swift
+trip/Features/Trips/Models/Map/TripMapLayoutMetrics.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicIndex.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicIndex+Ranking.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicCandidateBuffer.swift

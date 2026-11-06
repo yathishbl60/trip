@@ -1,12 +1,12 @@
 import TripLocalization
 import SwiftUI
-import AppIntents
 import TripDomain
 
 struct TripTodayView: View {
     let tripID: UUID
     let controller: TripController
     var previewDate: Date? = nil
+    @Environment(\.tripHingePartiallyOpen) private var partiallyOpen
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 60)) { context in
@@ -21,39 +21,10 @@ struct TripTodayView: View {
     }
 
     private func content(_ today: TripTodayModel) -> some View {
-        List {
-            if today.snapshot.needsTimeZoneReview { review }
-            else if let next = today.next {
-                TripTodayNextView(item: next, today: today, tripID: tripID, controller: controller)
-            } else { ContentUnavailableView(today.emptyTitle, systemImage: "sun.horizon", description: Text(today.emptyMessage)) }
-            if !today.rest.isEmpty { rest(today) }
-            Section { Text(today.zoneText).font(.footnote).foregroundStyle(.secondary) }
-        }
-    }
-
-    private var review: some View {
-        Section {
-            Label(TripText.confirmThisTripSTimeZone.resource, systemImage: "clock.badge.questionmark")
-            Text(TripText.olderSchedulesNeedYourReviewBeforeTodayCanUse.resource).foregroundStyle(.secondary)
-            Button(TripText.reviewInEditTrip.resource) { controller.beginEdit(tripID) }
-        }
-    }
-
-    private func rest(_ today: TripTodayModel) -> some View {
-        Section {
-            DisclosureGroup(TripText.restOfTheDayValue(TripText.number(today.rest.count)).text) {
-                ForEach(today.rest) { item in
-                    Button { controller.openTodayItem(item, tripID: tripID) } label: {
-                        Label { VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
-                            Text(item.title).foregroundStyle(.primary)
-                            Text(today.statusText(item)).font(.caption).foregroundStyle(.secondary)
-                        } } icon: { Image(systemName: item.isVisited ? "checkmark.circle" : item.symbol) }
-                            .frame(maxWidth: .infinity, minHeight: AppTheme.controlTarget, alignment: .leading)
-                            .contentShape(.rect)
-                    }.buttonStyle(.plain)
-                        .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: item.id))
-                }
-            }
+        GeometryReader { geometry in
+            let frame = partiallyOpen ? TripPaneDivision.activeFrame(in: geometry) : nil
+            TripTodayContentView(tripID: tripID, today: today, controller: controller,
+                                 division: TripPaneDivision(frame, in: geometry.size))
         }
     }
 }

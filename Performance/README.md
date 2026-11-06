@@ -110,6 +110,11 @@ comparison command requires an explicit override when the recorded machine diffe
 
 ## Coverage
 
+The standalone correctness suite exercises asymmetric book and tabletop folds,
+mirrored coordinates, clipping, invalid measurements, and narrow strips on either
+side of the day map. Native hinge callbacks and rendered poses require a Duo
+runtime. [Trip's adaptive layout contract](../UNIVERSAL-APP.md)
+
 The 2026-11-05 MapEngine pass adds `LayoutVisualBoundsChecks`,
 `LayoutObstructionChecks`, `MapOcclusionChecks`, and `PlaceCollectionChecks` to
 the existing `check`/`all` entry points. They cover every edge at -0.25/0/+0.25-point

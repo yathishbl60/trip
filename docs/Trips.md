@@ -315,8 +315,8 @@ stop ordering are unchanged by removing the preview feature.
 Trip map is a native MapKit view of one itinerary day at a time. Its numbered
 markers and list use the same stable stop IDs. The list keeps every stop reachable
 when map markers overlap; missing coordinates remain listed with an explanation.
-The layout uses a native split arrangement on supported iOS versions and an
-identity-preserving layout based on container aspect ratio on other platforms.
+An identity-preserving layout follows the measured fold when the content spans
+two usable panes. In an ordinary window it follows the container aspect ratio.
 In vertical layouts the list requests a text-scaled preferred height, leaving the
 remaining space for the map; the fallback caps the list at half the available height.
 It retains native map controls and attribution in safe areas.
@@ -324,8 +324,10 @@ On iOS its navigation-bar background stays clear; the native map background exte
 carries the canvas behind the header. The stop list keeps the soft top scroll edge.
 Selecting a pin reveals and highlights its matching list row. Selecting a row
 recenters the map while preserving the current zoom, heading, and pitch. Show in
-Explore and Share are available in each mapped stop's visible actions menu. Day directions stays
-in the pinned list header instead of scrolling after the last stop.
+Explore and Share are available in each mapped stop's visible actions menu. In a
+partially open two-pane layout the day title becomes the native day picker beside
+Directions. Both scroll with the stops so short panes and large text can reach
+every row. Ordinary and empty-day layouts keep day switching in the toolbar.
 Day switching and explicit focus/fit animate unless Reduce Motion is enabled.
 Shared-library changes reconcile selection; framing changes only when mapped stop
 identities or coordinates change. Notes, names, and order edits preserve the camera.

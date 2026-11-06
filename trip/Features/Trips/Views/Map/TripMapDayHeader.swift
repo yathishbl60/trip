@@ -6,6 +6,7 @@ struct TripMapDayHeader: View {
     let day: TripDay
     let trip: TripPlan
     let controller: TripController
+    var dayPicker: TripMapController?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
@@ -15,26 +16,42 @@ struct TripMapDayHeader: View {
                 Text(issue).font(.footnote).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(AppTheme.Spacing.medium)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
-        .overlay(alignment: .bottom) { Divider() }
     }
 
-    private var actions: some View {
-        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: AppTheme.Spacing.small))
-            : AnyLayout(HStackLayout(spacing: AppTheme.Spacing.medium))
-        return layout {
-            VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
-                Text(day.title).font(.headline)
-                Text(trip.dateText(for: day)).font(.subheadline).foregroundStyle(.secondary)
-            }.frame(maxWidth: .infinity, alignment: .leading)
-            Button(TripText.directions.resource, systemImage: "arrow.triangle.turn.up.right.diamond") {
-                controller.showDirections(dayID: day.id, tripID: trip.id)
+    @ViewBuilder private var actions: some View {
+        if typeSize.isAccessibilitySize { stackedActions }
+        else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: AppTheme.Spacing.medium) { dayActions }
+                stackedActions
             }
-            .buttonStyle(.bordered).buttonSizing(.fitted).controlSize(.regular)
-            .disabled(controller.model.dayDirectionsIssue(day, tripID: trip.id) != nil)
-            .accessibilityLabel(TripText.directionsForValue(day.title).resource)
+        }
+    }
+
+    private var stackedActions: some View {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.small) { dayActions }
+    }
+
+    @ViewBuilder private var dayActions: some View {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
+            dayTitle
+            Text(trip.dateText(for: day)).font(.subheadline).foregroundStyle(.secondary)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+        Button(TripText.directions.resource, systemImage: "arrow.triangle.turn.up.right.diamond") {
+            controller.showDirections(dayID: day.id, tripID: trip.id)
+        }
+        .buttonStyle(.bordered).buttonSizing(.fitted).controlSize(.regular)
+        .disabled(controller.model.dayDirectionsIssue(day, tripID: trip.id) != nil)
+        .accessibilityLabel(TripText.directionsForValue(day.title).resource)
+    }
+
+    @ViewBuilder private var dayTitle: some View {
+        if let dayPicker {
+            TripMapDayPicker(controller: dayPicker, inStopList: true)
+                .labelStyle(.titleOnly).menuIndicator(.visible).font(.headline).buttonStyle(.borderless)
+        } else {
+            Text(day.title).font(.headline)
         }
     }
 }

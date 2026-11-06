@@ -4,6 +4,7 @@ import TripDomain
 struct TripMapStopsView: View {
     let map: TripMapController
     let trips: TripController
+    var dayPickerInList = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -15,8 +16,9 @@ struct TripMapStopsView: View {
                 }
         }
         .safeAreaInset(edge: .top, spacing: 0) {
-            if let day = map.model.day, let trip = map.model.trip {
-                TripMapDayHeader(day: day, trip: trip, controller: trips)
+            if !dayPickerInList {
+                dayHeader.padding(AppTheme.Spacing.medium)
+                    .background(.bar).overlay(alignment: .bottom) { Divider() }
             }
         }
     }
@@ -25,6 +27,7 @@ struct TripMapStopsView: View {
         List {
             if let day = map.model.day {
                 Section {
+                    if dayPickerInList { dayHeader }
                     ForEach(map.model.stops) { stop in
                         TripMapStopRow(stop: stop, map: map, trips: trips).id(stop.id)
                             .listRowBackground(stop.id == map.model.selectedStopID ? AppTheme.accent.opacity(0.12) : nil)
@@ -35,6 +38,12 @@ struct TripMapStopsView: View {
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
+    }
+
+    @ViewBuilder private var dayHeader: some View {
+        if let day = map.model.day, let trip = map.model.trip {
+            TripMapDayHeader(day: day, trip: trip, controller: trips, dayPicker: dayPickerInList ? map : nil)
+        }
     }
 
     private func revealSelection(using proxy: ScrollViewProxy) {

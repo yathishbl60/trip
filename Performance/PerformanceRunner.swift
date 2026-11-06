@@ -25,6 +25,7 @@ import Foundation
         try SpatialChecks.grid()
         try SpatialChecks.wrapping()
         try SpatialChecks.searchAndZoom()
+        try TripPaneDivisionChecks.run()
         try IndexChecks.run()
         try dataChecks()
         try await PlaceCollectionChecks.cancellation()
