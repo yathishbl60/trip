@@ -21,13 +21,10 @@ extension TripCollectionsModel {
         guard self.draft?.id == draft.id, draft.canSave else { return }
         let saved = library.update(draft.tripID) { trip in
             if let id = draft.collectionID {
-                guard let index = trip.collections.firstIndex(where: { $0.id == id }) else { return false }
-                trip.collections[index].title = draft.normalizedTitle
+                return TripCollectionEditing.rename(id, to: draft.title, in: &trip)
             } else {
-                guard trip.collections.count < TripLimits.collections else { return false }
-                trip.collections.append(TripCollection(title: draft.normalizedTitle))
+                return TripCollectionEditing.create(draft.title, in: &trip) != nil
             }
-            return true
         }
         cancelCollection(draft)
         showNotice(saved ? nil : TripText.theCollectionCouldnTBeSavedTheTripMay.text)

@@ -68,18 +68,29 @@ public nonisolated struct TripSurfaceStop: Codable, Equatable, Sendable, Identif
     public let name: String
     public let category: PlaceCategory
     public let coordinate: Coordinate
+    // Older shared snapshots have no saved timing values.
+    public let visitMinutes: Int?
+    public let travelMinutes: Int?
+    public let bufferMinutes: Int?
 
     public init(_ stop: TripStop) {
         id = stop.id
         name = String(stop.place.name.prefix(96))
         category = stop.place.category
         coordinate = stop.place.coordinate
+        visitMinutes = stop.timing.visitMinutes
+        travelMinutes = stop.timing.travelMinutes
+        bufferMinutes = stop.timing.bufferMinutes
     }
 
-    public init(id: UUID, name: String, category: PlaceCategory, coordinate: Coordinate) {
+    public init(id: UUID, name: String, category: PlaceCategory, coordinate: Coordinate,
+                visitMinutes: Int? = nil, travelMinutes: Int? = nil, bufferMinutes: Int? = nil) {
         self.id = id
         self.name = String(name.prefix(96))
         self.category = category
         self.coordinate = coordinate
+        self.visitMinutes = visitMinutes
+        self.travelMinutes = travelMinutes
+        self.bufferMinutes = bufferMinutes
     }
 }

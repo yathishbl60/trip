@@ -31,6 +31,8 @@ extension TripModel {
         case .weather: beginWeather(dayID: dayID, tripID: tripID)
         case .addPlaces: beginSavedPlaces(dayID: dayID, tripID: tripID)
         case .map: presentation.detailRoute = TripDetailRoute(tripID: tripID, dayID: dayID)
+        case .directions: showDayDirections(dayID: dayID, tripID: tripID)
+        case .stopOrder: beginStopOrder(dayID: dayID, tripID: tripID)
         }
     }
 

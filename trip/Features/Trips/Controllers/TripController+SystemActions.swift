@@ -24,11 +24,14 @@ extension TripController {
     func systemActionPresentation(bookingEditor: Bool) -> Binding<TripSystemActionSession?> {
         let sessionID = model.systemActions.presentation?.id
         return Binding(get: {
-            guard let session = model.systemActions.presentation,
-                  (session.kind == .alarm) == bookingEditor else { return nil }
+            guard let session = model.systemActions.presentation else { return nil }
+            let belongsToEditor = session.kind == .alarm && model.presentation.eventDraft != nil
+            guard belongsToEditor == bookingEditor else { return nil }
             return session
         }, set: { value in
-            if value == nil, model.systemActions.presentation?.id == sessionID { model.systemActions.dismiss() }
+            guard value == nil, let session = model.systemActions.presentation, session.id == sessionID else { return }
+            let belongsToEditor = session.kind == .alarm && model.presentation.eventDraft != nil
+            if belongsToEditor == bookingEditor { model.systemActions.dismiss() }
         })
     }
 }

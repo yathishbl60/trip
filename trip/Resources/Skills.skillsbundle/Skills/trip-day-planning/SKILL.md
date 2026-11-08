@@ -18,6 +18,8 @@ For an explicit timing change, use Set Visit Timing on the exact saved place.
 Keep unspecified timing fields unchanged. Travel and buffer minutes are personal
 allowances, not route estimates. Ask for the intended local arrival time if it is
 ambiguous. A next-day arrival is relative to the visit's itinerary day.
+For relative duration changes, read the resolved place's saved minute properties
+first. If a value is missing, ask for the intended total rather than assuming zero.
 Flights, stays, and reservations are separate records; do not edit their times
 through the visit tool. If a clock needs daylight-saving review, explain the
 returned issue and open that saved detail for the person to resolve it.
@@ -40,3 +42,8 @@ Use Track Trip Day only when asked to track progress. Use Mark Saved Place Visit
 only when the person explicitly reports that visit completed. It accepts the next
 place of the tracked day or an already recorded visit; a different trip, booking,
 or out-of-order place must not advance another stop. Explain a returned issue.
+Use End Trip Day Tracking only when asked to stop tracking; it keeps recorded visits.
+
+Use Move Saved Place to Day for an explicitly requested move within the same trip.
+It keeps the visit's identity and local arrival clock on the destination day.
+It does not move bookings or recalculate travel. Re-read the destination day afterward.

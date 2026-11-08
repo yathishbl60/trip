@@ -33,7 +33,7 @@ prerequisites, standard metrics, and per-turn report analysis.
 
 ## Delivered behavior
 
-The built app exposes 28 tools: opening Explore, Trips, a new-trip form, a saved
+The original 28-tool baseline covered opening Explore, Trips, a new-trip form, a saved
 trip, an exact detail, or a checklist; reading an itinerary, day, next step, or
 checklist; adding and setting checklist items; opening packing, itinerary-draft,
 booking-review, and place-search flows; starting day tracking; setting visit
@@ -69,10 +69,52 @@ private notes. Lookup rows and next-step snippets provide exact on-screen entity
 identifiers through the app's existing composition boundary. Opening a trip from
 the library donates its matching intent; deletion removes matching donations.
 
-The four runtime skills cover day planning, departure preparation, booking review,
-and navigation. Stored-trip/detail entities have described properties, authentication,
+The initial four runtime skills cover day planning, departure preparation, booking review,
+and navigation; the expansion below adds collection organization. Stored-trip/detail entities have described properties, authentication,
 and safe transferable text. Checklist discovery enumerates the bounded canonical
 library without publishing checklist text to Spotlight or App Group snapshots.
+
+## Workflow coverage expansion on 2026-11-08
+
+The new collection tools create, rename, read, and save existing itinerary places
+into collections. Authenticated collection discovery includes unscheduled saved
+names without adding them to Spotlight or shared widget snapshots. An additional
+runtime skill explains shortlist semantics, ambiguity, and duplicate-safe edits.
+
+Move Saved Place to Day shares its canonical operation with the UI, preserves the
+original visit, and rejects bookings, capacity violations, and duplicate places.
+Optional saved-minute properties let Siri inspect duration and personal allowances
+before relative timing changes. Existing snippets and Spotlight use the same projection;
+older snapshots decode the new optional fields as missing.
+
+Day tool choices now include directions and stop-order review. An iOS-only booking
+alarm tool opens the existing review for an exact booking. End Trip Day Tracking
+is exposed as a tool with authentication and a description of its retained data.
+The ten automatic shortcuts and existing action/entity identifiers remain unchanged.
+
+Widget timeline relevance uses confirmed saved time boundaries, explicit tracking,
+and unfinished departure checklists. It informs native Smart Rotate on iPhone/iPad;
+it neither promises placement nor adds location collection or background polling.
+
+Source, compilation, and metadata evidence are recorded separately under ignored
+`.build/verification` and `.build/system-coverage`. No new tests are introduced;
+the existing day-tool test's case list retains its original five reviewed tools.
+New behavior, Siri routing, native permission/review flows, and Smart Stack placement
+remain for manual verification. Hindi/Kannada additions retain `needs_review`.
+
+### Remaining gaps identified in this review
+
+- Collections can expose unscheduled names, but individual unscheduled places still
+  need their own stable entity before Siri can schedule them directly.
+- Exact-target undo is needed before exposing repeat-safe visit recovery as a tool;
+  the existing undo-last Shortcuts action is not expanded into a custom Siri tool.
+- Calendar export currently covers bookings, not every scheduled visit.
+- Reminders export remains a copy operation; external deletion/edit reconciliation
+  needs native item identifiers and an explicit recovery policy.
+- Native property filtering for saved trips and a complete typed day entity remain
+  separate improvements; existing queries and day-number actions keep their contracts.
+- WeatherKit and Private Cloud Compute retain their documented signing/availability
+  limits. The app does not claim live services that are disabled in its configuration.
 
 ## Expanded coverage on 2026-11-05
 

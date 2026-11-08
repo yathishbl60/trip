@@ -608,19 +608,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open an existing day’s map, schedule editor, planning preview, weather review, or place picker. Changes and new places require review and saving in Trip."
+            "value": "Open an existing day’s map, directions, stop-order suggestion, schedule editor, planning preview, weather review, or place picker. Suggested orders, changes, and new places require review in Trip."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "मौजूदा दिन का मानचित्र, समय संपादक, योजना पूर्वावलोकन, मौसम समीक्षा या स्थान चयन खोलें। बदलाव और नए स्थान Trip में समीक्षा के बाद सहेजे जाते हैं।"
+            "value": "मौजूदा दिन का नक्शा, रास्ते, स्थानों के क्रम का सुझाव, समय-सारणी संपादक, योजना पूर्वावलोकन, मौसम समीक्षा या स्थान चयन खोलें। सुझाए गए क्रम, बदलाव और नए स्थानों की Trip में समीक्षा आवश्यक है।"
           }
         },
         "kn": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ಈಗಿರುವ ದಿನದ ನಕ್ಷೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಕ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಪರಿಶೀಲನೆ ಅಥವಾ ಸ್ಥಳ ಆಯ್ಕೆ ತೆರೆಯಿರಿ. ಬದಲಾವಣೆಗಳು ಮತ್ತು ಹೊಸ ಸ್ಥಳಗಳನ್ನು Trip ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ ಉಳಿಸಬೇಕು."
+            "value": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ದಿನದ ನಕ್ಷೆ, ದಿಕ್ಕುಗಳು, ಸ್ಥಳಗಳ ಕ್ರಮದ ಸಲಹೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಕ, ಯೋಜನೆಯ ಪೂರ್ವವೀಕ್ಷಣೆ, ಹವಾಮಾನ ಪರಿಶೀಲನೆ ಅಥವಾ ಸ್ಥಳ ಆಯ್ಕೆ ತೆರೆಯಿರಿ. ಸೂಚಿಸಿದ ಕ್ರಮಗಳು, ಬದಲಾವಣೆಗಳು ಮತ್ತು ಹೊಸ ಸ್ಥಳಗಳಿಗೆ Trip ನಲ್ಲಿ ಪರಿಶೀಲನೆ ಅಗತ್ಯ."
           }
         }
       }
@@ -728,19 +728,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choose the map, schedule editing, planning preview, weather, or adding places for the specified itinerary day."
+            "value": "Choose the map, directions, a stop-order suggestion, schedule editing, planning preview, weather, or adding places for the specified itinerary day."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "चुने हुए यात्रा दिन के लिए मानचित्र, समय संपादन, योजना पूर्वावलोकन, मौसम या स्थान जोड़ना चुनें।"
+            "value": "निर्दिष्ट यात्रा-दिन के लिए नक्शा, रास्ते, स्थानों के क्रम का सुझाव, समय-सारणी संपादन, योजना पूर्वावलोकन, मौसम या स्थान जोड़ना चुनें।"
           }
         },
         "kn": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ನಿರ್ದಿಷ್ಟ ಪ್ರವಾಸದ ದಿನಕ್ಕೆ ನಕ್ಷೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದನೆ, ಯೋಜನೆ ಪೂರ್ವನೋಟ, ಹವಾಮಾನ ಅಥವಾ ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+            "value": "ನಿರ್ದಿಷ್ಟ ಪ್ರವಾಸದ ದಿನಕ್ಕೆ ನಕ್ಷೆ, ದಿಕ್ಕುಗಳು, ಸ್ಥಳಗಳ ಕ್ರಮದ ಸಲಹೆ, ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದನೆ, ಯೋಜನೆಯ ಪೂರ್ವವೀಕ್ಷಣೆ, ಹವಾಮಾನ ಅಥವಾ ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
           }
         }
       }
@@ -27836,6 +27836,1075 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ಜೂಮ್ ಔಟ್"
+          }
+        }
+      }
+    },
+    "Create collection ${name} in ${trip}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create collection ${name} in ${trip}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} में ${name} संग्रह बनाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${trip} ನಲ್ಲಿ ${name} ಸಂಗ್ರಹ ರಚಿಸಿ"
+          }
+        }
+      }
+    },
+    "Move ${place} to day ${day}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move ${place} to day ${day}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${place} को दिन ${day} में ले जाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${place} ಅನ್ನು ದಿನ ${day} ಕ್ಕೆ ಸರಿಸಿ"
+          }
+        }
+      }
+    },
+    "Read collection ${collection}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read collection ${collection}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${collection} संग्रह पढ़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${collection} ಸಂಗ್ರಹ ಓದಿ"
+          }
+        }
+      }
+    },
+    "Rename collection ${collection} to ${name}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename collection ${collection} to ${name}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${collection} संग्रह का नाम बदलकर ${name} रखें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${collection} ಸಂಗ್ರಹದ ಹೆಸರನ್ನು ${name} ಎಂದು ಬದಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "Review the alarm for ${booking}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review the alarm for ${booking}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${booking} के अलार्म की समीक्षा करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${booking} ಅಲಾರಂ ಪರಿಶೀಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "Save ${place} to collection ${collection}" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save ${place} to collection ${collection}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${place} को ${collection} संग्रह में सहेजें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "${place} ಅನ್ನು ${collection} ಸಂಗ್ರಹದಲ್ಲಿ ಉಳಿಸಿ"
+          }
+        }
+      }
+    },
+    "collection_ambiguous_name" : {
+      "comment": "@symbol collectionAmbiguousName\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More than one collection already has that name in this trip. Choose an existing collection or use a different name."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस यात्रा में उस नाम के एक से अधिक संग्रह पहले से हैं। कोई मौजूदा संग्रह चुनें या दूसरा नाम रखें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರವಾಸದಲ್ಲಿ ಆ ಹೆಸರಿನ ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಸಂಗ್ರಹಗಳು ಈಗಾಗಲೇ ಇವೆ. ಇರುವ ಸಂಗ್ರಹವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಬೇರೆ ಹೆಸರು ಬಳಸಿ."
+          }
+        }
+      }
+    },
+    "collection_invalid_title" : {
+      "comment": "@symbol collectionInvalidTitle\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a collection name with 1 to 80 characters on a single line."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "संग्रह का नाम एक पंक्ति में 1 से 80 वर्णों का रखें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಂಗ್ರಹದ ಹೆಸರನ್ನು ಒಂದೇ ಸಾಲಿನಲ್ಲಿ 1 ರಿಂದ 80 ಅಕ್ಷರಗಳಲ್ಲಿ ನೀಡಿ."
+          }
+        }
+      }
+    },
+    "collection_limit_reached" : {
+      "comment": "@symbol collectionLimitReached\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This trip has reached its collection limit. Use an existing collection or remove one in Trip first."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस यात्रा में संग्रहों की अधिकतम संख्या हो गई है। कोई मौजूदा संग्रह इस्तेमाल करें या पहले Trip में कोई संग्रह हटाएँ।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರವಾಸದಲ್ಲಿ ಸಂಗ್ರಹಗಳ ಗರಿಷ್ಠ ಮಿತಿ ತಲುಪಿದೆ. ಇರುವ ಸಂಗ್ರಹವನ್ನು ಬಳಸಿ ಅಥವಾ ಮೊದಲು Trip ನಲ್ಲಿ ಒಂದು ಸಂಗ್ರಹವನ್ನು ತೆಗೆದುಹಾಕಿ."
+          }
+        }
+      }
+    },
+    "collection_missing" : {
+      "comment": "@symbol collectionMissing\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This collection is no longer available. Choose another saved collection."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यह संग्रह अब उपलब्ध नहीं है। कोई दूसरा सहेजा गया संग्रह चुनें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಸಂಗ್ರಹ ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ. ಉಳಿಸಿದ ಮತ್ತೊಂದು ಸಂಗ್ರಹವನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+          }
+        }
+      }
+    },
+    "collection_needs_saved_visit" : {
+      "comment": "@symbol collectionNeedsSavedVisit\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a place that is still saved in a trip day. Bookings cannot be saved as collection places."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ऐसी जगह चुनें जो यात्रा के किसी दिन में अभी भी सहेजी हुई है। बुकिंग को संग्रह की जगहों के रूप में नहीं सहेजा जा सकता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಯಾವುದಾದರೂ ದಿನದಲ್ಲಿ ಇನ್ನೂ ಉಳಿಸಿರುವ ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಬುಕಿಂಗ್‌ಗಳನ್ನು ಸಂಗ್ರಹದ ಸ್ಥಳಗಳಾಗಿ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "collection_places_full" : {
+      "comment": "@symbol collectionPlacesFull\n@group SiriCollections\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This collection is full. Remove a saved place in Trip before adding another."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यह संग्रह भर गया है। दूसरी जगह जोड़ने से पहले Trip में कोई सहेजी गई जगह हटाएँ।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಸಂಗ್ರಹ ತುಂಬಿದೆ. ಮತ್ತೊಂದು ಸ್ಥಳವನ್ನು ಸೇರಿಸುವ ಮೊದಲು Trip ನಲ್ಲಿ ಉಳಿಸಿದ ಒಂದು ಸ್ಥಳವನ್ನು ತೆಗೆದುಹಾಕಿ."
+          }
+        }
+      }
+    },
+    "intent_alarm_saved_booking_required" : {
+      "comment": "@symbol chooseSavedBookingForAlarm\n@group SiriCoverage\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a saved booking to review its alarm. Saved place visits do not have booking alarms."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "अलार्म की समीक्षा के लिए सहेजी गई बुकिंग चुनें। सहेजे गए स्थानों की यात्राओं के लिए बुकिंग अलार्म नहीं होते।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಅಲಾರಂ ಪರಿಶೀಲಿಸಲು ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಆಯ್ಕೆಮಾಡಿ. ಉಳಿಸಿದ ಸ್ಥಳದ ಭೇಟಿಗಳಿಗೆ ಬುಕಿಂಗ್ ಅಲಾರಂ ಇರುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_collection_name" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection name"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "संग्रह का नाम"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಂಗ್ರಹದ ಹೆಸರು"
+          }
+        }
+      }
+    },
+    "intent_collection_place_count" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved place count"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई जगहों की संख्या"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಸ್ಥಳಗಳ ಸಂಖ್ಯೆ"
+          }
+        }
+      }
+    },
+    "intent_collection_saved_places" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "intent_create_trip_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create Trip Collection"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा संग्रह बनाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಸಂಗ್ರಹ ರಚಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_create_trip_collection_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a named saved-place collection in a saved trip. If one collection already has the same normalized name, return it without creating a duplicate. Does not add places or change the itinerary."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई यात्रा में सहेजी गई जगहों का एक नाम वाला संग्रह बनाएँ। यदि उसी मानकीकृत नाम का एक संग्रह पहले से है, तो दूसरा बनाने के बजाय वही लौटाएँ। इससे जगहें नहीं जुड़तीं और यात्रा कार्यक्रम नहीं बदलता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸದಲ್ಲಿ ಉಳಿಸಿದ ಸ್ಥಳಗಳಿಗಾಗಿ ಹೆಸರಿರುವ ಸಂಗ್ರಹವನ್ನು ರಚಿಸಿ. ಅದೇ ಸಾಮಾನ್ಯೀಕೃತ ಹೆಸರಿನ ಒಂದು ಸಂಗ್ರಹ ಈಗಾಗಲೇ ಇದ್ದರೆ, ಮತ್ತೊಂದು ರಚಿಸದೆ ಅದನ್ನೇ ಹಿಂತಿರುಗಿಸಿ. ಇದು ಸ್ಥಳಗಳನ್ನು ಸೇರಿಸುವುದಿಲ್ಲ ಅಥವಾ ಪ್ರವಾಸದ ಯೋಜನೆಯನ್ನು ಬದಲಿಸುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_end_tracking_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End the current tracked trip day and its Live Activity, keeping recorded visits. Repeating the action leaves tracking ended. Does not delete the itinerary or change bookings."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "दर्ज की गई यात्राएँ बनाए रखते हुए मौजूदा यात्रा-दिन की ट्रैकिंग और उसकी Live Activity समाप्त करें। दोहराने पर ट्रैकिंग समाप्त ही रहती है। यात्रा कार्यक्रम नहीं मिटाता और बुकिंग नहीं बदलता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ದಾಖಲಿಸಿದ ಭೇಟಿಗಳನ್ನು ಉಳಿಸಿಕೊಂಡು ಪ್ರಸ್ತುತ ಪ್ರವಾಸದ ದಿನದ ಟ್ರ್ಯಾಕಿಂಗ್ ಮತ್ತು ಅದರ Live Activity ಮುಗಿಸಿ. ಪುನರಾವರ್ತಿಸಿದರೂ ಟ್ರ್ಯಾಕಿಂಗ್ ಮುಗಿದ ಸ್ಥಿತಿಯಲ್ಲೇ ಇರುತ್ತದೆ. ವೇಳಾಪಟ್ಟಿಯನ್ನು ಅಳಿಸುವುದಿಲ್ಲ ಅಥವಾ ಬುಕಿಂಗ್‌ಗಳನ್ನು ಬದಲಿಸುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_move_saved_visit" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Saved Place to Day"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजे गए स्थान को दूसरे दिन ले जाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಸ್ಥಳವನ್ನು ಬೇರೆ ದಿನಕ್ಕೆ ಸರಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_move_saved_visit_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move an exact saved place to the end of another day in the same trip. Preserve its notes, visit duration, travel and buffer allowances, and local arrival clock on the destination day. Does not move bookings, change reservations, or calculate routes. Repeating the same destination leaves the visit unchanged."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "किसी सहेजे गए स्थान को उसी यात्रा के दूसरे दिन के अंत में ले जाएँ। उसके नोट्स, घूमने की अवधि, यात्रा और अतिरिक्त समय तथा गंतव्य दिन का स्थानीय आगमन समय बनाए रखें। बुकिंग या आरक्षण नहीं बदलता और मार्गों की गणना नहीं करता। वही गंतव्य दोहराने पर स्थान अपरिवर्तित रहता है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನಿಖರವಾದ ಉಳಿಸಿದ ಸ್ಥಳವನ್ನು ಅದೇ ಪ್ರವಾಸದ ಮತ್ತೊಂದು ದಿನದ ಕೊನೆಗೆ ಸರಿಸಿ. ಅದರ ಟಿಪ್ಪಣಿಗಳು, ಭೇಟಿಯ ಅವಧಿ, ಪ್ರಯಾಣ ಮತ್ತು ಹೆಚ್ಚುವರಿ ಸಮಯ ಹಾಗೂ ಗುರಿ ದಿನದ ಸ್ಥಳೀಯ ಆಗಮನದ ಸಮಯವನ್ನು ಉಳಿಸುತ್ತದೆ. ಬುಕಿಂಗ್‌ಗಳು ಅಥವಾ ಕಾಯ್ದಿರಿಸುವಿಕೆಗಳನ್ನು ಬದಲಿಸುವುದಿಲ್ಲ, ಮಾರ್ಗಗಳನ್ನು ಲೆಕ್ಕಿಸುವುದಿಲ್ಲ. ಅದೇ ಗುರಿಯನ್ನು ಪುನರಾವರ್ತಿಸಿದರೆ ಭೇಟಿ ಬದಲಾಗುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_parameter_alarm_booking" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a saved flight, train, stay, reservation, or other booking from Trip. Saved place visits do not have booking alarms."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip से सहेजी गई उड़ान, ट्रेन, ठहराव, आरक्षण या दूसरी बुकिंग चुनें। सहेजे गए स्थानों की यात्राओं के लिए बुकिंग अलार्म नहीं होते।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip ನಿಂದ ಉಳಿಸಿದ ವಿಮಾನ, ರೈಲು, ತಂಗುವಿಕೆ, ಕಾಯ್ದಿರಿಸುವಿಕೆ ಅಥವಾ ಇತರ ಬುಕಿಂಗ್ ಆಯ್ಕೆಮಾಡಿ. ಉಳಿಸಿದ ಸ್ಥಳದ ಭೇಟಿಗಳಿಗೆ ಬುಕಿಂಗ್ ಅಲಾರಂ ಇರುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_parameter_collection_name" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A collection name of 1 to 80 characters. Leading and trailing spaces are removed."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "1 से 80 वर्णों का संग्रह नाम। शुरू और अंत के खाली स्थान हटा दिए जाते हैं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "1 ರಿಂದ 80 ಅಕ್ಷರಗಳ ಸಂಗ್ರಹದ ಹೆಸರು. ಆರಂಭ ಮತ್ತು ಕೊನೆಯ ಖಾಲಿ ಜಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ."
+          }
+        }
+      }
+    },
+    "intent_parameter_collection_source_visit" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An exact saved itinerary place to copy into the collection. Bookings are not places. Its original visit stays in its day."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "संग्रह में कॉपी करने के लिए यात्रा कार्यक्रम में सहेजी गई एक विशिष्ट जगह। बुकिंग जगहें नहीं हैं। उस जगह को मूल दिन के कार्यक्रम से हटाया नहीं जाता।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಂಗ್ರಹಕ್ಕೆ ನಕಲಿಸಲು ಪ್ರವಾಸದ ಯೋಜನೆಯಲ್ಲಿ ಉಳಿಸಿದ ನಿರ್ದಿಷ್ಟ ಸ್ಥಳ. ಬುಕಿಂಗ್‌ಗಳು ಸ್ಥಳಗಳಲ್ಲ. ಅದರ ಮೂಲ ಭೇಟಿ ಅದೇ ದಿನದಲ್ಲಿ ಉಳಿಯುತ್ತದೆ."
+          }
+        }
+      }
+    },
+    "intent_parameter_destination_day" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The existing destination day number in the same saved trip. Ask if the intended day is unclear."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "उसी सहेजी गई यात्रा में मौजूदा गंतव्य दिन की संख्या। इच्छित दिन अस्पष्ट हो तो पूछें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಅದೇ ಉಳಿಸಿದ ಪ್ರವಾಸದಲ್ಲಿರುವ ಗುರಿ ದಿನದ ಸಂಖ್ಯೆ. ಉದ್ದೇಶಿತ ದಿನ ಸ್ಪಷ್ಟವಿಲ್ಲದಿದ್ದರೆ ಕೇಳಿ."
+          }
+        }
+      }
+    },
+    "intent_parameter_moving_visit" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The exact saved place visit to move, not a flight, stay, reservation, or other booking."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ले जाने के लिए सहेजा गया सटीक स्थान; उड़ान, ठहराव, आरक्षण या दूसरी बुकिंग नहीं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸರಿಸಲು ನಿಖರವಾದ ಉಳಿಸಿದ ಸ್ಥಳದ ಭೇಟಿ; ವಿಮಾನ, ತಂಗುವಿಕೆ, ಕಾಯ್ದಿರಿಸುವಿಕೆ ಅಥವಾ ಇತರ ಬುಕಿಂಗ್ ಅಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_parameter_saved_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An exact saved collection in a trip. Resolve it from the current saved library."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा में सहेजा गया एक विशिष्ट संग्रह। इसे अभी सहेजी गई लाइब्रेरी से पहचानें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದಲ್ಲಿ ಉಳಿಸಿದ ನಿರ್ದಿಷ್ಟ ಸಂಗ್ರಹ. ಪ್ರಸ್ತುತ ಉಳಿಸಿದ ಪ್ರವಾಸಗಳ ಪಟ್ಟಿಯಿಂದ ಅದನ್ನು ಗುರುತಿಸಿ."
+          }
+        }
+      }
+    },
+    "intent_property_collection_place_count" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The number of places currently saved in this collection, whether or not they are on an itinerary day."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस संग्रह में अभी सहेजी गई जगहों की संख्या, चाहे वे यात्रा के किसी दिन के कार्यक्रम में हों या नहीं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಸಂಗ್ರಹದಲ್ಲಿ ಪ್ರಸ್ತುತ ಉಳಿಸಿದ ಸ್ಥಳಗಳ ಸಂಖ್ಯೆ; ಅವು ಪ್ರವಾಸದ ಯಾವುದೇ ದಿನದ ಯೋಜನೆಯಲ್ಲಿ ಇರಬಹುದು ಅಥವಾ ಇಲ್ಲದಿರಬಹುದು."
+          }
+        }
+      }
+    },
+    "intent_property_collection_saved_places" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved place names in collection order, separated by newlines. Includes places not scheduled on any trip day; excludes private notes."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "संग्रह के क्रम में सहेजी गई जगहों के नाम, हर नाम एक नई पंक्ति में। यात्रा के किसी भी दिन के लिए तय न की गई जगहें भी शामिल हैं; निजी नोट्स शामिल नहीं हैं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸಂಗ್ರಹದ ಕ್ರಮದಲ್ಲಿ ಉಳಿಸಿದ ಸ್ಥಳಗಳ ಹೆಸರುಗಳು, ಪ್ರತಿ ಹೆಸರು ಹೊಸ ಸಾಲಿನಲ್ಲಿ. ಪ್ರವಾಸದ ಯಾವುದೇ ದಿನಕ್ಕೆ ನಿಗದಿಪಡಿಸದ ಸ್ಥಳಗಳೂ ಸೇರಿವೆ; ಖಾಸಗಿ ಟಿಪ್ಪಣಿಗಳನ್ನು ಒಳಗೊಂಡಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_property_collection_title" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved collection name."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजे गए संग्रह का नाम।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಸಂಗ್ರಹದ ಹೆಸರು."
+          }
+        }
+      }
+    },
+    "intent_property_saved_buffer_minutes" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved personal buffer allowance in minutes before a place. Missing for bookings or older snapshots without timing."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "स्थान पर पहुँचने से पहले सहेजा गया निजी अतिरिक्त समय, मिनटों में। बुकिंग या समय के बिना पुराने स्नैपशॉट के लिए उपलब्ध नहीं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸ್ಥಳಕ್ಕೆ ತಲುಪುವ ಮುನ್ನ ಉಳಿಸಿದ ವೈಯಕ್ತಿಕ ಹೆಚ್ಚುವರಿ ಸಮಯ, ನಿಮಿಷಗಳಲ್ಲಿ. ಬುಕಿಂಗ್‌ಗಳು ಅಥವಾ ಸಮಯವಿಲ್ಲದ ಹಳೆಯ ಮಾಹಿತಿಗೆ ಲಭ್ಯವಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_property_saved_travel_minutes" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved personal travel allowance in minutes before a place, not a route estimate or live travel time. Missing for bookings or older snapshots without timing."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "स्थान पर पहुँचने से पहले यात्रा के लिए सहेजा गया निजी समय, मिनटों में। यह मार्ग का अनुमान या लाइव यात्रा समय नहीं है। बुकिंग या समय के बिना पुराने स्नैपशॉट के लिए उपलब्ध नहीं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸ್ಥಳಕ್ಕೆ ತಲುಪುವ ಮುನ್ನ ಪ್ರಯಾಣಕ್ಕಾಗಿ ಉಳಿಸಿದ ವೈಯಕ್ತಿಕ ಸಮಯ, ನಿಮಿಷಗಳಲ್ಲಿ. ಇದು ಮಾರ್ಗದ ಅಂದಾಜು ಅಥವಾ ನೇರ ಪ್ರಯಾಣದ ಸಮಯವಲ್ಲ. ಬುಕಿಂಗ್‌ಗಳು ಅಥವಾ ಸಮಯವಿಲ್ಲದ ಹಳೆಯ ಮಾಹಿತಿಗೆ ಲಭ್ಯವಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_property_saved_visit_minutes" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved visit duration in minutes for a place. Missing for bookings or older snapshots without timing; never infer a duration from missing data."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "किसी स्थान पर ठहरने की सहेजी गई अवधि, मिनटों में। बुकिंग या समय के बिना पुराने स्नैपशॉट के लिए उपलब्ध नहीं; जानकारी न होने पर अवधि का अनुमान न लगाएँ।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸ್ಥಳದಲ್ಲಿ ಕಳೆಯಲು ಉಳಿಸಿದ ಅವಧಿ, ನಿಮಿಷಗಳಲ್ಲಿ. ಬುಕಿಂಗ್‌ಗಳು ಅಥವಾ ಸಮಯವಿಲ್ಲದ ಹಳೆಯ ಮಾಹಿತಿಗೆ ಲಭ್ಯವಿಲ್ಲ; ಮಾಹಿತಿ ಇಲ್ಲದಾಗ ಅವಧಿಯನ್ನು ಊಹಿಸಬೇಡಿ."
+          }
+        }
+      }
+    },
+    "intent_read_trip_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read Trip Collection"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा संग्रह पढ़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಸಂಗ್ರಹ ಓದಿ"
+          }
+        }
+      }
+    },
+    "intent_read_trip_collection_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read the current names of places saved in a collection, including unscheduled places. Returns the saved names in order and speaks the first three. Does not include private notes."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "संग्रह में अभी सहेजी गई जगहों के नाम पढ़ें, उन जगहों सहित जिन्हें किसी दिन के लिए तय नहीं किया गया है। सहेजे गए नाम क्रम में लौटाता है और पहले तीन नाम बोलता है। निजी नोट्स शामिल नहीं हैं।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಯಾವುದೇ ದಿನಕ್ಕೆ ನಿಗದಿಪಡಿಸದ ಸ್ಥಳಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ, ಸಂಗ್ರಹದಲ್ಲಿ ಪ್ರಸ್ತುತ ಉಳಿಸಿದ ಸ್ಥಳಗಳ ಹೆಸರುಗಳನ್ನು ಓದಿ. ಉಳಿಸಿದ ಹೆಸರುಗಳನ್ನು ಕ್ರಮವಾಗಿ ಹಿಂತಿರುಗಿಸುತ್ತದೆ ಮತ್ತು ಮೊದಲ ಮೂರು ಹೆಸರುಗಳನ್ನು ಹೇಳುತ್ತದೆ. ಖಾಸಗಿ ಟಿಪ್ಪಣಿಗಳನ್ನು ಒಳಗೊಂಡಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_rename_trip_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename Trip Collection"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा संग्रह का नाम बदलें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಸಂಗ್ರಹದ ಹೆಸರು ಬದಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_rename_trip_collection_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename an exact saved collection, preserving its identity and places. Repeating the same rename leaves its content unchanged."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजे गए एक विशिष्ट संग्रह की पहचान और जगहें बनाए रखते हुए उसका नाम बदलें। वही नाम दोबारा रखने पर उसकी सामग्री नहीं बदलती।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ನಿರ್ದಿಷ್ಟ ಸಂಗ್ರಹದ ಗುರುತು ಮತ್ತು ಸ್ಥಳಗಳನ್ನು ಉಳಿಸಿಕೊಂಡು ಅದರ ಹೆಸರು ಬದಲಿಸಿ. ಅದೇ ಹೆಸರನ್ನು ಮತ್ತೆ ನೀಡಿದರೆ ಅದರ ವಿಷಯ ಬದಲಾಗುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_review_booking_alarm" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review Saved Booking Alarm"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई बुकिंग के अलार्म की समीक्षा करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಅಲಾರಂ ಪರಿಶೀಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_review_booking_alarm_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the alarm review for an exact saved booking in Trip. Choose or change the alarm time and confirm in the app; running this action does not schedule an alarm. Available on iPhone and iPad."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip में सहेजी गई सटीक बुकिंग के अलार्म की समीक्षा खोलें। ऐप में अलार्म का समय चुनें या बदलें और पुष्टि करें; यह कार्रवाई चलाने से अलार्म सेट नहीं होता। iPhone और iPad पर उपलब्ध।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trip ನಲ್ಲಿ ನಿಖರವಾದ ಉಳಿಸಿದ ಬುಕಿಂಗ್‌ನ ಅಲಾರಂ ಪರಿಶೀಲನೆ ತೆರೆಯಿರಿ. ಆ್ಯಪ್‌ನಲ್ಲಿ ಅಲಾರಂ ಸಮಯ ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಬದಲಿಸಿ ದೃಢೀಕರಿಸಿ; ಈ ಕ್ರಿಯೆ ನಡೆಸುವುದರಿಂದ ಅಲಾರಂ ನಿಗದಿಯಾಗುವುದಿಲ್ಲ. iPhone ಮತ್ತು iPad ನಲ್ಲಿ ಲಭ್ಯ."
+          }
+        }
+      }
+    },
+    "intent_save_trip_place_to_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Trip Place to Collection"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा की जगह संग्रह में सहेजें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಸ್ಥಳವನ್ನು ಸಂಗ್ರಹದಲ್ಲಿ ಉಳಿಸಿ"
+          }
+        }
+      }
+    },
+    "intent_save_trip_place_to_collection_description" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save an exact existing itinerary place into a saved collection without moving its original visit. Repeated saves keep one copy of the place. Does not copy visit timing or private notes."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा कार्यक्रम की एक विशिष्ट मौजूदा जगह को सहेजे गए संग्रह में सहेजें, उसे मूल दिन के कार्यक्रम से हटाए बिना। बार-बार सहेजने पर भी जगह की एक ही प्रति रहती है। जगह पर जाने की समय-सारणी या निजी नोट्स कॉपी नहीं होते।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರವಾಸದ ಯೋಜನೆಯಲ್ಲಿರುವ ನಿರ್ದಿಷ್ಟ ಸ್ಥಳವನ್ನು ಅದರ ಮೂಲ ಭೇಟಿಯನ್ನು ಸರಿಸದೆ ಉಳಿಸಿದ ಸಂಗ್ರಹಕ್ಕೆ ಸೇರಿಸಿ. ಮತ್ತೆ ಮತ್ತೆ ಉಳಿಸಿದರೂ ಸ್ಥಳದ ಒಂದೇ ಪ್ರತಿ ಉಳಿಯುತ್ತದೆ. ಭೇಟಿಯ ಸಮಯ ಅಥವಾ ಖಾಸಗಿ ಟಿಪ್ಪಣಿಗಳನ್ನು ನಕಲಿಸುವುದಿಲ್ಲ."
+          }
+        }
+      }
+    },
+    "intent_saved_collection" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved trip collection"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजी गई यात्रा का संग्रह"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರವಾಸದ ಸಂಗ್ರಹ"
+          }
+        }
+      }
+    },
+    "siri_move_changed" : {
+      "comment": "@symbol siriMoveChanged\n@group SiriCoverage\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This place changed while the move was saving. Open Trip to review its current day before trying again."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "स्थान को दूसरे दिन ले जाना सहेजते समय यह स्थान बदल गया। दोबारा कोशिश करने से पहले Trip में इसका मौजूदा दिन देखें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಸರಿಸುವ ಬದಲಾವಣೆಯನ್ನು ಉಳಿಸುವಾಗ ಈ ಸ್ಥಳ ಬದಲಾಗಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸುವ ಮೊದಲು Trip ನಲ್ಲಿ ಅದರ ಪ್ರಸ್ತುತ ದಿನವನ್ನು ಪರಿಶೀಲಿಸಿ."
+          }
+        }
+      }
+    },
+    "siri_move_duplicate" : {
+      "comment": "@symbol siriMoveDuplicate\n@group SiriCoverage\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That place is already saved on the destination day. Choose another day or review the itinerary in Trip."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "वह स्थान गंतव्य दिन में पहले से सहेजा गया है। दूसरा दिन चुनें या Trip में यात्रा कार्यक्रम की समीक्षा करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಆ ಸ್ಥಳವನ್ನು ಗುರಿ ದಿನದಲ್ಲಿ ಈಗಾಗಲೇ ಉಳಿಸಲಾಗಿದೆ. ಬೇರೆ ದಿನವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ Trip ನಲ್ಲಿ ಪ್ರವಾಸದ ವೇಳಾಪಟ್ಟಿಯನ್ನು ಪರಿಶೀಲಿಸಿ."
+          }
+        }
+      }
+    },
+    "siri_move_full" : {
+      "comment": "@symbol siriMoveFull\n@group SiriCoverage\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination day is full. Remove a place in Trip or choose another day."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "गंतव्य दिन भर गया है। Trip में कोई स्थान हटाएँ या दूसरा दिन चुनें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಗುರಿ ದಿನ ತುಂಬಿದೆ. Trip ನಲ್ಲಿ ಒಂದು ಸ್ಥಳವನ್ನು ತೆಗೆದುಹಾಕಿ ಅಥವಾ ಬೇರೆ ದಿನ ಆಯ್ಕೆಮಾಡಿ."
+          }
+        }
+      }
+    },
+    "siri_moved_visit" : {
+      "comment": "@symbol siriMovedVisit\n@group SiriCoverage\n@parameters String,String",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moved %@ to day %@."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ को दिन %@ में ले जाया गया।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ ಅನ್ನು ದಿನ %@ ಕ್ಕೆ ಸರಿಸಲಾಗಿದೆ."
           }
         }
       }

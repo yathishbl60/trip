@@ -17,6 +17,7 @@ events. **Undo Last Trip Visit** is available in the Shortcuts editor for recove
 
 - [Siri AI preview and contextual sharing](#siri-ai-preview-and-contextual-sharing)
 - [Native travel services](#native-travel-services)
+- [Collections and itinerary changes](#collections-and-itinerary-changes)
 - [Next item and direct actions](#next-item-and-direct-actions)
 - [Find a place from another app](#find-a-place-from-another-app)
 - [Ask my trip](#ask-my-trip)
@@ -28,9 +29,10 @@ events. **Undo Last Trip Visit** is available in the Shortcuts editor for recove
 
 ## Siri AI preview and contextual sharing
 
-Trip now targets 27.3 and exposes 28 custom Siri tools, including exact saved-place
-timing edits, visit completion, and Apple Maps directions. Three compiled app skills
-coordinate day planning, departure preparation, and booking review. Existing
+Trip targets 27.3 and exposes custom Siri tools, including exact saved-place
+timing edits, collection organization, visit movement, and Apple Maps directions.
+Runtime app skills coordinate day planning, departure preparation, booking review,
+navigation, and collection organization. Existing
 Shortcuts identities and phrases are preserved; configuration, snippet internals,
 and redundant saved-record search actions do not become additional tools.
 
@@ -95,6 +97,38 @@ host configuration flag. Other integrations remain available.
 Native adapters live in TripIntegrations behind injected TripDomain contracts.
 [Native travel services](docs/NativeTravelServices.md) records acceptance and
 verification; [dependency lifetimes](docs/Dependencies.md) describes composition.
+
+## Collections and itinerary changes
+
+**Create Trip Collection**, **Rename Trip Collection**, **Read Trip Collection**,
+and **Save Trip Place to Collection** work with authenticated canonical data.
+Collection entities expose the trip, title, place count, and saved names, including
+places not scheduled on a day. Discovery enumerates the bounded library without
+publishing collection content to Spotlight or App Group snapshots. Private notes
+are excluded. Read returns all names to Shortcuts and speaks the first three.
+
+Create reuses one normalized-name match; multiple matching names require a choice.
+Rename preserves collection identity. Saving an exact itinerary place to a collection
+keeps its original visit, avoids duplicate places, and copies neither timing nor notes.
+Edits share the UI's domain operations, protect active drafts, and flush before success.
+These actions do not accept invented places or turn a booking into a saved place.
+
+**Move Saved Place to Day** moves an exact visit to the end of another day in the
+same trip. It preserves its identifier, private notes, duration, allowances, and
+local arrival clock on the destination day. Repeating the same destination is a
+no-op. Bookings, duplicate places, missing days, and full days are rejected before
+mutation. Returned entities resolve the current saved visit after persistence.
+Saved-detail entities now expose optional visit, travel, and buffer minutes so Siri
+can inspect an existing value before a relative timing change. Travel is a personal
+allowance, not a route estimate; bookings and older snapshots expose no visit minutes.
+
+**Open Trip Day Tool** now includes Directions and Suggest Stop Order, reusing the
+existing route and ordering-review flows. Invalid requests return to the itinerary
+where the recovery message is visible. Nothing is reordered until the review is applied.
+On iPhone and iPad, **Review Saved Booking Alarm** opens the existing alarm review
+for an exact saved booking. It never schedules an alarm by itself. Native permission,
+time review, and confirmation stay in the existing flow. **End Trip Day Tracking**
+is also exposed as a Siri tool; repeated execution keeps tracking ended and preserves visits.
 
 ## Next item and direct actions
 
@@ -253,6 +287,13 @@ time boundaries, tracking expiry, and midnight, subject to WidgetKit's schedulin
 The gallery uses clearly labeled local sample content. Older projections without
 journey items still decode and show their places until the app republishes them.
 
+On iPhone and iPad, timeline relevance informs Smart Rotate when the displayed,
+confirmed saved item starts or ends within an hour, while a day is actively tracked,
+or when an unfinished checklist is due for departure today or tomorrow. Tracking
+relevance expires with its session; uncertain clocks and completed checklists do
+not receive those boosts. This uses existing saved dates without collecting location.
+WidgetKit decides placement and refresh delivery; Trip does not guarantee rotation.
+
 In a trip editor, choose **Track a day**. A Live Activity shows the next place and
 visited progress on the Lock Screen and supported Dynamic Island hardware, including
 compact, minimal, and expanded layouts. The checkmark records a visit; the app also
@@ -342,6 +383,7 @@ and all Dynamic Island presentations on supported hardware.
 ## Apple references
 
 - [App Intent execution modes](https://developer.apple.com/documentation/appintents/configuring-the-runtime-behavior-of-your-app-intents)
+- [Smart Stack relevance](https://developer.apple.com/documentation/widgetkit/widget-suggestions-in-smart-stacks)
 - [Onscreen entity context](https://developer.apple.com/documentation/swiftui/view/appentityidentifier(_:))
 - [Interactive widgets and Live Activities](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities)
 - [ActivityKit presentation](https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities)

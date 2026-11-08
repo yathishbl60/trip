@@ -3,6 +3,15 @@ import TripDomain
 
 extension TripModel {
     var hasPendingPlaceSave: Bool { presentation.placeSave != nil }
+    var supportsHostBookingAlarms: Bool { systemActions.service.supportsAlarms }
+
+    func openHostBookingAlarm(_ identity: TripDetailIdentity) {
+        guard !hasEditingSession, supportsHostBookingAlarms, let trip = library.trip(identity.tripID),
+              let event = trip.events.first(where: { $0.id == identity.itemID }),
+              event.dayRange(in: trip) != nil else { return }
+        openHostDetail(identity, editing: false)
+        systemActions.showAlarm(tripID: identity.tripID, eventID: identity.itemID)
+    }
 
     func openHostDraft(_ id: UUID, preferences: String, days: Int, processing: TripAIProcessing) {
         guard !hasEditingSession, library.trip(id) != nil else { return }

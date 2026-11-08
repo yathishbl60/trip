@@ -18,9 +18,7 @@ extension AppModel {
 
     func openWorkflow(_ request: AppWorkflowRequest) {
         switch request {
-        case .newTrip:
-            navigation.tab = .trips
-            trips.beginCreate()
+        case .newTrip: openNewTrip()
         case .draftTrip(let id, let preferences, let days, let processing):
             guard openSavedTrip(id) else { return }
             trips.openHostDraft(id, preferences: preferences, days: days, processing: processing)
@@ -34,6 +32,7 @@ extension AppModel {
         case .dayTool(let id, let dayID, let tool): openDayTool(tool, tripID: id, dayID: dayID)
         case .editDetail(let identity): openDetail(identity, editing: true)
         case .newEvent(let request): openNewEvent(request)
+        case .bookingAlarm(let identity): openBookingAlarm(identity)
         }
     }
 

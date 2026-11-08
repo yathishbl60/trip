@@ -22,6 +22,7 @@ extension TripDayTool: AppEnum {
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [.schedule: DisplayRepresentation(title: "edit_schedule"), .planning: DisplayRepresentation(title: "planning_Preview"),
          .weather: DisplayRepresentation(title: "travel_weather_for_day"), .addPlaces: DisplayRepresentation(title: "add_places"),
-         .map: DisplayRepresentation(title: "show_day_on_map")]
+         .map: DisplayRepresentation(title: "show_day_on_map"), .directions: DisplayRepresentation(title: "directions"),
+         .stopOrder: DisplayRepresentation(title: "suggest_stop_order")]
     }
 }

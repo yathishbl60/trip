@@ -6,6 +6,7 @@ nonisolated enum AppWorkflowRequest: Hashable {
     case checklist(UUID, String?), searchPlace(TripPlaceSearchRequest), importBooking(TripBookingImportRequest)
     case workspaceTool(UUID, TripWorkspaceTool), dayTool(UUID, UUID, TripDayTool)
     case editDetail(TripDetailIdentity), newEvent(TripNewEventRequest)
+    case bookingAlarm(TripDetailIdentity)
 }
 
 extension AppRequest {
@@ -31,5 +32,6 @@ extension AppRequest {
     }
 
     static func editDetail(_ identity: TripDetailIdentity) -> Self { Self(operation: .workflow(.editDetail(identity))) }
+    static func bookingAlarm(_ identity: TripDetailIdentity) -> Self { Self(operation: .workflow(.bookingAlarm(identity))) }
     static func newEvent(_ request: TripNewEventRequest) -> Self { Self(operation: .workflow(.newEvent(request))) }
 }

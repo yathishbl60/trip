@@ -19,6 +19,9 @@ struct SavedTripDetailEntity: IndexedEntity, Transferable, Sendable {
     @Property(title: "location", description: "intent_property_detail_location") var location: String
     @Property(title: "time_zone", description: "intent_property_detail_zone") var timeZoneID: String
     @Property(title: "intent_saved_times", description: "intent_property_detail_times") var savedTimes: String
+    @Property(title: "visit_duration", description: "intent_property_saved_visit_minutes") var visitMinutes: Int?
+    @Property(title: "travel_time", description: "intent_property_saved_travel_minutes") var travelMinutes: Int?
+    @Property(title: "buffer", description: "intent_property_saved_buffer_minutes") var bufferMinutes: Int?
     private let symbol: String
 
     init(_ result: TripDetailResult, plan: TripSurfacePlan) {
@@ -33,6 +36,10 @@ struct SavedTripDetailEntity: IndexedEntity, Transferable, Sendable {
         location = result.item.detail
         timeZoneID = result.item.startZoneID ?? result.day.calendar.timeZone.identifier
         savedTimes = result.item.timeText
+        let stop = result.item.kind == nil ? result.day.stops.first(where: { $0.id == result.id }) : nil
+        visitMinutes = stop?.visitMinutes
+        travelMinutes = stop?.travelMinutes
+        bufferMinutes = stop?.bufferMinutes
     }
 
     static var transferRepresentation: some TransferRepresentation {

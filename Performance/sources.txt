@@ -131,6 +131,8 @@ Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel4.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Planning.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Planning2.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Siri.swift
+Packages/TripKit/Sources/TripLocalization/TripText+SiriCollections.swift
+Packages/TripKit/Sources/TripLocalization/TripText+SiriCoverage.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips10.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Trips11.swift

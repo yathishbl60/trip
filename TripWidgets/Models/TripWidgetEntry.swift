@@ -9,6 +9,7 @@ nonisolated struct TripWidgetEntry: TimelineEntry {
     var day: TripSurfaceDay?
     var journey: TripJourney?
     var notice = TripText.createATripToSeeYourItinerary.text
+    var relevance: TimelineEntryRelevance? = nil
 
     var title: String { plan?.title ?? TripText.yourTrips.text }
     var url: URL? {

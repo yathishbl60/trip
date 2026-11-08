@@ -22,16 +22,18 @@ nonisolated struct TripWidgetProvider: AppIntentTimelineProvider {
 
     func timeline(for configuration: TripWidgetConfiguration, in context: Context) async -> Timeline<TripWidgetEntry> {
         let now = Date.now
-        let current = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: now)
+        var current = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: now)
         let calendar = current.day?.calendar ?? .current
         let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))
             ?? now.addingTimeInterval(24 * 60 * 60)
         let change = current.day.flatMap { TripSurfaceAgenda.nextChange(in: $0, after: now) }
         let expiry = current.journey?.expiresAt
         let pendingExpiry = expiry.flatMap { $0 > now ? $0 : nil }
-        let boundary = min(midnight, pendingExpiry ?? midnight,
+        let boundary = min(midnight, pendingExpiry ?? midnight, TripWidgetRelevance.nextChange(current) ?? midnight,
                            change?.addingTimeInterval(1) ?? midnight)
-        let later = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: max(boundary, now.addingTimeInterval(60)))
+        var later = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: max(boundary, now.addingTimeInterval(60)))
+        current.relevance = TripWidgetRelevance.itinerary(current)
+        later.relevance = TripWidgetRelevance.itinerary(later)
         return Timeline(entries: [current, later], policy: .after(later.date))
     }
 }

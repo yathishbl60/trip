@@ -2,6 +2,11 @@ import Foundation
 import TripDomain
 
 extension AppModel {
+    func openNewTrip() {
+        navigation.tab = .trips
+        trips.beginCreate()
+    }
+
     func openTripLibrary() {
         guard allowNavigation() else { return }
         navigation.tab = .trips
@@ -9,7 +14,8 @@ extension AppModel {
     }
 
     func openDayTool(_ tool: TripDayTool, tripID: UUID, dayID: UUID) {
-        guard openSavedDay(tripID, dayID: dayID, resetDestination: false) else { return }
+        let opensItinerary = tool == .directions || tool == .stopOrder
+        guard openSavedDay(tripID, dayID: dayID, resetDestination: opensItinerary) else { return }
         trips.openDayTool(tool, dayID: dayID, tripID: tripID)
     }
 
@@ -35,5 +41,15 @@ extension AppModel {
         }
         guard openSavedTrip(tripID, resetDestination: false) else { return }
         trips.openWorkspaceTool(tool, tripID: tripID)
+    }
+
+    func openBookingAlarm(_ identity: TripDetailIdentity) {
+        guard allowNavigation(), let plan = navigationPlan(identity.tripID) else { return }
+        do {
+            guard trips.supportsHostBookingAlarms else { throw TripSystemActionError.unavailable }
+            try TripBookingAlarmIntentError.validate(identity, in: plan)
+            guard openSavedTrip(identity.tripID, resetDestination: false) else { return }
+            trips.openHostBookingAlarm(identity)
+        } catch { navigation.notice = error.localizedDescription }
     }
 }

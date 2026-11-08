@@ -7,6 +7,7 @@ struct StartTripDayIntent: AppIntent {
     static var title: LocalizedStringResource { "track_trip_day" }
     static var description: IntentDescription { IntentDescription("show_your_next_planned_place_and_visited_progress_on") }
     static var supportedModes: IntentModes { .foreground }
+    static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     @Parameter(title: "trip", description: "intent_parameter_saved_trip") var trip: SavedTripEntity
     @Parameter(title: "day_number", description: "intent_parameter_day_number", default: 1, inclusiveRange: (1, 30)) var day: Int
     static var parameterSummary: some ParameterSummary {

@@ -16,9 +16,13 @@ import TripDomain
     }
 
     var normalizedTitle: String { title.trimmingCharacters(in: .whitespacesAndNewlines) }
-    var canSave: Bool { !normalizedTitle.isEmpty && validationMessage == nil }
+    var canSave: Bool { TripCollectionEditing.title(title) != nil }
     var navigationTitle: String { collectionID == nil ? TripText.newCollection.text : TripText.renameCollection.text }
     var validationMessage: String? {
-        normalizedTitle.count > TripLimits.titleCharacters ? TripText.useValueCharactersOrFewer(TripText.number(TripLimits.titleCharacters)).text : nil
+        if normalizedTitle.count > TripLimits.titleCharacters {
+            return TripText.useValueCharactersOrFewer(TripText.number(TripLimits.titleCharacters)).text
+        }
+        if !normalizedTitle.isEmpty, TripCollectionEditing.title(title) == nil { return TripText.collectionInvalidTitle.text }
+        return nil
     }
 }

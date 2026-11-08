@@ -33,7 +33,9 @@ struct CompleteTripStopIntent: TripTrackingIntent {
 
 struct EndTripDayIntent: TripTrackingIntent {
     static var title: LocalizedStringResource { "intent_end_trip_day_tracking" }
+    static var description: IntentDescription { IntentDescription("intent_end_tracking_description") }
     static var supportedModes: IntentModes { .background }
+    static var authenticationPolicy: IntentAuthenticationPolicy { .requiresAuthentication }
     static var parameterSummary: some ParameterSummary { Summary("End trip day tracking") }
 
     @MainActor func perform() async throws -> some IntentResult & ProvidesDialog {

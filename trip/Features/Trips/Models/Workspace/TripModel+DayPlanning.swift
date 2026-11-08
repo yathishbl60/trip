@@ -5,16 +5,16 @@ import Foundation
 extension TripModel {
     func moveStop(_ stopID: UUID, from sourceID: UUID, to destinationID: UUID, tripID: UUID) {
         guard !tracking.isBusy, sourceID != destinationID, let trip = library.trip(tripID),
-              let source = trip.days.firstIndex(where: { $0.id == sourceID }),
               let destination = trip.days.firstIndex(where: { $0.id == destinationID }),
-              let stop = trip.days[source].stops.first(where: { $0.id == stopID }),
-              canAdd(stop.place, to: trip.days[destination].stops, container: .day) else { return }
-        let moved = library.update(tripID) { plan in
-            plan.days[source].stops.removeAll { $0.id == stopID }
-            plan.days[destination].stops.append(stop)
-            return true
+              trip.days.first(where: { $0.id == sourceID })?.stops.contains(where: { $0.id == stopID }) == true else { return }
+        var updated = trip
+        do {
+            guard try updated.moveVisit(stopID, to: destinationID) else { return }
+        } catch {
+            presentation.notice = error.localizedDescription
+            return
         }
-        guard moved else { return }
+        guard library.update(tripID, edit: { $0 = updated; return true }) else { return }
         presentation.notice = nil
         feedback.show(TripText.movedToValue(trip.days[destination].title).text)
     }

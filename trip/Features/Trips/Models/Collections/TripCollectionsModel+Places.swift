@@ -7,8 +7,7 @@ extension TripCollectionsModel {
         guard let collection = library.trip(tripID)?.collections.first(where: { $0.id == collectionID }),
               canAdd(place, to: collection.stops) else { return false }
         let saved = library.updateCollection(collectionID, in: tripID) { collection in
-            collection.stops.append(TripStop(place: place))
-            return true
+            TripCollectionEditing.append(place, to: &collection)
         }
         guard saved else { return false }
         showNotice(nil)
