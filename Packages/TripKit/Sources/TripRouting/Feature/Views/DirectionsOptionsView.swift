@@ -7,26 +7,34 @@ import SwiftUI
 struct DirectionsOptionsView: View {
     let controller: DirectionsController
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .body) private var preferredHeight = 360.0
 
     var body: some View {
         NavigationStack {
-            Form {
-                if controller.model.mode.supportsAvoidance {
-                    Section(TripText.avoid.resource) {
-                        Toggle(TripText.tolls.resource, isOn: controller.avoidsTolls)
-                        Toggle(TripText.highways.resource, isOn: controller.avoidsHighways)
-                    }
-                }
-                travelTime
-            }
+            options
             .navigationTitle(TripText.routeOptions.resource).navigationBarTitleDisplayMode(.inline)
             #if os(iOS)
             .scrollEdgeEffectStyle(.soft, for: .top)
             #endif
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(TripText.done.resource) { dismiss() } } }
+            .toolbar { ToolbarItem(placement: .cancellationAction) { Button(role: .close) { dismiss() } } }
         }
-        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
+        .frame(idealWidth: 350, idealHeight: preferredHeight)
+        .presentationSizing(.form.fitted(horizontal: true, vertical: true))
+        #if os(iOS)
+        .presentationCompactAdaptation(.sheet)
+        #endif
+    }
+
+    private var options: some View {
+        Form {
+            if controller.model.mode.supportsAvoidance {
+                Section(TripText.avoid.resource) {
+                    Toggle(TripText.tolls.resource, isOn: controller.avoidsTolls)
+                    Toggle(TripText.highways.resource, isOn: controller.avoidsHighways)
+                }
+            }
+            travelTime
+        }
     }
 
     private var travelTime: some View {

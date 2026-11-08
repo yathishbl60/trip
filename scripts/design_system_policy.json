@@ -1,5 +1,10 @@
 {
   "roots": ["trip", "TripWidgets", "Packages/TripKit/Sources/TripRouting"],
+  "geometry_notes": {
+    "trip/Features/Explore/Views/Map/MapToolPresentation.swift": "A 400-point ideal width gives the native contextual sheet room for its place actions while preserving the map. SwiftUI fits it to the available window. visionOS uses native split-column sizing.",
+    "trip/Features/Explore/Models/Explore/PlacePresentationModel.swift": "The 100-point native compact detent keeps the place title and toolbar reachable. Taller native detents provide scrolling details, and accessibility text excludes the compact detent.",
+    "Packages/TripKit/Sources/TripRouting/Feature/Views/DirectionsOptionsView.swift": "A 350-point ideal width and text-scaled 360-point ideal height keep the native options popover proportionate to its short form. SwiftUI fits the presentation to available space and the form scrolls when needed."
+  },
   "exceptions": {
     "fixed_font": {
       "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": "Bounded map annotation metadata; the complete place label is exposed to accessibility.",

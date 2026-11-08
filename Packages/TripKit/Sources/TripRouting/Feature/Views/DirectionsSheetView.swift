@@ -7,23 +7,22 @@ import SwiftUI
 public struct DirectionsSheetView: View {
     let controller: DirectionsController
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.verticalSizeClass) private var verticalSize
-    @Environment(\.horizontalSizeClass) private var horizontalSize
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(controller: DirectionsController) { self.controller = controller }
     public init(model: DirectionsModel) { controller = DirectionsController(model: model) }
 
     public var body: some View {
         content
-            .presentationSizing(.form)
-            .presentationCornerRadius(controller.model.presentation.compactCornerRadius)
+            #if os(iOS)
             .presentationDetents(controller.model.presentation.detents, selection: controller.detent)
+            .presentationPlacement(.leading)
+            .presentationCompactAdaptation(horizontal: .automatic, vertical: .none)
+            .presentationDragIndicator(.visible)
+            .presentationContentInteraction(.resizes)
+            .presentationBackgroundInteraction(.enabled(upThrough: .large))
             .interactiveDismissDisabled(!controller.model.configuration.allowsInteractiveDismissal)
-            .sheet(item: controller.auxiliary, content: auxiliary)
+            #endif
             .onChange(of: typeSize, initial: true) { updateAccessibility() }
-            .onChange(of: verticalSize) { updateAccessibility() }
-            .onChange(of: horizontalSize) { updateAccessibility() }
             .onChange(of: reduceMotion) { updateAccessibility() }
     }
 
@@ -39,58 +38,56 @@ public struct DirectionsSheetView: View {
             #endif
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { DirectionsToolbar(controller: controller) }
+            .navigationDestination(isPresented: controller.readingSteps) { DirectionsStepsView(controller: controller) }
+            .navigationDestination(isPresented: controller.editingRoute) { editor }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }, action: controller.sheetFrameChanged)
-        .presentationDragIndicator(.visible)
-        .presentationContentInteraction(.resizes)
-        .presentationBackgroundInteraction(.enabled(upThrough: DirectionsPresentationModel.standard))
+        .reportingDirectionsFrame(to: controller)
     }
 
-    @ViewBuilder private func auxiliary(_ destination: DirectionsAuxiliary) -> some View {
-        switch destination.screen {
-        case .steps: DirectionsStepsView(controller: controller)
-        case .stops: DirectionsStopsView(controller: controller)
-        case .options: DirectionsOptionsView(controller: controller)
-        case .placePicker:
-            if let session = controller.model.presentation.placePicker {
-                NavigationStack {
-                    DirectionsStopPickerView(controller: controller, session: session, showsCancel: true)
-                }
-            }
+    @ViewBuilder private var editor: some View {
+        if controller.model.presentation.auxiliary?.screen == .stops {
+            DirectionsStopsView(controller: controller)
+        } else if let session = controller.model.presentation.placePicker {
+            DirectionsStopPickerView(controller: controller, session: session)
         }
     }
 
     private func updateAccessibility() {
-        controller.accessibility(largeText: typeSize.isAccessibilitySize, reduceMotion: reduceMotion,
-                                 compactHeight: verticalSize == .compact, regularWidth: horizontalSize == .regular)
+        controller.accessibility(largeText: typeSize.isAccessibilitySize, reduceMotion: reduceMotion)
     }
 }
 
 #if DEBUG
 #Preview("Directions · local alternatives") {
-    DirectionsSheetView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready()))
+    DirectionsSheetView(model: DirectionsPreviewFixtures.ready())
 }
-#Preview("Compact directions") {
-    DirectionsSheetView(controller: DirectionsController(model: DirectionsPreviewFixtures.compact()))
+#if os(iOS)
+#Preview("Collapsed leading sheet · landscape, local route", traits: .landscapeLeft) {
+    @Previewable @State var model = DirectionsPreviewFixtures.compact()
+    Color.secondary.opacity(0.15)
+        .sheet(isPresented: Binding(get: { model.isPresented }, set: { if !$0 { model.dismiss() } })) {
+            DirectionsSheetView(model: model)
+        }
 }
+#endif
 #Preview("Directions unavailable · dark") {
-    DirectionsSheetView(controller: DirectionsController(model: DirectionsPreviewFixtures.unavailable()))
+    DirectionsSheetView(model: DirectionsPreviewFixtures.unavailable())
         .preferredColorScheme(.dark)
 }
 #Preview("Directions · accessibility") {
-    DirectionsSheetView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready()))
+    DirectionsSheetView(model: DirectionsPreviewFixtures.ready())
         .dynamicTypeSize(.accessibility2)
 }
 #Preview("Directions · long destination, dark") {
     let model = DirectionsPreviewFixtures.ready()
     model.destination = DirectionsPreviewFixtures.longDestination
-    return DirectionsSheetView(controller: DirectionsController(model: model)).preferredColorScheme(.dark)
+    return DirectionsSheetView(model: model).preferredColorScheme(.dark)
 }
 #Preview("Screenshot regression · toll route sheet, local") {
     let model = DirectionsPreviewFixtures.tollRoutes()
     model.presentation.detent = .large
-    return DirectionsSheetView(controller: DirectionsController(model: model))
+    return DirectionsSheetView(model: model)
         .frame(width: 393, height: 780).preferredColorScheme(.dark)
 }
 #endif

@@ -6,28 +6,36 @@ import Foundation
 @MainActor @Observable final class DirectionsPresentationModel {
     let compact: PresentationDetent
     static let standard = PresentationDetent.fraction(0.55)
-    var detent = DirectionsPresentationModel.standard
+    private var preferredDetent = DirectionsPresentationModel.standard
+    private(set) var session = 0
+    var stepsVisit: UUID?
     var auxiliary: DirectionsAuxiliary?
     var placePicker: DirectionsPlacePicker?
     var usesLargeText = false
-    var isCompactHeight = false
-    var isRegularWidth = false
     var reduceMotion = false
     @ObservationIgnored var handoffID: UUID?
     var needsRouteFraming = true
     var followsRoute = true
 
     init(compactHeight: CGFloat) { compact = .height(min(max(compactHeight, 100), 300)) }
+
+    var detents: Set<PresentationDetent> { usesLargeText ? [Self.standard, .large] : [compact, Self.standard, .large] }
+
+    var detent: PresentationDetent {
+        get { usesLargeText && preferredDetent == compact ? Self.standard : preferredDetent }
+        set {
+            guard newValue != detent, detents.contains(newValue) else { return }
+            preferredDetent = newValue
+        }
+    }
+
     var isCompact: Bool {
         #if os(visionOS)
         false
         #else
-        detent == compact && !requiresExpandedSheet
+        detent == compact
         #endif
     }
-    var detents: Set<PresentationDetent> { requiresExpandedSheet ? [.large] : [compact, Self.standard, .large] }
-    var requiresExpandedSheet: Bool { usesLargeText || isCompactHeight || isRegularWidth }
-    var compactCornerRadius: CGFloat? { isCompact ? 32 : nil }
     var animation: Animation? { reduceMotion ? nil : .smooth(duration: 0.25) }
     var replacingPlaceID: String? {
         if case .stop(let id)? = placePicker?.target { return id }
@@ -35,23 +43,16 @@ import Foundation
     }
 
     func reset() {
-        detent = requiresExpandedSheet ? .large : Self.standard
+        session += 1
+        preferredDetent = Self.standard
+        stepsVisit = nil
         auxiliary = nil
         placePicker = nil
         handoffID = nil
         needsRouteFraming = true
         followsRoute = true
     }
-
-    func accessibility(largeText: Bool, reduceMotion: Bool, compactHeight: Bool, regularWidth: Bool) {
-        usesLargeText = largeText
-        isCompactHeight = compactHeight
-        isRegularWidth = regularWidth
-        self.reduceMotion = reduceMotion
-        if requiresExpandedSheet { detent = .large }
-    }
 }
-
 
 nonisolated struct DirectionsAuxiliary: Identifiable {
     let id = UUID()
@@ -60,5 +61,5 @@ nonisolated struct DirectionsAuxiliary: Identifiable {
     init(_ screen: DirectionsAuxiliaryScreen) { self.screen = screen }
 }
 
-nonisolated enum DirectionsAuxiliaryScreen { case steps, stops, options, placePicker }
+nonisolated enum DirectionsAuxiliaryScreen { case stops, options, placePicker }
 #endif

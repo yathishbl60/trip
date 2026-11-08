@@ -2,6 +2,7 @@ import TripDomain
 import Observation
 
 @MainActor @Observable final class PlaceSelectionModel {
+    let presentation = PlacePresentationModel()
     private(set) var place: Place?
     private(set) var rootPlace: Place?
     private(set) var detailPath: [PlaceDetailDestination] = []
@@ -13,6 +14,7 @@ import Observation
 
     @discardableResult func select(_ place: Place?) -> Bool {
         let changed = self.place != place || rootPlace != place || !detailPath.isEmpty
+        if rootPlace == nil || place == nil { presentation.reset() }
         annotationID = place?.id
         nearbyPlaces = []
         detailPath = []
@@ -34,6 +36,7 @@ import Observation
 
     func navigate(to path: [PlaceDetailDestination]) {
         guard rootPlace != nil, path != detailPath else { return }
+        presentation.expandIfCompact()
         detailPath = path
         place = path.reversed().compactMap(\.detailPlace).first ?? rootPlace
         annotationID = place?.id

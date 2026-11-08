@@ -148,40 +148,49 @@ preserving the original destination-only URL. The widget extension links TripRou
 
 ## Sheet and interaction behavior
 
-The default sheet has a 100-point compact stop, 55%-height stop, and full-height
-stop. Downward dragging resizes it; closing requires its Close button. The host
-can opt into interactive dismissal. Compact height is bounded to 100–300 points.
+On iOS and iPadOS, Directions requests a native leading-edge sheet and allows
+map interaction through the largest detent. SwiftUI adapts placement to the window.
+Explore supplies a 400-point ideal width and requests horizontal fitting from SwiftUI.
+The sheet offers a 100-point compact stop, a 55%-height stop, and a full-height
+stop. Downward dragging resizes it and Close ends the route. A host can opt into
+interactive dismissal. Compact height is bounded to 100–300 points.
 The sheet inherits the system background, matching Place Details and Save to Trip.
 Its compact state retains the native Directions title, Options toolbar item, and Close.
 Expanded content uses native grouped List sections with system row surfaces and separators.
 The native grabber controls resizing; there are no share, overview, or resize buttons.
-Accessibility text sizes and compact vertical layouts use the expanded state.
+Short windows retain native sheet resizing. At accessibility text sizes, the
+two taller stops keep the route list reachable. Resizing the window preserves
+the chosen height.
 Reduce Motion disables presentation, camera, and value animations.
 
-Explore uses the measured sheet frame for route and selection framing,
-including floating sheets. Temporary sheets leave annotation visibility, native map controls, and attribution
-at their existing safe-area positions. Route framing adds endpoint padding and offsets
+Explore uses the measured iOS sheet frame for route and selection framing,
+including floating sheets. On visionOS the host puts the same expanded content
+in a native split-view sidebar. The map occupies the detail column and its
+measured size already accounts for the sidebar. Route framing adds endpoint padding and offsets
 the camera into the exposed viewport. Resizing the window or sheet refits only while
 the user is following the route.
 
 Route alternatives use a native segmented picker; large text uses a menu picker.
-The route summary has no fixed page height, so content can grow. Steps opens native instructions;
-Open in Maps there hands off navigation explicitly. The main sheet shows one route
-summary at a time, with destination context above it and travel modes and grouped
-endpoints below it. The result stays visible at the standard sheet height. Options
-uses a native Form and only exposes settings supported by the in-app route request.
+The route summary grows with its content. Steps opens instructions inside the
+same panel, with native Back navigation and an explicit Open in Maps action.
+Collapsing the sheet preserves the open instructions. The main sheet shows one route
+summary at a time, below travel modes and above endpoint editing, so duration and
+Steps stay prominent at the standard sheet height. Options opens a short native
+Form in a toolbar-anchored popover, adapting to a sheet in compact space, and
+only exposes settings supported by the in-app route request.
 The map header stays clear while loading; discovery progress is a floating notice.
 Route fitting coalesces sheet geometry changes, uses the exposed map viewport, and
 animates once results are ready rather than first moving to provisional endpoints.
 
-Maps launch failures appear alongside the launch control, including in the Steps sheet.
+Maps launch failures appear alongside the launch control in Steps.
 Each launch has an identity; a late completion cannot update a replaced journey,
 dismissed auxiliary presentation, or newer launch. Instruction rows combine their
 step number, instruction, distance, and notice for assistive reading. Map route
 buttons expose the same disambiguated choices as the sheet, including duration and distance.
 
-Only one auxiliary sheet is active at a time. Endpoint rows open Change Stop;
-Add Stop opens search directly. The stop editor retains native delete/reorder controls.
+Endpoint rows and Add Stop push their search picker within the Directions stack.
+The stop editor retains native delete/reorder controls and Back navigation.
+Collapsing preserves the editing destination while hiding its scrolling content.
 The starting-point row uses the same search picker and can replace My Location with
 a place or address. My Location is the default, and offered in that picker, only
 when permission is granted. Otherwise the sheet asks for a starting point without

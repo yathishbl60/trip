@@ -4,8 +4,7 @@ import MapEngine
 
 extension ExploreModel {
     func directionsFrameChanged(_ frame: CGRect) {
-        guard directions.isPresented, frame != camera.sheetFrame else { return }
-        camera.sheetFrame = frame
+        guard directions.isPresented, camera.recordPanelFrame(frame) else { return }
         if !isSuspended { layout.viewportSettled() }
         directionsViewportChanged()
     }

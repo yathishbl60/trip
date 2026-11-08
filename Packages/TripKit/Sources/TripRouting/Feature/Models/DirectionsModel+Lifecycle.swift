@@ -5,7 +5,7 @@ import TripDomain
 extension DirectionsModel {
     func clearResults() {
         routes = []
-        selectedID = nil
+        setSelectedRoute(nil)
         transitEstimate = nil
     }
 

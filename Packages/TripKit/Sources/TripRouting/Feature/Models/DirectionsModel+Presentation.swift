@@ -11,14 +11,29 @@ extension DirectionsModel {
     var estimate: DirectionsEstimate? { selectedRoute?.estimate ?? transitEstimate }
     public var isPresented: Bool { destination != nil }
 
+    func showSteps() {
+        guard presentation.stepsVisit == nil, selectedRoute?.steps.isEmpty == false else { return }
+        presentation.stepsVisit = UUID()
+    }
+
+    func setSelectedRoute(_ id: String?) {
+        selectedID = id
+        if presentation.stepsVisit != nil, selectedRoute?.steps.isEmpty != false {
+            presentation.stepsVisit = nil
+        }
+    }
+
     func mapsHandoffCompletion(_ completion: @escaping (Bool) -> Void) -> (Bool) -> Void {
         let handoffID = UUID()
         presentation.handoffID = handoffID
         let generation = generation
         let auxiliaryID = presentation.auxiliary?.id
+        let stepsVisit = presentation.stepsVisit
+        let routeID = selectedID
         return { [weak self] accepted in
-            guard let self, isPresented, generation == self.generation,
-                  presentation.auxiliary?.id == auxiliaryID, presentation.handoffID == handoffID else { return }
+            guard let self, isPresented, generation == self.generation, routeID == selectedID,
+                  presentation.auxiliary?.id == auxiliaryID, presentation.stepsVisit == stepsVisit,
+                  presentation.handoffID == handoffID else { return }
             presentation.handoffID = nil
             completion(accepted)
         }

@@ -15,6 +15,7 @@ struct NearbyPlacesView: View {
         .navigationTitle(TripText.placesHere.resource)
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
+        .modifier(PlacePanelContentVisibility(isCompact: controller.model.selection.presentation.isCompact))
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif

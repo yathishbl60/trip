@@ -25,7 +25,7 @@ Map discovery and general annotation decluttering remain in Explore and MapEngin
 
 Link the TripRouting and TripDomain products from Packages/TripKit; do not copy app sources.
 Retain a DirectionsModel per independent flow and inject DirectionsEnvironment and configuration.
-Embed DirectionsSheetView in the host sheet and DirectionsMapContent in its Map builder.
+Embed DirectionsSheetView in the iOS map sheet or spatial split-view sidebar and DirectionsMapContent in the Map builder.
 The UI is available on iOS and visionOS; the routing engine and geometry also support macOS.
 Keep native MapKit objects on MainActor and mutable requests local to one calculation.
 Retain debounce, deadlines, generation checks, cancellation, route selection, and origin semantics.

@@ -17,6 +17,8 @@ Read [DIRECTIONS.md](../../../../DIRECTIONS.md) for current APIs and supported c
 
 - Keep Explore's navigation header clear in loading, failure, and ready states.
 - Use native MapUserLocationButton, compass, scale, and Apple's Maps/Legal attribution.
+- ExploreMapView shares one stable namespace across Map, MapReader's environment, and native controls.
+- ExploreMapTrackingToolbar alone owns tracking in every layout; compass and scale use automatic mapControls.
 - Reserve native map safe-area space only for persistent UI that covers or blocks attribution.
 - Keep transient overlays, including bottom sheets, out of map safe-area insets.
 - Float notices above attribution; showing or resizing a sheet must not move it.
@@ -27,11 +29,11 @@ Read [DIRECTIONS.md](../../../../DIRECTIONS.md) for current APIs and supported c
 - Keep native map chrome anchored while collision exclusions and camera fitting account for sheets.
 - Offset route framing into the exposed viewport without changing native map safe areas.
 - Coalesce route fits until sheet geometry settles; allow map gestures to interrupt following.
-- Keep one interactive detail sheet and update its content when a different annotation is selected.
+- Keep one interactive map panel and remeasure on selection or route replacement, including identical bounds.
 - Native map deselection must not dismiss details; reject stale sheet/geometry callbacks by selection revision.
-- Directions shares the default system sheet background and navigation theme with Place Details/Save to Trip.
-- Preserve its grabber, compact/standard/large detents, and Close without a forced material background.
-- Use native presentationCornerRadius for compact directions to avoid an oversized capsule; expanded corners stay automatic.
+- On iOS use native leading placement for Directions and Place Details, with map interaction at every detent.
+- Preserve the system grabber, corners, height choices and Close action as window size changes.
+- On visionOS put contextual map tools in a split-view sidebar and frame the map in its own column.
 - Keep action buttons content-sized with visible text, and use the native Close role for dismissal.
 - Its compact state is non-dismissible by default; do not add overview/resize or share-direction buttons.
 - Match the supplied visual hierarchy using native components and minimal customization.

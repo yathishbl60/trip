@@ -21,8 +21,7 @@ extension ExploreModel {
 
     func detailAreaChanged(_ frame: CGRect, placeID: String, revision: Int) {
         guard !directions.isPresented, selectedPlace?.id == placeID,
-              selection.revision == revision, camera.sheetFrame != frame else { return }
-        camera.sheetFrame = frame
+              selection.revision == revision, camera.recordPanelFrame(frame) else { return }
         selection.viewportChanged()
         if !isSuspended { layout.viewportSettled() }
     }

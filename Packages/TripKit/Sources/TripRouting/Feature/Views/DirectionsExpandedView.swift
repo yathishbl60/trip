@@ -8,8 +8,8 @@ struct DirectionsExpandedView: View {
     var body: some View {
         List {
             Section { DirectionsModePicker(controller: controller) }
-            Section { DirectionsEndpointsView(controller: controller) }
             Section { DirectionsResultsView(controller: controller) }
+            Section { DirectionsEndpointsView(controller: controller) }
         }
         .scrollContentBackground(.hidden)
         #if os(iOS)

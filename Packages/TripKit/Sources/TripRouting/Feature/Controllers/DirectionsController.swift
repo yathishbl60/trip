@@ -21,7 +21,7 @@ import TripDomain
     }
 
     func select(_ id: String) { model.select(id) }
-    func showSteps() { model.showAuxiliary(.steps) }
+    func showSteps() { model.showSteps() }
     func showOptions() { model.showAuxiliary(.options) }
     func editStops() { model.showAuxiliary(.stops) }
     func changePlace(_ place: Place) { model.changePlace(place) }

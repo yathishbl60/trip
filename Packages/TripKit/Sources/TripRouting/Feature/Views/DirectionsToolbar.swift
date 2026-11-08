@@ -11,6 +11,7 @@ struct DirectionsToolbar: ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
             Button(TripText.options.resource, systemImage: "slider.horizontal.3", action: controller.showOptions)
                 .accessibilityValue(controller.model.optionsTitle)
+                .popover(isPresented: controller.options) { DirectionsOptionsView(controller: controller) }
         }
         ToolbarItem(placement: .cancellationAction) {
             Button(role: .close, action: controller.dismiss)

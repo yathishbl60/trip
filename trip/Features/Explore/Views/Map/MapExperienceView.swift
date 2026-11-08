@@ -24,7 +24,7 @@ struct MapExperienceView<Detail: View>: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .toolbarBackground(.clear, for: .navigationBar)
         .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
-        .sheet(item: PlaceController(model: model).mapSheet, content: sheet)
+        .modifier(MapToolPresentation(controller: PlaceController(model: model), panel: panel))
         .sheet(isPresented: FilterController(model: model).presentation) {
             FilterPanelView(controller: FilterController(model: model))
         }
@@ -32,7 +32,7 @@ struct MapExperienceView<Detail: View>: View {
         .onDisappear { MapController(model: model).stop() }
     }
 
-    @ViewBuilder private func sheet(_ destination: ExploreSheet) -> some View {
+    @ViewBuilder private func panel(_ destination: ExploreSheet) -> some View {
         switch destination {
         case .details: PlaceDetailsSheetView(model: model, detail: detail)
         case .directions: DirectionsSheetView(model: model.directions)

@@ -7,22 +7,25 @@ import Foundation
 
 struct DirectionsStepsView: View {
     let controller: DirectionsController
-    @Environment(\.dismiss) private var dismiss
     @ScaledMetric(relativeTo: .subheadline) private var badgeSize = 32.0
 
     var body: some View {
-        NavigationStack {
-            List { routeSteps }
-            .navigationTitle(TripText.routeSteps.resource)
+        let compact = controller.model.presentation.isCompact
+        return List { routeSteps }
             #if os(iOS)
             .scrollEdgeEffectStyle(.soft, for: .top)
             #endif
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(TripText.done.resource) { dismiss() } } }
             .safeAreaInset(edge: .bottom) {
-                DirectionsMapsButton(controller: controller).padding()
-                    .frame(maxWidth: .infinity).background(.bar)
+                if !compact {
+                    DirectionsMapsButton(controller: controller).padding()
+                        .frame(maxWidth: .infinity).background(.bar)
+                }
             }
-        }
+            .opacity(compact ? 0 : 1)
+            .allowsHitTesting(!compact)
+            .accessibilityHidden(compact)
+            .navigationTitle(TripText.routeSteps.resource)
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder private var routeSteps: some View {
@@ -55,10 +58,12 @@ struct DirectionsStepsView: View {
 
 #if DEBUG
 #Preview("Route instructions · local fixture") {
-    DirectionsStepsView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready()))
+    let model = DirectionsPreviewFixtures.ready()
+    model.showSteps()
+    return DirectionsSheetView(model: model)
 }
 #Preview("Route instructions · large text, dark") {
-    DirectionsStepsView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready()))
+    NavigationStack { DirectionsStepsView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready())) }
         .dynamicTypeSize(.accessibility3).preferredColorScheme(.dark)
 }
 #endif

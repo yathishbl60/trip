@@ -61,20 +61,35 @@ Vertical day maps use a text-scaled preferred list height instead of assigning a
 fixed percentage to the map; the fallback caps the list at half the available height.
 Place actions use ViewThatFits and native buttonSizing; full labels stack when
 they cannot fit alongside each other. Accessibility text always uses the stack.
-Place details, filters, trip forms, the assistant, and Directions
-use native form-sized presentations. Semantic toolbar placements let the system
-position close and primary actions; text-heavy items remain horizontal on iOS 27.1.
+On iPad and Duo, Explore requests native leading-edge sheets for Place Details
+and Directions. SwiftUI fits the panel to a 400-point ideal width when space
+allows. Native detents control height and the exposed map accepts input even
+when the panel is expanded. Short windows retain resizing. Filters, trip forms, and the assistant
+use form-sized presentations. Semantic toolbar placements let the system
+position Close and primary actions.
 Gallery resizing retains zoom and scales the pan offset with the fitted image,
 then clamps it to the new viewport. In-flight gestures wait for release after a
 resize so old translations cannot jump the image.
-Directions expands its content for regular-width and short windows, including
-when a previously compact sheet moves into a wider layout.
+Dragging either map panel down retains its native title and toolbar. The map
+keeps its selection or route. Resizing preserves the traveler's height choice.
+Accessibility text omits the smallest stops. Route steps and stop editing share
+the Directions navigation stack, and Options uses its toolbar's native popover.
+
+Visual review must include folding with a panel already open, not only opening
+a new panel on the larger display. On the 27.3 Duo simulator (2026-11-08), the
+retained sheet can become wider after unfolding; a fresh presentation fits the
+intended width. Native form, fitted, and explicit size proposals did not resolve
+that transition. A standalone SwiftUI reproduction without MapKit or Trip's
+navigation measured 653 points after unfolding and 400 after reopening. SwiftUI
+did not call its sizing proposal during the fold. Keep this case open; do not
+reset presentation identity or add a UIKit bridge to conceal it.
 
 ## visionOS
 
 The app opens native resizable windows, uses standard SwiftUI controls and sheets,
-and gives custom map markers native hover feedback. Directions expose their
-expanded controls because spatial sheets do not offer the iPhone's collapsed detent.
+and gives custom map markers native hover feedback. Explore presents the selected
+place or route in a leading NavigationSplitView column beside the map. Hiding
+the sidebar keeps the route active. Close ends the current presentation.
 Saved trips, place search, routes, manual planning, and supported on-device
 intelligence keep their existing service availability checks.
 

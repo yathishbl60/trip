@@ -209,8 +209,14 @@ the viewport once before visiting the retained candidate slice.
 
 See [the MapEngine review](MapEngineReview.md) for concrete findings and verification scope.
 
-Place details keep the native sheet background and detents. Directions and Save
-remain the primary actions; Share is directly in the toolbar. Information rows
+Place Details and Directions use a native leading sheet on iOS and iPadOS, and a
+native sidebar beside the map on visionOS. The traveler can pan and select on the
+exposed map while either tool is open. The iOS camera uses the measured panel
+bounds, including after a same-size selection change. The spatial camera uses
+the map column's own viewport. The native compact place detent retains the place
+name and toolbar while preserving the detail navigation path. Accessibility text
+uses taller detents. Directions and Save remain the primary actions, with Share
+directly in the toolbar. Information rows
 show an address, validated website, and telephone action when returned by MapKit.
 Older saved places decode without a telephone value. New live search results have
 no synthetic ratings; previously saved sample ratings remain explicitly labeled.
@@ -250,8 +256,18 @@ result contrast. Filters use one category grid (a list at accessibility sizes),
 All categories to reset, and a loaded-count footer instead of a duplicate summary
 panel and Reset action.
 
-Native controls retain their established automatic MapKit hosting. An attempted
-control relocation was withdrawn after runtime checks exposed regressions; extra
-collision geometry is not a delivered change. App composition shows save
-confirmations inside an open place sheet, and above the tab bar when the map
-itself is visible.
+ExploreMapView owns one stable namespace shared by its Map and native controls;
+mapScope encloses the existing MapReader, whose live projection callbacks remain
+in place. ExploreMapTrackingToolbar owns the native MapUserLocationButton in every
+layout, alongside map options using topBarLeading. The iOS verticalPreferred axis
+behavior lets the system place tracking beneath map options in a vertical bar.
+Compass and scale retain automatic mapControls hosting. The tracking button stays
+in the same native toolbar as layout changes; no device, hinge, or environment
+condition transfers it between toolbar and mapControls hosts.
+
+Keep exactly one tracking control through resizing and fold transitions. After
+scope or hosting changes, verify fresh annotation projection after pan, zoom,
+and search selection, plus tracking, compass, route framing, and attribution.
+Existing markers or an enabled tracking button alone do not verify MapProxy.
+App composition shows save confirmations inside an open place sheet, and above
+the tab bar when the map itself is visible.

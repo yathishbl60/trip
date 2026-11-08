@@ -45,7 +45,7 @@ extension DirectionsModel {
         } else {
             let previousSelection = selectedID
             routes = try DirectionsRoute.alternatives(responses, arrival: arrival)
-            selectedID = routes.first(where: { $0.id == previousSelection })?.id ?? routes.first?.id
+            setSelectedRoute(routes.first(where: { $0.id == previousSelection })?.id ?? routes.first?.id)
         }
         guard let estimate, estimate.isValid else { throw DirectionsFailure.unavailable }
         status = .ready

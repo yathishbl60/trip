@@ -8,11 +8,21 @@ import TripDomain
 struct DirectionsStopPickerView: View {
     let controller: DirectionsController
     let session: DirectionsPlacePicker
-    var showsCancel = false
     @Environment(\.dynamicTypeSize) private var typeSize
     @ScaledMetric(relativeTo: .body) private var symbolSize = 36.0
 
     var body: some View {
+        let compact = controller.model.presentation.isCompact
+        return searchContent
+            .opacity(compact ? 0 : 1)
+            .allowsHitTesting(!compact).accessibilityHidden(compact)
+            .toolbar(removing: compact ? .search : nil)
+            .onAppear { controller.loadStops(session: session) }
+            .onDisappear { controller.stopSearching(session: session) }
+            .id(session.id)
+    }
+
+    private var searchContent: some View {
         List { searchRows }
             .navigationTitle(session.title)
             #if os(iOS)
@@ -26,17 +36,6 @@ struct DirectionsStopPickerView: View {
             #if os(iOS)
             .scrollDismissesKeyboard(.interactively)
             #endif
-            .toolbar { pickerTools }
-            .onAppear { controller.loadStops(session: session) }.onDisappear { controller.stopSearching(session: session) }
-            .id(session.id)
-    }
-
-    @ToolbarContentBuilder private var pickerTools: some ToolbarContent {
-        if showsCancel {
-            ToolbarItem(placement: .cancellationAction) {
-                Button(TripText.cancel.resource) { controller.cancelPlacePicker(session: session) }
-            }
-        }
     }
 
     @ViewBuilder private var searchRows: some View {

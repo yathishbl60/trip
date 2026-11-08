@@ -6,6 +6,7 @@ import SwiftUI
 struct PlaceDetailsSheetView<Detail: View>: View {
     let model: ExploreModel
     private let detail: (Place, PlaceController) -> Detail
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     init(model: ExploreModel, @ViewBuilder detail: @escaping (Place, PlaceController) -> Detail) {
         self.model = model
@@ -13,16 +14,36 @@ struct PlaceDetailsSheetView<Detail: View>: View {
     }
 
     var body: some View {
-        if let place = model.selection.rootPlace, let visiblePlace = model.selectedPlace {
-            let revision = model.selection.revision
-            detail(place, PlaceController(model: model))
-                .id(place.id)
-                .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) {
-                    MapController(model: model).detailAreaChanged($0, placeID: visiblePlace.id, revision: revision)
-                }
+        if let root = model.selection.rootPlace, let selectedID = model.selectedPlace?.id {
+            measuredDetails(root, selectedID: selectedID, revision: model.selection.revision)
+                #if os(iOS)
+                .presentationPlacement(.leading)
+                .presentationCompactAdaptation(horizontal: .automatic, vertical: .none)
+                .presentationDetents(model.selection.presentation.detents, selection: PlaceController(model: model).detailDetent)
+                .presentationContentInteraction(.resizes)
+                .presentationDragIndicator(.visible)
+                .presentationBackgroundInteraction(.enabled(upThrough: .large))
+                .onChange(of: typeSize, initial: true) { PlaceController(model: model).detailAccessibilityChanged(typeSize) }
+                #endif
         }
     }
+
+    private func measuredDetails(_ root: Place, selectedID: String, revision: Int) -> some View {
+        detail(root, PlaceController(model: model))
+            .onGeometryChange(for: PlacePanelMeasurement.self) { geometry in
+                PlacePanelMeasurement(frame: geometry.frame(in: .global), placeID: selectedID, revision: revision)
+            } action: { measurement in
+                MapController(model: model).detailAreaChanged(measurement.frame, placeID: measurement.placeID,
+                                                             revision: measurement.revision)
+            }
+            .id(root.id)
+    }
+}
+
+private nonisolated struct PlacePanelMeasurement: Equatable, Sendable {
+    let frame: CGRect
+    let placeID: String
+    let revision: Int
 }
 
 #if DEBUG
@@ -53,4 +74,16 @@ struct PlaceDetailsSheetView<Detail: View>: View {
         PlaceDetailView(place: place, controller: controller)
     }
 }
+#if os(iOS)
+#Preview("Place sheet · short window, accessibility text", traits: .landscapeLeft) {
+    @Previewable @State var presented = true
+    let model = PreviewFixtures.explore()
+    model.select(PreviewFixtures.longName)
+    return Color.clear.sheet(isPresented: $presented) {
+        PlaceDetailsSheetView(model: model) { place, controller in
+            PlaceDetailView(place: place, controller: controller)
+        }.dynamicTypeSize(.accessibility2)
+    }
+}
+#endif
 #endif

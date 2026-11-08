@@ -9,10 +9,6 @@ extension DirectionsController {
 
     func choosePlace(_ place: Place, session: DirectionsPlacePicker) { model.choosePlace(place, session: session) }
     func useMyLocation(session: DirectionsPlacePicker) { model.useMyLocation(session: session) }
-    func cancelPlacePicker(session: DirectionsPlacePicker) {
-        guard model.presentation.placePicker?.id == session.id else { return }
-        model.closePlacePicker()
-    }
     func loadStops(session: DirectionsPlacePicker) { model.searchPlaces(model.stopSearch.query, session: session) }
     func stopSearching(session: DirectionsPlacePicker) { model.stopSearching(session: session) }
 }

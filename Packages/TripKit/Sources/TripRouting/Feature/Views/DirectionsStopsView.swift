@@ -7,25 +7,22 @@ import TripDomain
 
 struct DirectionsStopsView: View {
     let controller: DirectionsController
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationStack {
-            stops
-                .navigationTitle(TripText.routeStops.resource)
-                #if os(iOS)
-                .scrollEdgeEffectStyle(.soft, for: .top)
-                #endif
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) { EditButton() }
-                    ToolbarItem(placement: .confirmationAction) { Button(TripText.done.resource) { dismiss() } }
+        let compact = controller.model.presentation.isCompact
+        return stops
+            .opacity(compact ? 0 : 1)
+            .allowsHitTesting(!compact).accessibilityHidden(compact)
+            .navigationTitle(TripText.routeStops.resource).navigationBarTitleDisplayMode(.inline)
+            #if os(iOS)
+            .scrollEdgeEffectStyle(.soft, for: .top)
+            #endif
+            .toolbar { ToolbarItem(placement: .primaryAction) { if !compact { EditButton() } } }
+            .navigationDestination(isPresented: controller.choosingPlace) {
+                if let session = controller.model.presentation.placePicker {
+                    DirectionsStopPickerView(controller: controller, session: session)
                 }
-                .navigationDestination(isPresented: controller.choosingPlace) {
-                    if let session = controller.model.presentation.placePicker {
-                        DirectionsStopPickerView(controller: controller, session: session)
-                    }
-                }
-        }
+            }
     }
 
     private var stops: some View {
@@ -61,10 +58,10 @@ struct DirectionsStopsView: View {
 #Preview("Reorder route stops · local places") {
     let model = DirectionsPreviewFixtures.ready()
     model.stops = Array(model.environment.loadedPlaces().prefix(2))
-    return DirectionsStopsView(controller: DirectionsController(model: model))
+    return NavigationStack { DirectionsStopsView(controller: DirectionsController(model: model)) }
 }
 #Preview("Empty stops") {
-    DirectionsStopsView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready()))
+    NavigationStack { DirectionsStopsView(controller: DirectionsController(model: DirectionsPreviewFixtures.ready())) }
 }
 #endif
 #endif

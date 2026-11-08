@@ -84,7 +84,7 @@ import TripDomain
 
     func select(_ id: String) {
         guard status == .ready, selectedID != id, routes.contains(where: { $0.id == id }) else { return }
-        selectedID = id
+        setSelectedRoute(id)
         presentation.needsRouteFraming = true
         presentation.followsRoute = true
         revision += 1

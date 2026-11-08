@@ -9,6 +9,19 @@ struct PlaceDetailContentView: View {
     @State private var lookAround = PlaceLookAroundModel()
 
     var body: some View {
+        content
+        .listStyle(.insetGrouped).scrollContentBackground(.hidden)
+        .modifier(PlacePanelContentVisibility(isCompact: controller.model.selection.presentation.isCompact))
+        .navigationTitle(controller.model.selection.presentation.isCompact ? place.name : "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { PlaceDetailToolbar(place: place, controller: controller) }
+        .modifier(PlaceLookAroundPresentation(coordinate: place.coordinate, model: lookAround))
+        #if os(iOS)
+        .scrollEdgeEffectStyle(.soft, for: .top)
+        #endif
+    }
+
+    private var content: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: AppTheme.spacing) {
@@ -20,13 +33,6 @@ struct PlaceDetailContentView: View {
             PlaceDetailContactSection(place: place)
             exploration
         }
-        .listStyle(.insetGrouped).scrollContentBackground(.hidden)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar { PlaceDetailToolbar(place: place, controller: controller) }
-        .modifier(PlaceLookAroundPresentation(coordinate: place.coordinate, model: lookAround))
-        #if os(iOS)
-        .scrollEdgeEffectStyle(.soft, for: .top)
-        #endif
     }
 
     private var exploration: some View {

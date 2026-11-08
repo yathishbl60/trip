@@ -6,10 +6,28 @@ extension DirectionsController {
         Binding(get: { model.presentation.detent }, set: { model.presentation.detent = $0 })
     }
 
-    var auxiliary: Binding<DirectionsAuxiliary?> {
+    var readingSteps: Binding<Bool> {
+        let visit = model.presentation.stepsVisit
+        return Binding(get: { model.presentation.stepsVisit != nil }, set: { shown in
+            if !shown, model.presentation.stepsVisit == visit { model.presentation.stepsVisit = nil }
+        })
+    }
+
+    var editingRoute: Binding<Bool> {
         let id = model.presentation.auxiliary?.id
-        return Binding(get: { model.presentation.auxiliary }, set: { value in
-            guard value == nil, model.presentation.auxiliary?.id == id else { return }
+        return Binding(get: {
+            guard let screen = model.presentation.auxiliary?.screen else { return false }
+            return screen != .options
+        }, set: { shown in
+            guard !shown, model.presentation.auxiliary?.id == id else { return }
+            model.dismissAuxiliary()
+        })
+    }
+
+    var options: Binding<Bool> {
+        let id = model.presentation.auxiliary?.id
+        return Binding(get: { model.presentation.auxiliary?.screen == .options }, set: { shown in
+            guard !shown, model.presentation.auxiliary?.id == id else { return }
             model.dismissAuxiliary()
         })
     }
@@ -23,10 +41,15 @@ extension DirectionsController {
         })
     }
 
-    func sheetFrameChanged(_ frame: CGRect) { model.environment.sheetFrameChanged(frame) }
-    func accessibility(largeText: Bool, reduceMotion: Bool, compactHeight: Bool, regularWidth: Bool) {
-        model.presentation.accessibility(largeText: largeText, reduceMotion: reduceMotion,
-                                        compactHeight: compactHeight, regularWidth: regularWidth)
+    func sheetFrameChanged(_ measurement: DirectionsPanelMeasurement) {
+        guard model.isPresented, model.destinationID == measurement.destinationID,
+              model.presentation.session == measurement.session else { return }
+        model.environment.sheetFrameChanged(measurement.frame)
+    }
+
+    func accessibility(largeText: Bool, reduceMotion: Bool) {
+        model.presentation.usesLargeText = largeText
+        model.presentation.reduceMotion = reduceMotion
     }
 }
 #endif

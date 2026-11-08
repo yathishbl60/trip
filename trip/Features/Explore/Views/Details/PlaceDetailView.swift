@@ -4,17 +4,12 @@ import SwiftUI
 struct PlaceDetailView: View {
     let place: Place
     let controller: PlaceController
-    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         NavigationStack(path: controller.detailPath) {
             PlaceDetailContentView(place: place, controller: controller)
                 .navigationDestination(for: PlaceDetailDestination.self, destination: destination)
         }
-        .presentationSizing(.form)
-        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
-        .presentationContentInteraction(.resizes)
-        .presentationDragIndicator(.visible)
     }
 
     @ViewBuilder private func destination(_ destination: PlaceDetailDestination) -> some View {
@@ -52,13 +47,6 @@ struct PlaceDetailView: View {
 #Preview("Live place") {
     PlaceDetailView(place: PlaceDetailPreviewFixtures.live,
                     controller: PlaceController(model: PreviewFixtures.explore()))
-}
-#Preview("Place sheet · primary actions and detents") {
-    @Previewable @State var isPresented = true
-    Color.clear.sheet(isPresented: $isPresented) {
-        PlaceDetailView(place: PreviewFixtures.hotel,
-                        controller: PlaceController(model: PlaceDetailPreviewFixtures.saving()))
-    }
 }
 #Preview("Place details · narrow, large text") {
     PlaceDetailView(place: PreviewFixtures.longName,
