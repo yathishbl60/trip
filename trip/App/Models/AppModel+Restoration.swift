@@ -2,7 +2,7 @@ import Foundation
 
 extension AppModel {
     func restore(tab: String, tripID: String, initialTripID: UUID?) async {
-        guard !navigation.didRestore else { return }
+        guard !Task.isCancelled, !navigation.didRestore else { return }
         let generation = navigation.beginRequest()
         let state = AppRestoration(tab: AppTab(rawValue: tab) == .trips ? .trips : .explore,
                                    tripID: initialTripID ?? UUID(uuidString: tripID), opensTrip: initialTripID != nil)

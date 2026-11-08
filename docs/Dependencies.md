@@ -87,8 +87,9 @@ AppleTripSystemActions adapter. Each scene receives independent import, export, 
 weather models. Trips imports only their TripDomain contracts. PreviewTripServices
 injects local document, weather, and system-action fixtures without permission prompts.
 
-The system adapter retains EventKit stores and a durable export/alarm ledger. Successful
-trip saves and foreground activation reconcile pending alarms with canonical bookings.
+The system adapter creates and retains its EventKit store and durable export/alarm
+ledger on first use, keeping native-service setup out of scene construction.
+Successful trip saves and foreground activation reconcile pending alarms with canonical bookings.
 Import and forecasts use cancellation plus generation checks. No provider is created
 inside a view or silently substituted after a failure. See [native travel services](NativeTravelServices.md).
 

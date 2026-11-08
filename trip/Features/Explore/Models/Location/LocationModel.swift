@@ -13,7 +13,7 @@ import Foundation
     @ObservationIgnored var wantsUpdates = false
     @ObservationIgnored var generation = 0
     @ObservationIgnored var task: Task<Void, Never>?
-    @ObservationIgnored private let authorization = CLLocationManager()
+    @ObservationIgnored private lazy var authorization = CLLocationManager()
 
     init(coordinate: Coordinate = .bangkok, label: String = TripText.bangkokStartingPoint.text) {
         self.coordinate = coordinate
@@ -21,7 +21,7 @@ import Foundation
     }
 
     var currentCoordinate: Coordinate? {
-        guard isAuthorized, isLive, let timestamp, abs(timestamp.timeIntervalSinceNow) < 60 else { return nil }
+        guard isLive, let timestamp, abs(timestamp.timeIntervalSinceNow) < 60, isAuthorized else { return nil }
         return coordinate
     }
 

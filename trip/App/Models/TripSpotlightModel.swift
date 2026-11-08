@@ -15,12 +15,12 @@ import Foundation
         task = Task {
             await previous?.value
             guard token == generation else { return }
-            await update(plans)
+            await update(plans, token: token)
         }
         await task?.value
     }
 
-    private func update(_ plans: [TripSurfacePlan]) async {
+    private func update(_ plans: [TripSurfacePlan], token: Int) async {
         let entities = plans.map { SavedTripEntity(TripSurfaceSummary($0)) }
         let previous = Set((defaults?.stringArray(forKey: "spotlightTripIDs") ?? []).compactMap(UUID.init(uuidString:)))
         let current = Set(plans.map(\.id))
@@ -33,7 +33,7 @@ import Foundation
                                                                    ofType: SavedTripEntity.self)
             try await CSSearchableIndex.default().indexAppEntities(entities)
             defaults?.set(current.map(\.uuidString), forKey: "spotlightTripIDs")
-            try await TripDetailSpotlightIndex.publish(plans, defaults: defaults)
+            try await TripDetailSpotlightIndex.publish(plans, defaults: defaults, isCurrent: { token == self.generation })
         } catch { /* Indexing is retried after the next durable library publication. */ }
     }
 }

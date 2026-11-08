@@ -22,9 +22,7 @@ import Foundation
 
     func showExplore() { model.showExplore() }
     func start(_ phase: ScenePhase, tab: String, tripID: String, initialTripID: UUID?) async {
-        if phase == .active { await model.restore(tab: tab, tripID: tripID, initialTripID: initialTripID) }
-        guard !Task.isCancelled else { return }
-        await model.start(isActive: phase == .active)
+        await model.start(isActive: phase == .active, tab: tab, tripID: tripID, initialTripID: initialTripID)
     }
     func consumeLaunch() { model.consumeLaunch() }
     func openURL(_ url: URL) { model.openURL(url) }

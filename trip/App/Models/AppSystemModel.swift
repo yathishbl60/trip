@@ -1,10 +1,12 @@
-import AppIntents
 import TripDomain
-import WidgetKit
 import Foundation
 
 @MainActor final class AppSystemModel {
     private var generation = 0
+    private var publicationTask: Task<Void, Never>?
+    private var activePublication: Task<Void, Never>?
+    private var pendingPublication: (plans: [TripPlan], token: Int)?
+    private(set) var publicationRevision = 0
     private var refreshRevision = 0
     private let spotlight = TripSpotlightModel()
     private let systemActions: any TripSystemActionProviding
@@ -16,35 +18,64 @@ import Foundation
         self.journey = journey
     }
 
-    func recordTripOpened(_ trip: TripPlan) {
-        let entity = SavedTripEntity(TripSurfaceSummary(TripSurfacePlan(trip)))
-        IntentDonationManager.shared.donate(intent: OpenSavedTripIntent(trip: entity))
+    func publish(_ plans: [TripPlan]) async {
+        // Durable publication outlives the save caller; only newer snapshots cancel active work.
+        generation += 1
+        pendingPublication = (plans, generation)
+        activePublication?.cancel()
+        if let publicationTask { await publicationTask.value; return }
+        let task = Task { await drainPublications() }
+        publicationTask = task
+        await task.value
     }
 
-    func publish(_ plans: [TripPlan]) async {
-        generation += 1
-        let token = generation
-        let snapshots = plans.map(TripSurfacePlan.init)
-        let alarmError = await reconcileAlarms(plans)
-        guard token == generation else { return }
+    private func drainPublications() async {
+        defer {
+            publicationTask = nil
+            activePublication = nil
+        }
+        while let pending = pendingPublication {
+            pendingPublication = nil
+            let task = Task { await performPublication(pending.plans, token: pending.token) }
+            activePublication = task
+            await task.value
+        }
+    }
+
+    private func performPublication(_ plans: [TripPlan], token: Int) async {
         do {
-            try await TripSystemData.publish(snapshots, at: .now)
-            guard token == generation else { return }
-            reloadSurfaces()
-            await spotlight.publish(snapshots)
-            await journey.refresh()
-            if token == generation { error = alarmError }
+            let snapshots = try await AppSystemProjection.snapshots(plans)
+            guard !Task.isCancelled, token == generation else { return }
+            let alarmError = await reconcileAlarms(plans)
+            guard !Task.isCancelled, token == generation else { return }
+            try await publishSurfaces(snapshots, token: token, alarmError: alarmError)
+        } catch is CancellationError {
+            return
         } catch {
             if token == generation { self.error = error.localizedDescription }
         }
     }
 
-    func refresh(_ plans: [TripPlan]) async {
+    private func publishSurfaces(_ snapshots: [TripSurfacePlan], token: Int, alarmError: String?) async throws {
+        try await TripSystemData.publish(snapshots, at: .now)
+        guard !Task.isCancelled, token == generation else { return }
+        reloadSurfaces()
+        await spotlight.publish(snapshots)
+        guard !Task.isCancelled, token == generation else { return }
+        await journey.refresh()
+        guard !Task.isCancelled, token == generation else { return }
+        error = alarmError
+        publicationRevision = token
+    }
+
+    func refresh(_ plans: [TripPlan], since publication: Int? = nil) async {
+        guard !Task.isCancelled, publicationTask == nil,
+              publication == nil || publication == publicationRevision else { return }
         refreshRevision += 1
         let revision = refreshRevision
-        let publication = generation
+        let publicationGeneration = generation
         let alarmError = await reconcileAlarms(plans)
-        guard !Task.isCancelled, revision == refreshRevision, publication == generation else { return }
+        guard !Task.isCancelled, revision == refreshRevision, publicationGeneration == generation else { return }
         if let alarmError { error = alarmError }
         await journey.refresh()
     }
@@ -52,19 +83,6 @@ import Foundation
     private func reconcileAlarms(_ plans: [TripPlan]) async -> String? {
         do { try await systemActions.reconcileAlarms(with: plans); return nil }
         catch { return error.localizedDescription }
-    }
-
-    private func reloadSurfaces() {
-        WidgetCenter.shared.reloadTimelines(ofKind: TripSystemData.widgetKind)
-        WidgetCenter.shared.reloadTimelines(ofKind: TripSystemData.readinessWidgetKind)
-        TripDaySnippetIntent.reload()
-        TripNextStepSnippetIntent.reload()
-        TripAnswerSnippetIntent.reload()
-        TripChecklistSnippetIntent.reload()
-        TripShortcuts.updateAppShortcutParameters()
-        #if os(iOS)
-        ControlCenter.shared.reloadControls(ofKind: TripSystemData.controlKind)
-        #endif
     }
 
 }

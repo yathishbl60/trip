@@ -2,8 +2,10 @@ import Foundation
 import TripDomain
 
 extension AppModel {
-    func start(isActive: Bool) async {
+    func start(isActive: Bool, tab: String, tripID: String, initialTripID: UUID?) async {
+        guard !Task.isCancelled else { return }
         let activation = navigation.beginActivation(isActive)
+        let publication = system?.publicationRevision
         guard isActive else {
             if AppRuntime.activeScene === self { AppRuntime.activeScene = nil }
             trips.suspendHostServices()
@@ -11,9 +13,11 @@ extension AppModel {
             return
         }
         AppRuntime.activeScene = self
-        await trips.library.load()
+        await restore(tab: tab, tripID: tripID, initialTripID: initialTripID)
         guard navigation.acceptsActivation(activation) else { return }
-        await system?.refresh(trips.library.trips)
+        await trips.library.load()
+        guard navigation.acceptsActivation(activation), trips.library.isReady else { return }
+        await system?.refresh(trips.library.trips, since: publication)
         guard navigation.acceptsActivation(activation) else { return }
         consumeLaunch()
     }

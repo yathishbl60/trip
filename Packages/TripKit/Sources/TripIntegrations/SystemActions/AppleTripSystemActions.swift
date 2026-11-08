@@ -10,17 +10,18 @@ import AppIntents
 
 /// Retain one instance at the app composition root; permission prompts never run from initialization.
 @MainActor public final class AppleTripSystemActions: TripSystemActionProviding {
-    let ledger: TripActionLedger
+    private let defaults: UserDefaults
+    lazy var ledger = TripActionLedger(defaults: defaults)
     var isSchedulingAlarm = false
     #if os(iOS) || os(macOS)
-    let eventStore = EKEventStore()
+    lazy var eventStore = EKEventStore()
     #endif
     #if os(iOS)
     public var openAlarm: (@MainActor (TripSystemBooking) -> any LiveActivityIntent)?
     #endif
 
     public init(defaults: UserDefaults = .standard) {
-        ledger = TripActionLedger(defaults: defaults)
+        self.defaults = defaults
     }
 
     public var supportsCalendarReminders: Bool {

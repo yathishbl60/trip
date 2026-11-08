@@ -4,6 +4,7 @@ import CoreLocation
 
 extension LocationModel {
     func updates(generation: Int) async {
+        guard !Task.isCancelled, generation == self.generation else { return }
         let session = CLServiceSession(authorization: .whenInUse)
         defer {
             session.invalidate()

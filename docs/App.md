@@ -31,6 +31,11 @@ New Trip launch intents wait for successful library loading. Scene inactivity
 flushes edits and cancels generation; the map host stops its own work.
 Do not move feature tasks into AppController.
 
+AppModel captures the completed system-publication revision before restoration
+loads the library. Activation reuses that publication instead of immediately
+repeating alarm reconciliation and journey refresh. Later foreground activations
+still refresh these services. Failed loading never reconciles against an empty library.
+
 Use `PreviewFixtures.app()` for local integration previews. Use a feature's own
 fixture when editing that feature. After wiring changes, run `bash scripts/check.sh`.
 When runtime verification is requested, exercise save from both entry points,
@@ -119,3 +124,10 @@ Trips model explicitly. See [Dependencies](Dependencies.md) for lifetime details
 Native booking capture, explicit exports and alarms, and planned-visit weather follow
 [the native travel service contract](NativeTravelServices.md). Reusable adapters stay
 in TripIntegrations; feature models receive TripDomain protocols from AppTripServices.
+
+`AppSystemProjection` prepares Sendable surface snapshots and bounded Spotlight
+detail values with `@concurrent`; native indexing entities and UI state stay on
+MainActor. AppSystemModel owns durable publication independently of the cancellable
+edit debounce. Only a newer durable publication may supersede that work.
+Source audits and compilation check these boundaries; launch responsiveness and
+background-return behavior still require runtime verification.
