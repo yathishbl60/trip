@@ -1,7 +1,7 @@
-# Packing, checklist intents, and controls · checked 2026-10-17
+# Packing, checklist intents, and controls
 
 Use these patterns when extending Trip's preparation or system launch surfaces.
-Signatures were inspected in Xcode-beta's iOS 27.2 SDK; device behavior is separate.
+Verify changed signatures against the installed SDK; review device behavior separately.
 
 ## Packing with Foundation Models
 
@@ -42,5 +42,5 @@ Signatures were inspected in Xcode-beta's iOS 27.2 SDK; device behavior is separ
 - [Intent runtime and host execution](https://developer.apple.com/documentation/appintents/configuring-the-runtime-behavior-of-your-app-intents)
 - [Universal-link-only URL intents](https://developer.apple.com/documentation/appintents/urlrepresentableintent)
 - Run scripts/check.sh for source/wiring audits. Builds and Performance checks require user requests.
-- Preview closures that mutate fixture state need an explicit return; the Swift 6.4 beta can crash while diagnosing their Void expressions.
+- Preview closures that mutate fixture state must explicitly return their final view.
 - Verify cold controls, Siri snippets, unavailable models, and all widget/activity sizes on signed supported hardware.

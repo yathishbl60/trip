@@ -1,11 +1,12 @@
 ## Outcome
 
-What user task or maintenance problem does this change improve?
+What problem does this fix, and what happens after the change? Link an issue if relevant.
 
 ## Ownership and compatibility
 
 Name the owning area and any changed dependency, public contract, persisted
 format, async lifetime, or host callback. Link the relevant guide or decision.
+For a small correction, keep this brief and remove inapplicable prompts.
 
 ## Verification
 

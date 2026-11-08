@@ -3,8 +3,8 @@
 General inference, isolation, and import diagnosis lives in global `app-development` compiler-diagnostics.
 These are concrete Trip ownership traps, not universal Swift recipes.
 
-- PlaceSearchQuery's ranking pipeline previously timed out type inference; preserve ordering when splitting expressions.
-- TripSurfaceAgenda's pure priority extension needed its own explicit nonisolated declaration under default MainActor isolation.
+- Preserve PlaceSearchQuery's ranking order when splitting expressions for type inference.
+- Keep TripSurfaceAgenda's pure priority extension explicitly nonisolated under default MainActor isolation.
 - PlaceCategory.annotationTitle belongs to Shared, not TripDomain; inferred member access can hide app-only dependencies.
 - Locate defining members before moving helpers into packages; lexical ownership checks cannot resolve every extension.
 - MemberImportVisibility requires explicit imports in every consuming file, including extensions.

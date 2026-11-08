@@ -1,111 +1,97 @@
 # Shared text and localization
 
-Author user-facing copy in `Packages/TripKit/Sources/TripLocalization`, shared by
-Trip, all TripKit modules, and the widget extension. The package has no dependency
-on app types, MapKit, SwiftUI, or a translation service at runtime.
+Use this guide when adding user-facing copy, changing translations, or exposing
+native metadata to Siri, Shortcuts or widgets. TripLocalization owns shared text;
+app and extension metadata also need their generated main-bundle resources.
 
-- `Resources/Localizable.xcstrings` is the authored English, Kannada (`kn`), and
-  Hindi (`hi`) catalog. It includes controls, accessibility, errors, sharing,
-  packing templates, and system summaries.
-- `HostResources/AppShortcuts.xcstrings` owns Siri invocation translations.
-- `HostResources/InfoPlist.xcstrings` owns location permission translations.
-- `HostResources/Localizable.xcstrings` is a generated subset for native app and
-  extension metadata, whose lookups use their own main bundles.
-- `TripText.swift` resolves the package bundle explicitly and provides deferred
-  resources, localized strings, and a deterministic locale override for previews.
-- `TripText+*.swift` files are generated, grouped, and capped below the project's
-  physical line limit. Edit the catalog instead of these accessors.
+## Find the right resource
 
-## Contents
+Paths below are relative to `Packages/TripKit/Sources/TripLocalization`.
 
-- [Use existing text](#use-existing-text)
-- [Add or change text](#add-or-change-text)
-- [Translation review and verification](#translation-review-and-verification)
+| Resource | Ownership |
+| --- | --- |
+| `Resources/Localizable.xcstrings` | Authored English, Hindi (`hi`) and Kannada (`kn`) copy, plural forms and accessor metadata |
+| `HostResources/AppShortcuts.xcstrings` | Siri invocation translations and native parameter tokens |
+| `HostResources/InfoPlist.xcstrings` | Location permission explanation translations |
+| `HostResources/Localizable.xcstrings` | Generated app/widget metadata subset; do not hand-edit managed entries |
+| `TripText.swift` | Explicit package bundle, deferred resources, resolved text and locale override |
+| `TripText+*.swift` | Generated typed accessors; edit their catalog entries instead |
+
+The package depends on Foundation, not app types, SwiftUI, MapKit or a runtime
+translation service. Consumers should reuse existing accessors before adding keys.
 
 ## Use existing text
 
 ```swift
-// SwiftUI keeps bundle and locale context until rendering.
 Button(TripText.save.resource) { controller.save() }
 Text(TripText.dayCount(3).resource)
-
-// Existing model/service contracts requiring String resolve explicitly.
 model.error = TripText.thisTripIsNoLongerAvailable.text
-
-// Explicit locale for deterministic preview text.
 TripText.cancel.localized(locale: Locale(identifier: "kn"))
 ```
 
-Prefer deferred `.resource` at native SwiftUI display sites. Use `.text` where an
-existing API needs a resolved String. The resource and all translations come from
-the same key. A count accessor accepts Int; its catalog owns plural forms. Other
-message accessors preserve interpolation positions so translators can reorder them.
-Do not construct sentences from translated fragments or English plural suffixes.
+Prefer deferred `.resource` in SwiftUI so bundle and locale context survive until
+rendering. Use `.text` when a model or service API requires String. Use explicit
+locales for deterministic fixtures. Count accessors take Int and use catalog plural
+forms; preserve interpolation positions so translators can reorder arguments.
+Never assemble sentences from translated fragments or English plural suffixes.
 
 ## Add or change text
 
-1. Update the catalog's English value and the `hi` / `kn` translations. Keep stable
-   keys independent of copy edits. Add `one` and `other` variants for counts.
-   New App Intent metadata keys use `intent_` (for example `intent_open_my_trips`)
-   so they cannot collide with native English Shortcuts summary keys.
-2. New shared entries have comment metadata: `@symbol save`, `@group Common`, and
-   `@parameters ` (empty for labels, or comma-separated `String` / `Int` types).
-   Include the UI purpose and explain each interpolation position for translators.
-3. Run `python3 scripts/generate_localization.py` after catalog or native metadata
-   changes. It updates accessors and the main-bundle metadata subset.
-4. Run `bash scripts/check.sh`. It checks catalog coverage, placeholder types, Siri
-   tokens, generation drift, architecture, and source/skill limits without an app build.
+1. Search the catalog for an existing key with the same meaning. Keep stable keys
+   when changing wording; user-entered names and saved text remain data.
+2. Supply English, Hindi and Kannada values. Counts need `one` and `other` variants.
+   Explain the UI purpose and interpolation positions for translators.
+3. For shared runtime copy, add comment metadata: `@symbol` for the accessor name,
+   `@group` for the generated file group, and `@parameters ` followed by comma-separated
+   `String`/`Int` types, or an empty value for labels. Preserve the space after the
+   parameters directive in the catalog comment.
+4. Run `python3 scripts/generate_localization.py` after catalog or native metadata
+   changes. Review generated accessors, host resources and any synchronized project
+   or performance-source entries together.
+5. Follow the source checks in [Contributing](../CONTRIBUTING.md). Check all supported
+   languages and plural/interpolation branches before treating the copy as complete.
 
-Siri invocation phrases and Shortcuts `Summary` interpolation must remain native
-DSL literals so Apple can extract parameter tokens. Their translations live in the
-central catalogs; preserve `${parameter}` tokens exactly. Metadata titles use stable
-literal keys for compiler extraction and resolve through the generated host catalog.
-The base location explanation in project settings is synchronized from its catalog
-by the generator, preserving a meaningful permission fallback.
+## Native metadata and runtime dialogs
 
-Generation sorts accessor keys and serializes the generated host catalog in a
-stable order, so Xcode's catalog reordering does not move accessors between files.
-The generator collects literal metadata references from intents, shared system
-types, and widgets. Only those keys become managed host entries. A missing
-translation fails generation with the key and catalog path. Removed metadata
-references disappear on regeneration.
-Generated host entries are manually managed because the catalog combines app and
-widget metadata. Each target must retain the other target's translations. The
-source audit checks that generated keys match the actual metadata references.
-Xcode may add compiler-owned interpolation/separator entries during extraction.
-These retain automatic ownership and are preserved only when the key and every
-value contain placeholders or punctuation, with no authored words or symbols.
-All real copy still requires complete translations. Catalog comparisons use JSON
-content so Xcode formatting changes do not report false generation drift. Generation
-writes only changed files, preserving incremental-build timestamps.
-Swift symbol generation stays enabled. Stable metadata keys use a distinct name
-from literal Shortcuts summaries, while existing `TripText` APIs remain unchanged.
-The audit detects equivalent plain keys such as `Open my trips` and `open_my_trips`
-before compilation. Xcode's build remains authoritative for generated Swift symbols.
-The source audit accepts Xcode's empty and format-only extraction placeholders;
-actual labels and authored symbols still require all supported translations.
+Use stable literal metadata keys with the `intent_` prefix for new App Intent titles
+and descriptions. This avoids collisions with native English Shortcuts summary keys.
+The generator collects actual literal references from intents, shared system types
+and widgets into the main-bundle catalog.
 
-User-entered trip names, notes, saved checklist items, and MapKit/source catalog
-names stay as data. Enum raw values used as IDs remain stable; separate `title`
-properties supply localized labels. AI prompts, symbols, resource names, URLs,
-diagnostic signposts, and preview fixture names are not UI translation keys. The
-AI assistant still reports when the selected model does not support a language.
+Runtime errors and dialogs should use generated `TripText` accessors. A new raw key
+used only in model code is not automatically native metadata and will not enter the
+host subset. Keep its accessor metadata in the authored shared catalog instead.
 
-## Translation review and verification
+Siri phrases and Shortcuts Summary interpolation remain native DSL literals for
+Apple's extraction. Preserve `${parameter}` tokens exactly. Keep permission fallback
+copy synchronized through the generator rather than editing the project setting
+independently.
 
-The initial Hindi and Kannada translations were generated with Google Translate,
-with common controls and selected terminology reviewed during implementation.
-Entries marked `needs_review` still require native-speaker review, particularly
-long guidance, travel timing, and Siri phrases. English remains the source
-and fallback language. Translation generation is an authoring step; the app makes
-no translation-service requests.
+Managed host entries use manual extraction ownership because both app and widget
+metadata share the catalog. Preserve both targets' entries. Compiler-owned empty,
+separator and format-only artifacts may remain automatic when they contain no
+authored words or symbols. Actual copy still requires all supported translations.
+The checker detects catalog coverage, placeholder types, Siri tokens, equivalent
+plain-key symbol collisions and generation drift; Xcode remains authoritative for
+metadata extraction and generated Swift symbols.
 
-`TripLocalizationPreview.swift` provides deterministic English, compact Kannada,
-and large-text/dark Hindi previews. Preview source is not visual verification.
-Request an app build and device/Canvas review separately to verify compilation,
-App Intents metadata extraction, language selection, glyphs, and truncation across
-Explore, trip editors, directions, widgets, and system permission prompts.
+Generation sorts entries, compares catalogs by JSON content and writes only changed
+files. Do not hand-reorder generated accessors or suppress a missing translation to
+make generation pass.
 
-The standalone performance harness includes the shared text sources and prepares
-an isolated localization bundle when explicitly run. It continues to exercise the
-production domain and presentation code; no localized fallback stubs replace them.
+## Review copy and presentation
+
+Keep persisted enum raw values stable and localize separate display titles. User
+names, notes, checklist items and MapKit names remain data. Prompts, diagnostic
+signposts, SF Symbols, URLs, resource identifiers and preview names are not UI keys.
+AI availability must still explain unsupported model languages.
+
+The catalog includes machine-assisted translations. Entries marked `needs_review`
+require native-speaker review, especially travel timing, longer guidance and Siri
+phrases. English is the source/fallback language; translation generation is an
+authoring step, not an app network dependency.
+
+Use `TripLocalizationPreview` for English, compact Kannada and large-text/dark Hindi
+states. Check glyphs, truncation, VoiceOver, widgets and permission prompts when
+rendered verification is in scope. [Testing](Testing.md) separates source checks,
+compilation and runtime evidence; preview declarations alone do not verify visuals.

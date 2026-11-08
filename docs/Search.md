@@ -1,95 +1,94 @@
 # Search across Trip
 
+Use this guide when a search change crosses feature boundaries. Start with the
+owning feature for its presentation and cancellation lifetime; do not create a
+second shared search coordinator. Setup/check commands live in
+[Contributing](../CONTRIBUTING.md).
+
 ## Ownership
 
-TripDomain owns immutable search values, text matching, and result deduplication.
-TripPlaces owns `PlaceTextSearch`, `PlaceFactory.make`, and
-`PlaceCategory.mapCategories`, shared by Explore and Trips through a package
-boundary. Native request handles and reverse category resolution stay internal.
-Each search owns its native cancellation and cleanup; replacing a request cancels
-the prior operation without allowing its completion to clear the current handle.
+| Responsibility | Owner |
+| --- | --- |
+| Immutable query values, matching, deduplication | `TripDomain` |
+| Native text search and MapKit conversion/category mapping | `TripPlaces` |
+| Observable autocomplete and native completion tokens | `trip/Shared/Places` |
+| Camera discovery, catalog, cached map results | Explore and MapEngine's `PlaceRepository` |
+| Day-picker search and destination session | Trips' picker/search models |
+| Directions stop/origin search | `TripRouting` |
 
-Shared/Places retains observable autocomplete state and completion tokens, plus
-app annotation presentation and asset colors. Explore owns camera-driven discovery
-and catalog search; Trips owns day-picker search. Each feature controls debounce,
-timeouts, session cancellation, and stale-result checks. TripPlaces does not own navigation,
-selection, or the lifetime of a feature search session.
+Native request handles stay inside their adapter. Each operation cancels/releases
+its own handle; an obsolete completion cannot clear a newer request. Feature models
+own debounce, deadlines, selection, navigation, and stale-result checks.
 
-AppTripServices injects Trips' `PlaceSearching` operation factory through TripModel.
-TripPlaceSearchModel never constructs a live provider. An absent factory is the
-local-preview configuration; both native autocomplete and submitted search stay
-disabled while supplied results can still render. Production composition supplies
-PlaceTextSearch explicitly. Explore retains its own catalog/search composition.
+`AppTripServices` injects a `PlaceSearching` factory into Trips. `TripPlaceSearchModel`
+never constructs a live provider. Without a factory, native autocomplete/submission
+stay disabled while local supplied results can render; production explicitly injects
+`PlaceTextSearch`. Explore has its own provider/catalog composition.
 
-## Prefix suggestions
+## Native suggestions and submission
 
-Explore and Add places use `MKLocalSearchCompleter` while typing, with up to
-20 native suggestions and location subtitles. A full `MKLocalSearch` query can
-interpret “Ph” as one place/country; it is not an autocomplete list. The change
-uses Apple's [completion API](https://developer.apple.com/documentation/mapkit/mklocalsearchcompleter).
-Actual choices and their count depend on Apple's provider, query and regional hint.
-Preview examples are explicitly illustrative local fixtures, not promised live results.
+Explore and Add places use `MKLocalSearchCompleter` while typing, capped at 20
+suggestions with location subtitles. Full `MKLocalSearch` submission is a different
+operation, not a prefix suggestion list. Choices/counts depend on Apple's provider,
+query, and regional hint; preview suggestions are illustrative local fixtures.
 
-Explore preserves the background map while typing. It resolves a selected native
-completion before opening one exact place; if that completion returns several
-places, it displays those choices instead of choosing the first. Keyboard submission
-still performs a full search. Add places resolves a chosen suggestion, then keeps
-the existing explicit Add action and Undo. Saved matches remain directly available.
-Typing cancels superseded resolution. Clearing, dismissal, day changes and
-backgrounding cancel owned work; foregrounding resumes the active search.
+Explore keeps the map while typing and resolves a selected completion before
+opening a place. Multiple matches remain choices instead of silently choosing the
+first. Keyboard submission still performs full search. Add places resolves the
+choice but retains explicit Add and Undo; saved matches remain directly available.
 
-## Matching and relevance
+Typing cancels superseded resolution. Clearing, dismissal, destination changes,
+and backgrounding cancel owned work; foregrounding resumes the active session.
+Submitted map searches may update results after the field closes. See
+[Explore](Explore.md) for that distinction and native keyboard dismissal.
 
-TripDomain's `PlaceSearchQuery` matches every word across relevant fields, ignoring
-case, accents, width differences and punctuation separators. Extra whitespace is
-removed from service queries while text fields keep the user's raw input, including
-spaces between words. A punctuation-only query does not match every record.
-For example, a saved café can match “cafe Paris” using its name and address.
+## Matching and identity
 
-Local place results prioritize exact names, name prefixes, other name matches,
-then category/address matches. Equal ranks keep their original order. MapKit's
-live results retain provider order and semantic matching; they are not discarded
-merely because a provider result doesn't contain the literal query words.
+`PlaceSearchQuery` matches every word across relevant fields, ignoring case,
+accents, width differences, and punctuation separators. Service queries normalize
+whitespace while fields retain raw user input. Punctuation alone must not match
+every record. For example, “cafe Paris” can match a café's name and address.
 
-Library and Save to Trip searches cover trip names, places/addresses/categories,
-day and collection names, trip notes, booking names/locations/notes and checklist
-titles. Existing user-selected trip sorting remains in effect. Private content
-stays in the app library; it is not added to system projections or AI prompts.
-Assistant place selection uses names, addresses and categories. Time-zone search
-also recognizes localized standard names and abbreviations, alongside identifiers.
-Shortcuts' trip-name and checklist entity searches use the same word matching.
+Local ranking favors exact names, name prefixes, other name matches, then
+category/address matches; ties preserve source order. Live MapKit results retain
+provider order and semantic matching, even when they lack literal query words.
+Trip/route searches remove repeated listing IDs and same-name listings within
+five meters, retaining separate branches and differently named places.
 
-## Search state and actions
+Library and Save to Trip search cover trip names, places/addresses/categories,
+days/collections, trip notes, booking names/locations/notes, and checklist titles.
+User-selected sorting remains in effect. This private app-library search does not
+publish those fields to system projections or AI prompts. Assistant selection
+uses place names/addresses/categories; time-zone search includes localized names,
+abbreviations, and identifiers. System entity name searches reuse word matching.
 
-- Explore refines compatible displayed matches immediately. Its repository actor
-  prepares up to 100 cached matches after debounce, before the live search. Clearing
-  restores the complete loaded catalog. No additional network request is added.
-- An explicit map submission can run while camera motion is settling. Reopening
-  a cancelled search reschedules missing work. Generation checks reject late results.
-- No-results messages suggest changing the query or map area. Retry is reserved for
-  actual errors/timeouts, with a contextual Search this area action for an idle query.
-- Add places retains compatible results during retries/refinements. Switching days
-  still cancels and clears old-area results. Saved matches and Maps results remain
-  separate; an empty Maps section is omitted when saved matches already answer the query.
-- Route search matches its full loaded catalog before applying the result limit,
-  combines relevant cached and live results, and offers Retry after errors/timeouts.
-- Trip and route searches remove duplicate listing IDs and same-name listings within
-  five meters, preserving separate branches, different names and provider order.
-- Explore, route and trip add actions validate current result/session identities.
-  Explore resolves the choice before dismissing native search, which may clear its text.
-  Existing duplicate protection, explicit Add, destination selection and Undo remain.
+## Preserve results and recover
 
-## Saved details without Intelligence
+- Explore prepares up to 100 compatible cached matches after debounce, before live
+  search. Clearing restores its loaded catalog. Explicit submission/retry bypasses
+  cache; camera discovery retains its bounded debounce/cache policy.
+- Compatible results remain visible through refinements and retry. Switching day
+  destinations cancels/clears old-area results. Saved and Maps results stay separate;
+  an empty Maps section can be omitted when saved matches answer the query.
+- Route search matches the full loaded catalog before its result limit, merges
+  relevant cached/live results, and offers Retry for errors/timeouts.
+- No-results recovery suggests another query or map area; Retry denotes an actual
+  failure. Reopening a cancelled search reschedules missing work.
+- Add/select actions validate current result and session identities. Explore
+  resolves its choice before dismissing native search, which may clear the field.
+  Preserve explicit Add, duplicate protection, destination choice, and Undo.
 
-Ask my trip has native text search for saved names, locations and booking kinds.
-It works when Apple Intelligence is unavailable. Day, category and text filters
-combine instead of resetting one another, and their menus display the current scope.
-No-results recovery can restore all details. Natural-language questions still use
-the existing cancellable interpretation and saved-data results.
+Ask my trip also supports native saved-name/location/kind search without Apple
+Intelligence. Day, category, and text filters combine and expose their scope;
+no-results recovery can restore all details. Natural-language interpretation is
+cancellable and returns saved facts, not generated booking data. See
+[System integrations](../SYSTEM-INTEGRATIONS.md).
 
-## Verification
+## Check a search change
 
-Use the source gate in [Contributing](../CONTRIBUTING.md). TripPlacesTests uses
-local MKMapItem values to check conversion and category mapping through public
-imports. It makes no live searches. Request compilation and runtime checks
-separately; source checks do not verify rendered behavior or MapKit provider results.
+`TripPlacesTests` uses local MapKit values to check public conversion/category
+contracts without live searches. Matching/identity checks and preview declarations
+are separate from keyboard, VoiceOver, rendering, and provider-result acceptance.
+Use [Testing](Testing.md) to select authorized checks; report their scope explicitly.
+
+Native API reference: [MKLocalSearchCompleter](https://developer.apple.com/documentation/mapkit/mklocalsearchcompleter).

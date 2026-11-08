@@ -1,36 +1,52 @@
 # Preview fixtures
 
-All fixture declarations belong behind `#if DEBUG`. Production code must not
-refer to them; the ownership checker rejects direct references outside DEBUG.
+Use the smallest local fixture that constructs the component you are changing.
+Fixtures live in `trip/PreviewSupport` behind `#if DEBUG`; production code must not
+reference them. A preview is a reproducible state for inspection, not evidence that
+a screen has been visually verified.
 
-| Fixture | Purpose |
+## Pick a fixture
+
+| Component | Factory or source |
 | --- | --- |
-| PreviewFixtures.swift | Shared places and local Explore states |
-| PreviewFixtures+Density.swift | Dense map inputs |
-| PreviewFixtures+Trips.swift | TripModel, Checklist, and Collections fixtures with local storage |
-| PreviewTripServices.swift | Explicit component composition, independent of live AI |
-| PreviewTripStore.swift | Isolated value snapshots without SwiftData |
-| PreviewTripPlanning.swift | Deterministic itinerary, packing, lookup, and ordering providers |
-| TripPackingPreview.swift | Focused Checklist model with local packing review states |
-| PreviewFixtures+App.swift | AppModel with map/save/navigation wiring |
-| TripRouting/Feature/PreviewSupport/DirectionsPreviewFixtures.swift | Package-local route states without live requests |
-| LocalPlaceProvider.swift | Cancellable local search for map previews |
+| Trips workspace | `PreviewFixtures.tripPlanner()`, `emptyTripPlanner()`, `PreviewTripServices.makeTrips(plans)` |
+| Checklist and packing | `PreviewFixtures.checklist()`, `PreviewTripServices.makeChecklist(plans)`, `TripPackingPreview` |
+| Collections | `PreviewFixtures.collections()`, `PreviewTripServices.makeCollections(plans)` |
+| Cross-feature save/navigation | `PreviewFixtures.app()` in `PreviewFixtures+App.swift` |
+| Explore places and density | `PreviewFixtures.swift`, `PreviewFixtures+Density.swift`, `LocalPlaceProvider.swift` |
+| Journey and time editing | `TripJourneyPreview`, `TripClockPreview`, `TripSchedulePreview`, `TripTodayPreview` |
+| Map, ordering and day review | `TripMapPreview`, `TripStopOrderPreview`, `TripPlanningPreview` |
+| Search and autocomplete | `TripPlaceSearchPreview`, `PlaceAutocompletePreview` |
+| Import, exports and weather | `TripBookingPreview`, `PreviewSystemActions`, `TripWeatherPreview` |
+| Language and adaptive layouts | `TripLocalizationPreview`, `TripLayoutPreview` |
+| Widgets and activities | `Widgets/TripWidgetFixtures.swift`, `Widgets/TripActivityFixtures.swift` |
+| Reusable directions UI | `Packages/TripKit/Sources/TripRouting/Feature/PreviewSupport/DirectionsPreviewFixtures.swift` |
 
-Change the fixture for the workflow you own. Checklist components use
-`PreviewFixtures.checklist()` or `PreviewTripServices.makeChecklist(plans)`;
-packing review variants use `TripPackingPreview.planner()`. These return
-TripChecklistModel without constructing unrelated Trips workflows. Collection
-components use `PreviewFixtures.collections()` or `PreviewTripServices.makeCollections(plans)`;
-these construct TripCollectionsModel and a local library. Other Trips components
-can use TripModel fixtures. Use the app fixture only for cross-feature
-sheets or navigation. Give each view named same-file previews for
-useful normal/error/empty/large-text states. Label any intentional live-service
-preview; ContentView previews exercise the complete live app.
+Checklist and Collections factories return their focused models with a local
+library; they do not construct TripModel or unrelated services. The Checklist
+host-navigation preview in TripEditorView separately covers the parent title menu.
+Use App fixtures only when the behavior crosses features.
 
-For Trips integration use `PreviewTripServices.makeTrips(plans)` or the existing
-fixture factories. The Checklist host-navigation preview in TripEditorView covers
-its parent-supplied title menu separately from component previews. Preview lookup
-deliberately returns a sample stays query and preview
-ordering preserves the supplied order. These are deterministic display fixtures,
-not replacements for production algorithms. Override/inject controlled protocol
-implementations for future workflow tests; see [Testing](Testing.md).
+## Add a useful preview
+
+Keep named previews in the view's own Swift file. Choose states that expose the
+changed behavior: normal, empty, failure, long content, large text or dark
+appearance. Reuse fixtures instead of repeating production composition. Keep the
+project's file/member limits when adding variants.
+
+`PreviewTripServices` uses an isolated value store and deterministic planning,
+lookup, ordering, document, weather and system-action providers. Lookup returns a
+fixed stays query; ordering preserves the supplied order. These show state without
+pretending to execute the real algorithms. The optional Trips live-search factory
+is omitted, so editing a picker query cannot start live text search.
+
+Native basemaps can still depend on system map availability. Label previews that
+intentionally use live services: ContentView previews use complete live app
+composition. Do not describe those as isolated fixtures.
+
+## Verification
+
+Source checks establish DEBUG boundaries and named-preview syntax. Canvas rendering,
+interaction, accessibility and real service behavior are separate checks. See
+[Contributing](../CONTRIBUTING.md) for commands and [Testing](Testing.md) for isolated
+test fixtures; test targets should not depend on DEBUG preview data.

@@ -1,39 +1,44 @@
-# 0001: Feature ownership and explicit composition
+# Feature ownership and explicit composition
 
-Status: accepted.
+Use this decision when placing new behavior, choosing a service lifetime or
+considering package extraction. Small source files help reading, but do not by
+themselves define ownership or make workflows independent.
 
-## Context
+## Guiding decision
 
-Trip has seven reusable package targets and growing app features. Small Swift files
-help local reading, but a flat collection of model extensions and broad shared
-permissions make ownership harder to follow. Concrete service defaults inside UI
-models also make component previews depend on live infrastructure.
+Keep feature-oriented View–Controller–Model: views render, struct controllers
+forward actions, and MainActor models own mutable UI behavior. Organize model files
+by workflow. App owns composition and cross-feature navigation; AppTripServices
+selects production Trips providers. The same feature models accept local preview
+providers and controlled test implementations.
 
-## Decision
+Keep package edges explicit and public APIs small. The current eight-target graph
+is in [Architecture](../../ARCHITECTURE.md). Shared capabilities have separate
+manifest owners rather than broad permission to reach any app code. Generate
+contributor context from those enforced manifests.
 
-Keep feature-oriented View–Controller–Model with structs for controllers and
-MainActor UI models. Organize model files by workflow. Retain the seven package
-targets with explicit dependency edges. App remains the composition and navigation
-owner; AppTripServices supplies production Trips dependencies. The same feature
-models accept local preview providers and later controlled test providers.
+## Why this boundary
 
-Give shared capabilities separate ownership entries. Enforce imports, source
-boundaries, compiler settings, file/member limits, and guide references through
-source checks. Generate contributor context from those manifests. Use small
-templates for new features and record behavior/verification in task briefs.
+Moving every feature into a package adds public APIs and resource boundaries
+without necessarily creating useful reuse or independent work. App feature
+boundaries are checked lexically; compilation and review still assess inferred
+dependencies. Extract a package when concrete consumers or independent build
+ownership justify the cost.
 
-## Alternatives and consequences
+A global service locator hides selection and lifetime. Explicit initializers make
+construction longer but keep availability, failure and cancellation policy visible.
+Feature models must not add live fallback defaults. See [Dependencies](../Dependencies.md).
 
-Moving every app feature into a package would create new public APIs and resource
-boundaries without a demonstrated external consumer. Keep app feature boundaries
-lexically enforced; compilation and review are still required for inferred member
-dependencies. Extract another package when independent reuse or build ownership
-justifies that cost.
+## Apply the decision
 
-A global service locator would hide lifetime and dependency information. Explicit
-initializers make construction longer but keep service selection visible and
-independently controllable. Feature models must not add live fallback defaults.
+1. Resolve the owning source area with `workspace.py locate` or `context`.
+2. Prefer the existing workflow owner; define a focused model when state has its
+   own lifetime and coherent actions.
+3. Put reusable values/contracts in the owning package and live selection in App.
+4. Update manifests and owning guides with boundary changes; keep shared code free
+   of feature and app dependencies.
+5. Use local fixtures and the scoped checks in [Contributing](../../CONTRIBUTING.md).
 
 The scaffold is a source starter, not runtime feature discovery. Navigation remains
-intentional and product-specific. Tests can be added at the documented seams later;
-this decision does not claim compilation, runtime correctness, or test coverage.
+intentional and product-specific. File/member limits and advisory metrics support
+review; they are not reasons to split a coherent responsibility artificially.

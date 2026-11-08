@@ -3,7 +3,7 @@
 Trip targets iOS/iPadOS and visionOS 27.3+ by explicit user decision. Use the APIs
 directly; preserve newer-member gates and the existing native platform boundaries.
 General framework contracts live in global app-development's App Intents, Siri,
-and Siri evaluation references. Local progress/evidence lives in [Siri preview](../../../../docs/SiriPreview.md).
+and Siri evaluation references. Local procedures and contracts live in [Siri preview](../../../../docs/SiriPreview.md).
 
 - Preserve shipped intent/entity names, parameters, IDs, enum values, and Siri phrases.
 - App/Intents owns tool exposure and app-only actions; Shared/System remains widget-safe.

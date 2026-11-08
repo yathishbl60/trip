@@ -1,0 +1,17 @@
+name: Documentation improvement
+description: Report a confusing guide, broken link, or setup problem.
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Guide or command
+      description: Link the file or section, or name the command you tried.
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What needs to change?
+      description: Describe what you were trying to do, what was unclear, and a correction if you know one. Include tool versions for setup problems and remove private data.
+    validations:
+      required: true

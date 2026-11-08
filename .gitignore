@@ -4,6 +4,7 @@
 DerivedData/
 build/
 .build/
+.venv/
 __pycache__/
 *.pyc
 *.xcarchive

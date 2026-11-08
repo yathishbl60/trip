@@ -1,7 +1,7 @@
 # <number>: <decision>
 
-Status: proposed / accepted / superseded by <link>.
-Date: YYYY-MM-DD.
+Use this template for a lasting contract, dependency, or persistence choice.
+State whether the decision is proposed or governing; link any replacement.
 
 ## Context
 
@@ -16,6 +16,7 @@ State the owner, dependency direction, public contract, and lifetime.
 Record alternatives considered, practical tradeoffs, migration/compatibility
 impact, and the evidence that would justify revisiting the decision.
 
-## Verification
+## Apply and check
 
-Name the checks that support it and what remains unverified.
+Explain how to apply the decision and which checks protect the contract. Keep
+dated build results and delivery summaries in the PR, not the decision guide.

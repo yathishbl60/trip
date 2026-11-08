@@ -1,0 +1,22 @@
+name: Feature proposal
+description: Propose an improvement to an existing travel or planning task.
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What task should become easier?
+      description: Describe the current flow, who needs the improvement, and the concrete friction.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Proposed behavior
+      description: Explain the observable benefit and how it fits an existing entry point. A new control or animation should help complete the task.
+    validations:
+      required: true
+  - type: textarea
+    id: considerations
+    attributes:
+      label: Alternatives and constraints
+      description: Optional. Include relevant layouts, accessibility, privacy, offline behavior, or examples. This proposal still needs maintainer agreement before implementation.

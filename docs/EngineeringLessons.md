@@ -1,28 +1,32 @@
-# Engineering lessons and their owners
+# Apply Trip's engineering safeguards
 
-Keep demonstrated decisions in the contract that can prevent their recurrence.
-This record captures the relevant lessons from the UI, maps, Siri, adaptive layout,
-and architecture work reviewed on 2026-11-08. It is an adoption map, not a new set
-of framework instructions. Proposals do not become product policy until accepted.
+Use this guide when a change touches several features or repeats a difficult class
+of failure. Follow the linked owner contract rather than adding another parallel
+rule or framework tutorial.
 
-| Trigger and observed problem | Accepted correction and owner | Evidence or continuing check |
+## Match the risk to its owner
+
+| Change trigger | Required approach | Owning guidance |
 | --- | --- | --- |
-| More map controls reduced the useful map area | Preserve existing native entry points and progressive disclosure; [DesignSystem](DesignSystem.md) and [universal contract](../UNIVERSAL-APP.md) own Trip's choices | The toolbar location-control change from `4d133d0` was reverted by user request; automatic MapKit hosting is restored. Review controls after live resizing, not only fresh launch |
-| Large modal content obscured routes on wide layouts | Use native adaptive presentations and measured exclusions; [map contract](Search.md) and [universal contract](../UNIVERSAL-APP.md) | Keep the documented retained-sheet SDK observation scoped to its runtime/reproduction; compilation does not resolve it |
-| An available API was mistaken for behavior verification | Record SDK declarations, compilation, executable behavior, and visual results separately; [Testing](Testing.md) | `scripts/verify.py` records exact command and source fingerprints; unchanged source is required to reuse evidence |
-| Many short files still exposed root Trips capabilities to Checklist views | Give Checklist its own model/controller and narrow callbacks; [Trips](Trips.md) and [decision 0002](decisions/0002-workflow-contracts.md) | Checklist fixtures and hosted draft, cancellation, stale-result and current-data tests |
-| Navigation could wait for data while user intent changed | One scene request generation; validate identity and editing protection again at delivery; [App](App.md) | Controlled restoration, overlapping requests, missing IDs, draft protection and once-delivery tests |
-| Siri and in-app actions risked separate mutation rules | Share domain operations and resolve current records; [system integration contract](../SYSTEM-INTEGRATIONS.md) | Checklist completion uses TripChecklistEditing in both paths; domain and hosted tests remain separate from Siri evaluation |
-| A file-wide design exception could hide new literals | Review exact occurrences and production geometry anchors; [DesignSystem](DesignSystem.md) | Scoped policy regression fixtures; rendered contrast and motion still need UI review |
-| Text containing `#Preview` could satisfy a source audit | Parse real macros and require distinct names per file; [PreviewSupport](PreviewSupport.md) | SwiftSyntax fixtures reject fake/comment/unnamed previews; reviewers still check view/state coverage and service isolation |
-| Parallel work touched shared manifests and produced stale verification | Agree file ownership and crossing contracts, name an integrator, isolate build outputs; [Development](Development.md) | Impact/context tooling, source digest records, and integrated checks; metrics are advisory |
+| Adding map actions | Use existing native entry points and progressive disclosure; preserve map interaction space | [Design system](DesignSystem.md), [adaptive app](../UNIVERSAL-APP.md) |
+| Wide layouts, folds, or retained sheets | Use native presentation and measured exclusions; check expansion, collapse, and live resizing | [Search](Search.md), [adaptive app](../UNIVERSAL-APP.md) |
+| A feature view gains access to unrelated root state | Give the workflow a composed model/controller and narrow callbacks | [Trips](Trips.md), [workflow contracts](decisions/0002-workflow-contracts.md) |
+| Navigation waits for data | Revalidate identity, request generation, and editing protection at delivery | [App](App.md) |
+| Siri duplicates in-app mutation behavior | Resolve current records and share domain operations | [System integrations](../SYSTEM-INTEGRATIONS.md) |
+| A visual exception is needed | Record exact occurrences and production geometry anchors with a reason | [Design system](DesignSystem.md) |
+| A new preview is added | Use a real, distinctly named macro and useful local state | [Preview support](PreviewSupport.md) |
+| Parallel work crosses shared files | Agree contracts, assign an integrator, isolate outputs, and check the integrated revision | [Development](Development.md) |
+| A successful check is used to justify behavior | Match the claim to the command: source, compilation, execution, or visual review | [Testing](Testing.md) |
 
-Reusable methods live in the maintained global `app-development` skill: architecture,
-navigation, map diagnosis, verification, and guidance ownership references. Its
-installer retains a content manifest and backup. Trip skills retain the local model
-names, paths, native UX policy, commands, and platform contract. Existing local Siri
-guidance was preserved in the maintained source before updating that installation.
+## Apply a safeguard
 
-For a new lesson, record the trigger, consequence, correction, evidence, and owner.
-Mark it accepted, proposed, superseded, or runtime-specific. Prefer an owning guide
-and a meaningful regression fixture over another overlapping skill or blanket rule.
+1. Identify the concrete failure the change could introduce and its owning contract.
+2. Inspect the current call path, state lifetime, and consumers.
+3. Make the smallest coherent correction in that owner.
+4. Review adjacent editing, navigation, persistence, and asynchronous behavior.
+5. Run relevant checks within the authorized scope and report results in the PR.
+6. Update the owner guide if the reusable contract changes.
+
+Keep shared framework techniques in global guidance. Keep Trip-specific rules and
+paths here. Add a new safeguard only when it names a concrete consequence,
+correction, and responsible owner; avoid vague quality claims and duplicate policy.

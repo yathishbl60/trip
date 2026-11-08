@@ -26,6 +26,11 @@ jobs:
           python-version: '3.12'
       - name: Tooling regression checks
         run: python3 scripts/verify.py --kind tooling --output .build/verification/tooling.json -- python3 -m unittest discover -s scripts -p 'test_*.py'
+      - name: Portable repository checks
+        run: |
+          python3 scripts/verify.py --kind source --output .build/verification/workspace.json -- python3 scripts/workspace.py check
+          python3 scripts/verify.py --kind source --output .build/verification/skills.json -- python3 scripts/check_project_skills.py
+          python3 scripts/verify.py --kind source --output .build/verification/design-policy.json -- python3 scripts/check_design_system.py
       - name: Changed commit whitespace
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -59,7 +64,29 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check native prerequisites
-        run: python3 scripts/workspace.py doctor --require-ready --json
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/test_destination.sh
+          if ! validate_model_test_destination "${TRIP_TEST_DESTINATION:-}"; then
+            echo "::error::Set TRIP_TEST_DESTINATION to a Simulator platform and explicit id or name."
+            exit 1
+          fi
+          mkdir -p .build/verification
+          python3 scripts/workspace.py doctor --require-ready --json | tee .build/verification/native-prerequisites.json
+          python3 - <<'PY'
+          import json
+          import platform
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from factory.doctor import version
+          report = json.loads(Path('.build/verification/native-prerequisites.json').read_text())
+          required = report['deploymentMinimums']['macOS']
+          current = platform.mac_ver()[0]
+          if version(current) < version(required):
+              raise SystemExit(f'Package tests require a macOS {required}+ host; this runner is {current}.')
+          PY
       - name: Source and syntax checks
         run: |
           python3 scripts/verify.py --kind source --output .build/verification/source.json -- bash scripts/check.sh
@@ -75,7 +102,7 @@ jobs:
           python3 scripts/verify.py --kind executable --platform macOS --output .build/verification/algorithms.json -- bash scripts/performance.sh check
           python3 scripts/verify.py --kind executable --platform macOS --output .build/verification/integrations.json -- bash scripts/performance.sh system-check
       - name: Isolated app-model behavior
-        run: python3 scripts/verify.py --kind executable --platform iOS --output .build/verification/models.json -- bash scripts/test.sh models
+        run: python3 scripts/verify.py --kind executable --output .build/verification/models.json -- bash scripts/test.sh models "$TRIP_TEST_DESTINATION"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

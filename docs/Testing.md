@@ -1,142 +1,116 @@
-# Test ownership and evidence
+# Choose and run checks
 
-Trip has portable contributor-tool tests, SwiftSyntax checker fixtures, package
-tests, a standalone production-algorithm harness, and hosted test targets. The
-dedicated `TripSiriEvaluations` hosted target already existed for system integration
-contracts. `TripAppTests` adds deterministic general app-model tests using the
-`TripModels` test plan; it does not replace Siri evaluations or UI/device review.
-Source audits parse Swift and enforce contracts without executing app behavior.
+Use this guide when selecting checks for a change or extending authorized test
+coverage. Prepare [Python and Xcode](../CONTRIBUTING.md#local-setup) first. Keep
+builds, benchmarks, executable tests, and runtime review within the requested scope.
 
-## Run the intended check
+## Source checks
+
+Run the full source gate on macOS with the selected project Xcode:
 
 ```sh
-# Portable Python tooling only; no Swift compilation or app execution.
-python3 -m unittest discover -s scripts -p 'test_*.py'
-
-# Python tooling plus executable SwiftSyntax checker fixtures on macOS.
-bash scripts/test.sh tooling
-
-# Public package behavior on the host Mac.
-bash scripts/test.sh package
-
-# Build the hosted model bundle for generic iOS Simulator without running it.
-bash scripts/build.sh models Debug
-
-# Execute model tests only on an explicitly chosen simulator.
-bash scripts/test.sh models 'platform=iOS Simulator,id=<simulator-UDID>'
-
-# Production algorithm correctness; neither command runs timing workloads.
-bash scripts/performance.sh check
-bash scripts/performance.sh system-check
+bash scripts/check.sh
+# Include committed whitespace changes from the merge base:
+bash scripts/check.sh --base origin/main --head HEAD
 ```
 
-Builds, executable tests, benchmarks, and runtime checks stay within the requested
-verification scope. `TRIP_TEST_DESTINATION` can supply the model-test destination;
-no device is selected implicitly. `TRIP_BUILD_ROOT` must be an absolute path and
-isolates app/package build and test outputs when needed. Do not use a simulator containing valued
-Trip/App Group data for unsigned test installation; preserve signed runtime data.
+The gate checks ownership, module edges, references, localization, design policy,
+source/member limits, preview syntax, UIKit exclusion, and whitespace. It parses
+Swift without building the app or running application behavior.
 
-Wrap any authorized command with `python3 scripts/verify.py --kind <category> -- ...`
-to retain command identity, exit status, source snapshots, and toolchain. Add the
-platform/configuration for builds. A source pass, compiled bundle, passing test suite,
-and visual/device acceptance are separate results. A checked-in test or configured
-CI job is not evidence that the current revision passed it.
+For documentation and contributor-tool work without Xcode, run the portable subset:
 
-The optional native CI lane uses GitHub-hosted `macos-latest`. Enable it only when
-the image supplies the required SDKs and the configured simulator; the doctor gate
-fails on missing tool/SDK prerequisites. Hosted-image compatibility, repository-variable
-enablement, remote activation, and job results remain separate from checked-in tests.
-This avoids running PR-controlled code on a persistent personal runner; see GitHub's
-[runner isolation guidance](https://docs.github.com/en/actions/reference/security/secure-use#hardening-for-self-hosted-runners).
+```sh
+python3 scripts/check_whitespace.py
+python3 scripts/workspace.py check
+python3 scripts/check_project_skills.py
+python3 scripts/check_design_system.py
+```
 
-## Hosted model isolation and current coverage
+These commands require Python 3.10+ and no third-party packages. They do not replace
+the macOS architecture, localization, and SwiftSyntax checks. For Markdown edits,
+also follow relative links and verify named files, commands, and anchors.
 
-[TripModels.xctestplan](../TestPlans/TripModels.xctestplan) selects `TripAppTests` and
-sets `TRIP_MODEL_TEST_HOST=1`. In Debug, the app entry renders an empty host and skips
-live control installation instead of starting `ContentView` and production services.
-Tests import the host using `@testable import trip`, construct their own models and
-providers, and do not copy app sources into the test target or widen public APIs.
-The flag has no effect in Release. Use the shared `TripAppTests` scheme/test plan
-so the isolation environment reaches the hosted process.
+## Select compilation and behavior checks
 
-The current suites cover request URL parsing; missing/deleted navigation targets;
-preferred active-window delivery; restoration and superseded requests; editing
-protection while loading; checklist draft cancellation and current-data commits;
-packing review identity, capacity, and stale itinerary rejection; and propagation
-of host callbacks. Library lifetime cases suspend saves and complete them out of order,
-check latest-revision publication, retain changes through failure/retry, and reject an
-obsolete failure after a newer success. Packing lifetime cases complete canceled or
-superseded AI-provider requests late and verify that they cannot publish old suggestions.
-Fixtures use controlled stores and local service implementations.
-These checks do not evaluate live AI output, native sheets, gestures, accessibility,
-MapKit rendering, or actual multi-window scene delivery.
-
-Package tests currently cover `TripRouting`, checklist domain editing in `TripDomain`,
-and exported place conversion/classification in `TripPlaces`. The standalone
-[Performance harness](../Performance/README.md) supplies broader deterministic domain,
-scheduling, map-layout, and persistence-value coverage using production files.
-That harness uses `TRIP_STANDALONE`; package tests and app compilation separately
-exercise real module boundaries.
-
-## Siri evaluation target
-
-Prepared [Siri evaluation sources](../Performance/SiriEvaluations/README.md) use
-the public SiriEvaluations runner, exact fixture identities, and all three runtime
-skills. `bash scripts/check_siri_evaluations.sh` type-checks them;
-`bash scripts/build_siri_evaluations.sh Debug` builds the app, widget, and test
-bundle for iPhoneOS without running tests. Actual Siri/device evaluation requires
-its own execution request and supported hardware, configuration, and accounts.
-The model-test host flag is specific to `TripModels`; Siri scenarios retain their
-own host setup and may intentionally exercise system services.
-
-## Where later tests belong
-
-| Behavior | Current owner or next focused coverage | Dependency seam |
+| Change | Command | Scope |
 | --- | --- | --- |
-| Trip values, time zones, editing, projections | Existing TripKit/Tests/TripDomainTests and standalone checks | Sendable value inputs and fixed dates |
-| Native place conversion and classification | Existing TripKit/Tests/TripPlacesTests | Exported adapters and constructed MKMapItem values |
-| Ranking, layout, cache behavior | TripKit/Tests/MapEngineTests | Deterministic coordinates and bounded policies |
-| Store migration and revision handling | TripKit/Tests/TripStorageTests | Isolated in-memory container or temporary store |
-| Routing | Existing TripKit/Tests/TripRoutingTests | DirectionsProviding |
-| AI output assembly and validation | TripKit/Tests/TripIntelligenceTests | Supplied data and bounded generated drafts |
-| UI model workflows and cross-window edits | Existing TripAppTests hosted target | TripStoring, TripAIClient, TripStopOrderSuggesting |
-| Native navigation, maps, accessibility | UI/device verification, when requested | Stable identities and explicit states |
+| Contributor tooling | `python3 -m unittest discover -s scripts -p 'test_*.py'` | Portable Python tests |
+| Source-audit tooling | `bash scripts/test.sh tooling` | Python tests and executable SwiftSyntax fixtures |
+| One package | `bash scripts/build.sh TripDomain Debug` | Host-Mac compilation; replace the product as needed |
+| iOS app | `bash scripts/build.sh app Debug` | Generic iOS Simulator compilation with signing disabled |
+| visionOS app | `bash scripts/build.sh visionOS Debug` | Generic visionOS Simulator compilation with signing disabled |
+| Hosted model bundle | `bash scripts/build.sh models Debug` | Build for testing; no test execution |
+| Public package behavior | `bash scripts/test.sh package` | Package tests on the host Mac |
+| App-model behavior | `bash scripts/test.sh models 'platform=iOS Simulator,id=<simulator-UDID>'` | Tests on the explicit simulator |
+| Map/domain algorithms | `bash scripts/performance.sh check` | Standalone correctness checks |
+| System projections | `bash scripts/performance.sh system-check` | Standalone correctness checks |
 
-Add a `.testTarget` only for the module under test, retaining Swift 6 isolation
-and current deployment requirements. App source features share a binary, so their
-models are not independently importable packages. Extend the existing hosted model
-target for authorized app workflows; do not copy production files into test targets
-or export app internals merely to make testing possible.
+Package products are listed in [TripKit](../Packages/TripKit/README.md). Use
+`Release` for optimized compilation. Package execution needs a compatible host
+macOS, not just a newer SDK. For timings, follow the [performance procedure](../PERFORMANCE.md).
 
-## Useful fakes
+Replace simulator placeholders with an available destination. Alternatively set
+`TRIP_TEST_DESTINATION`; no device is selected implicitly. Use a disposable
+simulator for unsigned tests, preserving any valued signed App Group installation.
+Use an absolute `TRIP_BUILD_ROOT` to isolate app/package output when needed.
 
-`ControlledTripStore` suspends and fails saves by revision for library lifetime tests;
-`NavigationTestStore` controls pending loads. Keep fake state scoped to each test.
-Extend these seams for changed persistence workflows without contacting the live store.
+Wrap authorized commands with `python3 scripts/verify.py --kind <category> -- ...`
+to capture exact command, source digests, toolchain, and exit status. Include
+platform/configuration when relevant. Keep source checks, compilation, tests, and
+visual review distinct in PR reports. For CI setup, follow [Automation](Development.md#automation).
 
-Inject a TripAIClient with a controlled protocol implementation, availability
-closure, and error mapper. Suspend a request, change inputs, then resume the old
-request to verify stale-result rejection. Check cancellation and deadline behavior
-without contacting live services or requiring an eligible AI device.
-`ControlledPackingPlanner` intentionally finishes canceled calls to exercise result
-rejection. Do not assert the exact text of a live language-model response.
+## Extend hosted model checks
 
-Supply TripStopOrderSuggesting to review a known proposal or error. Verify current
-day matching, visit-tracking restrictions, stable stop IDs, and preserved notes.
-Use PreviewTripServices for interactive local previews; executable tests own
-their own providers and fixtures rather than importing DEBUG preview types.
+Use [TripModels.xctestplan](../TestPlans/TripModels.xctestplan) and the shared
+`TripAppTests` scheme. The plan sets `TRIP_MODEL_TEST_HOST=1`; in Debug, the app
+renders an empty host and skips production startup. The flag has no Release effect.
+Keep this isolation when editing the host.
 
-## High-value regression cases
+Import the app with `@testable import trip`. Construct models with local providers;
+do not copy app sources into tests or widen APIs solely for testing. Use the
+existing navigation, checklist, packing, library-lifetime, and host-callback suites
+as entry points for the corresponding behavior.
 
-Extend coverage according to the changed responsibility. The list below includes
-remaining work; the presence of a test seam does not establish coverage:
+Use `ControlledTripStore` for suspended/out-of-order saves and
+`NavigationTestStore` for controlled loads. Inject a `TripAIClient` with a controlled
+provider, availability closure, and error mapper. Resume canceled or superseded
+requests deliberately to check stale-result rejection; `ControlledPackingPlanner`
+supports this pattern. Keep each fake's mutable state scoped to its test.
 
-- Load failure and retry; edits during an outstanding save; out-of-order completion.
-- Cancelling a draft preserves saved values; concurrent edits merge only changed fields.
-- Query changes, backgrounding, and dismissal cancel work and reject stale output.
-- Deleted or changed days invalidate proposals without losing unrelated edits.
-- Legacy payloads still decode; identifiers and user data survive round trips.
-- Dynamic Type, VoiceOver, Reduce Motion, long text, and supported window layouts.
+Supply `TripStopOrderSuggesting` to check known proposals, errors, day identity,
+tracking restrictions, stop IDs, and preserved notes. Use `PreviewTripServices`
+for interactive previews; executable tests own their fixtures and do not import
+DEBUG preview types.
 
-Record the exact command/configuration and outcome. Keep source checks,
-compilation, executable tests, and visual verification separate in reports.
+## Keep Siri evaluation separate
+
+Follow [Siri evaluations](../Performance/SiriEvaluations/README.md) for the hosted
+`TripSiriEvaluations` target. Use `check_siri_evaluations.sh` to type-check scenarios
+or `build_siri_evaluations.sh Debug` to build the app, widget, and evaluation bundle
+for iPhoneOS without execution. Device evaluation needs an explicit request and
+eligible hardware, configuration, and accounts. Do not apply the model-only host
+flag to Siri scenarios that exercise system services.
+
+## Place new coverage in its owner
+
+| Responsibility | Placement | Useful seam |
+| --- | --- | --- |
+| Values, time zones, editing, projections | Existing `TripDomainTests` or standalone checks | Sendable inputs and fixed dates |
+| Place conversion/classification | Existing `TripPlacesTests` | Constructed MapKit values and exported adapters |
+| Routing | Existing `TripRoutingTests` | `DirectionsProviding` |
+| Map layout/ranking/cache | MapEngine package or standalone harness | Fixed coordinates and bounded policies |
+| Store migration/revisions | TripStorage package | Isolated container or temporary store |
+| AI draft validation | TripIntelligence package | Supplied data and bounded drafts |
+| UI models/cross-window edits | Existing `TripAppTests` | Injected store, AI, and stop-order contracts |
+| Native maps, navigation, accessibility | Requested UI/device review | Explicit states and stable identities |
+
+Add a test target only when requested and appropriate to the module. Retain Swift
+6 isolation and deployment requirements. The standalone harness compiles production
+files with `TRIP_STANDALONE`; use package/app compilation for real module boundaries.
+
+Choose cases that exercise the changed contract: failures and retries, edits during
+saves, cancellation, late results, deleted identities, legacy decoding, and
+preservation of unrelated data. Review Dynamic Type, VoiceOver, Reduce Motion,
+long text, and adaptive windows when UI behavior changes. Avoid assertions against
+exact live AI wording or tests that simply repeat implementation details.

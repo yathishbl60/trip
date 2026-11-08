@@ -25,7 +25,6 @@ completion with MKLocalSearch.Request(completion:), retaining query/session guar
 Check both Explore and Add places; show provider results rather than hardcoded names.
 
 - Keep location, compass, and scale in automatic mapControls across all layouts.
-  The toolbar tracking relocation was reverted by user request.
   Do not infer a control frame from its surrounding container.
 - Validate every proposed exclusion against the live viewport. A container-sized
   rectangle can exclude all markers; a successful build will not detect it.

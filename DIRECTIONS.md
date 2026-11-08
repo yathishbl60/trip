@@ -1,31 +1,25 @@
 # Directions integration
 
-TripRouting contains the complete reusable directions engine, SwiftUI feature,
-route rendering, and map geometry. The engine supports iOS 27, macOS 27, and
-visionOS 27; the existing sheet and map UI support iOS and visionOS.
+`TripRouting` owns the reusable directions engine, SwiftUI sheet, route overlays,
+and map geometry. Its package minimums are iOS, macOS, and visionOS 27.3; the
+sheet/map UI is compiled for iOS and visionOS. It depends on `TripDomain`,
+`TripLocalization`, and system frameworks, never Trip app types or resources.
 
-## Contents
+Use [the owner guide](docs/Directions.md) to find implementation files. This guide
+covers the public integration contract. Repository setup and verification commands
+live in [Contributing](CONTRIBUTING.md).
 
-- [Routing package](#routing-package)
-- [SwiftUI feature](#swiftui-feature)
-- [Access boundary](#access-boundary)
-- [Sheet and interaction behavior](#sheet-and-interaction-behavior)
-- [Platform limits](#platform-limits)
+## Use the engine
 
-## Routing package
-
-Add the local `Packages/TripKit` package and its `TripRouting` product to another
-app. `TripRouting` depends only on `TripDomain`, Apple's geographic types, and
-system frameworks. It never imports Trip's app types, navigation, storage, or resources.
-
-The public engine API exposes input values (`RouteWaypoint`, `TravelMode`,
-`DirectionsOptions`, `DirectionsTiming`, `TransitPreference`), calculation
-(`DirectionsPlan`, `DirectionsProviding`, `MapDirectionsService`,
-`DirectionsCalculation`, `DirectionsResponse`, `DirectionsFailure`), and results
-(`DirectionsRoute`, `DirectionsEstimate`, `DirectionsStep`). MapsDirectionsLink
-exposes only its constructor and URL; its stored inputs are private.
+Link the local `TripRouting` and `TripDomain` products from `Packages/TripKit`.
+The public API provides waypoints, travel modes, options/timing, a request plan,
+an injectable provider, typed responses/errors, and route/estimate/step values.
+For example, inside a MainActor workflow with a valid origin and coordinate:
 
 ```swift
+import TripDomain
+import TripRouting
+
 let service = MapDirectionsService()
 let destination = RouteWaypoint(id: "museum", name: "Museum", coordinate: coordinate)
 let plan = try DirectionsPlan(origin: currentLocation, places: [destination],
@@ -34,197 +28,126 @@ let responses = try await DirectionsCalculation(provider: service).calculate(pla
 let routes = try DirectionsRoute.alternatives(responses) { Date.now.addingTimeInterval($0) }
 ```
 
-Run request orchestration on MainActor because MapKit response objects remain
-actor-owned. Cancel the calling task to cancel its native request, or call
-`service.cancel()` to cancel all requests belonging to that service. Use one
-provider instance per independently cancellable workflow. Providers injected for
-other backends or tests must honor cancellation. `DirectionsPlan` creates fresh
-native requests; do not share mutable request objects between workflows.
+MapKit request/response objects remain MainActor-owned. Cancelling the caller
+cancels its native request; `service.cancel()` cancels all requests owned by that
+service. Inject one provider per independently cancellable workflow. A plan creates
+fresh native requests; do not share mutable requests across calculations.
 
-Transit returns `DirectionsResponse.estimate`; it cannot be passed to
-`DirectionsRoute.alternatives`. Arrival planning calculates legs backwards;
-departure planning calculates them in order. Alternatives combine up to three
-choices across the legs, with estimates based on sequential leg requests. They
-are not an exhaustive route optimizer and exclude time spent at stops.
+Transit returns an estimate, not a drawable route, and cannot be passed to
+`DirectionsRoute.alternatives`. Departure planning requests legs in order; arrival
+planning works backwards. Alternatives combine up to three choices across legs.
+They exclude time spent at stops and are not an exhaustive route optimizer.
 
-## SwiftUI feature
+## Embed the feature
 
-Link `TripRouting` and `TripDomain` from `Packages/TripKit`; no source copying is
-needed. Import both products where their types are used. `TripRouting/Feature`
-contains the sheet, map content, controllers, models, and DEBUG preview fixtures.
-The feature has no Explore, Trips, catalog, camera-model, shared-theme, or storage
-dependency. Views use a struct controller storing only the composed DirectionsModel.
-
-Create and retain one `DirectionsModel` at the host's composition root. Inject:
-
-- `DirectionsConfiguration`: travel modes, stop limit, request/location deadlines,
-  compact height, and whether interactive dismissal is permitted.
-- `DirectionsEnvironment.locationAuthorized`: report whether location permission
-  is currently granted. It defaults to false; opening directions must not request permission.
-- `currentLocation` and `requestLocation`: supply a fresh, authorized coordinate
-  and start the host's location workflow only when My Location is selected.
-- `loadedPlaces` and asynchronous `search`: provide local suggestions and remote
-  results as `TripDomain.Place` values with stable identities.
-- `close`: clear the host's sheet presentation and release location work it owns.
-- `sheetFrameChanged`: receive the sheet's global frame for map fitting and occlusion.
-- `placeTint`: optionally adapt annotation fills to the host's categories. Use a
-  color that keeps native marker glyphs readable; endpoint rows use soft tinted surfaces.
-- `appearance`: inject `DirectionsAppearance` to choose route, selected callout,
-  callout text, and prominent action colors. The default keeps blue routes and a
-  darker blue fill with white text; Trip injects its teal action fill. Keep callout
-  text readable against its fill in both appearances. Native secondary surfaces
-  and semantic text retain their system colors.
-- `DirectionsProviding`: optionally replace Apple's service for integration or tests.
+Retain one `DirectionsModel` per independent flow in the host's composition root.
+The host supplies its existing `Map`, presentation lifetime, and camera changes:
 
 ```swift
-import SwiftUI
-import MapKit
-import TripDomain
-import TripRouting
-
 let directions = DirectionsModel(configuration: DirectionsConfiguration(),
                                  environment: environment,
                                  provider: MapDirectionsService())
 directions.begin(place, origin: environment.currentLocation())
-// In the host's sheet:
+
+// Host sheet or spatial sidebar:
 DirectionsSheetView(model: directions)
-// In the host's Map content builder:
+// Inside the host's Map content builder:
 DirectionsMapContent(model: directions, scale: 1)
 ```
 
-When the first location fix arrives, call `directions.acceptLocation(coordinate)`.
-Location updates are accepted only while waiting for a selected My Location origin.
-For denial or another terminal location error, call `directions.fail(message)` only
-if `directions.waitsForLocation`; searched starting points do not depend on location.
-Observe `revision` to update map geometry. On a viewport change, call
-`requestRouteFit()` and schedule fitting only if it returns true. Use `routeBounds`,
-which is nil until a presented route is ready, and call `didFitRoute()` after a
-successful camera update. User gestures call `stopFollowingRoute()` so late
-responses or sheet resizing cannot move a map the user is exploring. Selecting
-another route restores following. Call `suspend()` on inactivity and `resume()`
-on activation; do not leave native requests running after removing the feature.
+Import SwiftUI and MapKit at those UI sites. `DirectionsConfiguration` controls
+modes, stop limits, request/location deadlines, compact height, and interactive
+dismissal. Defaults include five intermediate stops, 45-second request and
+20-second location deadlines. Limits are clamped to 0–20 intermediate stops and
+100–300 points for compact height.
 
-The host supplies its existing Map and applies its own camera transitions. Reuse
-`RouteMapGeometry.exposedFrame(in:obstacles:)` with the measured sheet and reserved
-regions, then `cameraRect(for:in:exposedViewport:mapSize:)` for the route's bounds.
-The result preserves the existing 52-point inset and 200-meter minimum extent.
-Call `scheduleRouteFit(isActive:fit:)` to coalesce geometry changes by 180 ms;
-the callback uses `routeBounds` and calls `didFitRoute()` after a successful fit.
-Call `cancelRouteFit()` on dismissal or inactivity; stopFollowingRoute also cancels it.
-`mapExclusions(using:scale:)` supplies the existing callout/endpoint exclusion rectangles
-for a host's annotation layout. Call it synchronously in the live MapReader callback.
-No map proxy, native camera, app catalog, or location manager is retained by these helpers.
-Exclusions cover the same annotated places as the map content, including a searched
-starting point, so discovery labels cannot compete with that origin marker.
+`DirectionsEnvironment` contains only host integration:
 
-The public feature types are DirectionsModel, DirectionsConfiguration,
-DirectionsEnvironment, DirectionsAppearance, DirectionsSheetView, and
-DirectionsMapContent. DirectionsController, DirectionsPresentationModel,
-DirectionsStatus, auxiliary controls, and request bookkeeping are internal.
-The model exposes read-only `isPresented`, `destinationID`, `maximumPlaces`,
-`placeIDs`, `waitsForLocation`, `routeBounds`, and `revision`. The host cannot read
-or mutate its raw routes, selection, options, origin, search, or presentation state.
-Use `configure(environment:)` when host callbacks require late weak-self binding.
-
-## Access boundary
-
-| Public contract | Reason |
+| Input or callback | Host responsibility |
 | --- | --- |
-| Configuration, environment, appearance, options and their value fields | Hosts construct and customize inputs without package implementation access |
-| Routing provider, calculation, request plan, response and typed errors | Hosts can calculate routes without SwiftUI and inject an independently cancellable provider |
-| Immutable route/estimate/step values and their constructors | Hosts can consume route results, draw their own maps, or supply deterministic fixtures |
-| DirectionsModel lifecycle, location callbacks and read-only host projections | Hosts integrate sheet lifetime, selection, permissions, and itinerary limits |
-| Route fitting actions, map exclusions and RouteMapGeometry | Hosts apply camera updates and annotation layout without accessing presentation state |
-| DirectionsSheetView and DirectionsMapContent model initializers | Hosts embed the existing UI while its controller remains internal |
+| `locationAuthorized`, `currentLocation`, `requestLocation` | Report permission and supply a fresh coordinate; request location only after an explicit My Location choice |
+| `loadedPlaces`, `search` | Return stable `TripDomain.Place` values from local suggestions or a cancellable search |
+| `close` | Clear host presentation and release location work the host owns |
+| `sheetFrameChanged` | Capture the sheet's measured global frame for occlusion/framing |
+| `placeTint`, `appearance` | Adapt category fills and route/callout/action colors while keeping text readable |
 
-Native request arrays, plan bookkeeping, MapKit transport/URL encoding, option
-application, callout coordinates, estimate validation, and calculation provider
-storage are implementation details. The tests that inspect request construction
-or callout placement use `@testable import TripRouting`; test access alone does
-not justify a public export. Public-consumer integration tests use a normal import.
+Location authorization defaults to false. Opening directions must not trigger a
+permission prompt. Deliver a location fix through `acceptLocation`; call `fail`
+for a terminal location error only while `waitsForLocation` is true. A searched
+origin remains valid without device location, survives retries/backgrounding,
+and cannot be replaced by a late device fix. Search cancellation preserves the
+previous origin. Equal origin/destination coordinates use the arrival state.
 
-TripSystemData's widget/intent links use MapsDirectionsLink with automatic mode,
-preserving the original destination-only URL. The widget extension links TripRouting.
+Call `suspend()` on inactivity/removal and `resume()` when active. Use
+`configure(environment:)` for late weak-self binding. Compatible refreshes retain
+route geometry/selection while showing an updating state; changed journeys clear
+incompatible geometry. Preserve cancellation, deadlines, generation checks, and
+stable geometry identity when modifying this behavior.
 
-## Sheet and interaction behavior
+## Fit routes without taking over the map
 
-On iOS and iPadOS, Directions requests a native leading-edge sheet and allows
-map interaction through the largest detent. SwiftUI adapts placement to the window.
-Explore supplies a 400-point ideal width and requests horizontal fitting from SwiftUI.
-The sheet offers a 100-point compact stop, a 55%-height stop, and a full-height
-stop. Downward dragging resizes it and Close ends the route. A host can opt into
-interactive dismissal. Compact height is bounded to 100–300 points.
-The sheet inherits the system background, matching Place Details and Save to Trip.
-Its compact state retains the native Directions title, Options toolbar item, and Close.
-Expanded content uses native grouped List sections with system row surfaces and separators.
-The native grabber controls resizing; there are no share, overview, or resize buttons.
-Short windows retain native sheet resizing. At accessibility text sizes, the
-two taller stops keep the route list reachable. Resizing the window preserves
-the chosen height.
-Reduce Motion disables presentation, camera, and value animations.
+Observe `revision` and use read-only `routeBounds`. On viewport changes,
+`requestRouteFit()` indicates whether following is still wanted. After applying a
+camera update, call `didFitRoute()`. User gestures call `stopFollowingRoute()`;
+selecting another route resumes following. A late response or sheet resize must
+not move a map the traveler is exploring.
 
-Explore uses the measured iOS sheet frame for route and selection framing,
-including floating sheets. On visionOS the host puts the same expanded content
-in a native split-view sidebar. The map occupies the detail column and its
-measured size already accounts for the sidebar. Route framing adds endpoint padding and offsets
-the camera into the exposed viewport. Resizing the window or sheet refits only while
-the user is following the route.
+Use measured map, sheet, and reserved-region frames with
+`RouteMapGeometry.exposedFrame(in:obstacles:)` and
+`cameraRect(for:in:exposedViewport:mapSize:)`. Geometry retains a 52-point inset
+and 200-meter minimum extent. `scheduleRouteFit(isActive:fit:)` coalesces changes
+by 180 ms; cancel fitting on dismissal/inactivity.
 
-Route alternatives use a native segmented picker; large text uses a menu picker.
-The route summary grows with its content. Steps opens instructions inside the
-same panel, with native Back navigation and an explicit Open in Maps action.
-Collapsing the sheet preserves the open instructions. The main sheet shows one route
-summary at a time, below travel modes and above endpoint editing, so duration and
-Steps stay prominent at the standard sheet height. Options opens a short native
-Form in a toolbar-anchored popover, adapting to a sheet in compact space, and
-only exposes settings supported by the in-app route request.
-The map header stays clear while loading; discovery progress is a floating notice.
-Route fitting coalesces sheet geometry changes, uses the exposed map viewport, and
-animates once results are ready rather than first moving to provisional endpoints.
+Call `mapExclusions(using:scale:)` synchronously inside the live `MapReader`
+callback. It covers route callouts/endpoints, including a searched origin.
+Never retain `MapProxy` or send it into delayed work. The package returns value
+geometry; the host applies camera transitions and Reduce Motion.
 
-Maps launch failures appear alongside the launch control in Steps.
-Each launch has an identity; a late completion cannot update a replaced journey,
-dismissed auxiliary presentation, or newer launch. Instruction rows combine their
-step number, instruction, distance, and notice for assistive reading. Map route
-buttons expose the same disambiguated choices as the sheet, including duration and distance.
+## Preserve the native interaction
 
-Endpoint rows and Add Stop push their search picker within the Directions stack.
-The stop editor retains native delete/reorder controls and Back navigation.
-Collapsing preserves the editing destination while hiding its scrolling content.
-The starting-point row uses the same search picker and can replace My Location with
-a place or address. My Location is the default, and offered in that picker, only
-when permission is granted. Otherwise the sheet asks for a starting point without
-a location spinner or permission prompt. Cancelling search keeps the previous origin;
-retry and background/resume retain searched origins. Late device fixes cannot replace them.
-The map marks a searched origin and includes it in framing; Open in Maps carries
-that coordinate in its native source parameter. A source equal to the destination
-retains the existing arrival state instead of starting a redundant route request.
-Duplicate identities and locations, invalid coordinates, and stale index operations
-are rejected. The default limit is five intermediate stops, configurable from zero
-to twenty. Search results are capped at 100 and superseded searches are cancelled.
+- iOS/iPadOS use a leading native sheet with compact, 55%-height, and full-height
+  stops. Explore requests a 400-point ideal width. The exposed map stays
+  interactive. Close ends directions; dragging changes height. Accessibility text
+  omits the smallest stop.
+- visionOS uses the same expanded content in a split-view sidebar. Its map column
+  supplies the usable viewport. See [adaptive layouts](UNIVERSAL-APP.md), including
+  the retained-sheet and fold-transition checks.
+- Alternatives use a segmented picker or a menu at large text sizes. Steps and
+  endpoint/stop search share the panel's navigation stack; collapsing preserves
+  that destination. Options uses a native popover with compact adaptation.
+- Search rejects duplicate identities/locations, invalid coordinates, and stale
+  index actions. Results are capped at 100; superseded work is cancelled.
+- Apple Maps launch failures stay beside the launch action. Launch identities
+  prevent late completions from updating a replaced route or presentation.
+- Keep system backgrounds, native grabber/resizing, semantic toolbar placement,
+  accessible route descriptions, and explicit Open in Maps. Do not add imitation
+  navigation, extra resize controls, or options native requests cannot honor.
 
-A route refresh retains compatible geometry and selection while showing an
-updating state; navigation and route-choice controls wait for fresh results.
-Changing the journey clears incompatible geometry. Stable geometry identifiers
-preserve route selection across traffic-only refreshes. Requests and location
-waits have deadlines and generations; old responses cannot overwrite newer state.
-Already being at a destination has an explicit arrival state.
+Driving, walking, cycling, and automatic modes draw routes; transit is ETA-only.
+Toll/highway avoidance and arrival/departure dates affect in-app requests.
+Apple Maps chooses its own alternative and scheduled-time behavior. Maps-only
+avoidance remains a URL-builder capability, not an in-app control. Shared widget
+and intent handoffs use `MapsDirectionsLink` with destination-only automatic mode.
 
-## Platform limits
+## Preserve the public boundary
 
-Driving, walking, cycling, and automatic modes draw MapKit routes. Transit exposes
-ETA only. Toll/highway avoidance and departure/arrival dates affect in-app requests.
-The default picker shows driving, walking, transit, and cycling. Automatic routing
-remains available to hosts through configuration. Maps-only avoidance preferences
-remain supported by the package's URL builder but are not exposed in this UI.
-Opening Maps can choose a different alternative and uses its own date/time selection;
-the scheduled-time options explain this. Ride-hailing and walking elevation profiles
-remain Apple Maps features rather than simulated controls.
+Public hosts use configuration/environment/appearance, the provider and result
+values, `DirectionsModel` lifecycle/read-only projections, fitting actions,
+`DirectionsSheetView`, and `DirectionsMapContent`. Controllers, presentation/status
+models, raw route selection, search state, and request bookkeeping remain internal.
+Tests may use `@testable`; test convenience alone does not justify a public API.
 
-`swift test --package-path Packages/TripKit --filter 'RoutingContractsTests|RouteIdentityTests|RoutingCancellationTests|RouteMapGeometryTests'`
-checks ordered legs, cancellation, transit handling, invalid/past requests,
-avoidance, Maps links, stable route identity, and camera/viewport geometry without
-live services. DirectionsFeatureIntegrationTests additionally composes the public
-sheet/map API on iOS and visionOS; it is excluded from host-macOS test runs.
+## Check a routing change
 
-Use the source gate in [Contributing](CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.
+Run `bash scripts/check.sh` for source changes. When tests are requested, routing
+contract, identity, cancellation, and geometry suites use local providers without
+live service requests.
+`DirectionsFeatureIntegrationTests` also composes the public UI on iOS/visionOS;
+host-Mac tests exclude that UI and cannot establish its compilation. See
+[Testing](docs/Testing.md) and the [owner guide](docs/Directions.md).
+
+Report source checks, each platform's compilation, and runtime review separately.
+Native acceptance includes origin permission/denial, late fixes, route replacement,
+search retry/cancellation, stop editing, sheet resizing, map gestures, attribution,
+large text, VoiceOver, and Reduce Motion. Record the exercised cases and any
+remaining checks in the change description.

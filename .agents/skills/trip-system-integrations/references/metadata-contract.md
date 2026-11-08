@@ -1,7 +1,7 @@
 # Trip App Intents metadata contracts
 
-General static DSL rules and the recorded Xcode 27.2 KeyPath-interpolation issue live
-in global `app-development` system-integration guidance. Recheck that SDK issue on toolchain changes.
+Use global `app-development` system-integration guidance for static DSL diagnosis.
+Preserve concrete KeyPath interpolation and recheck metadata extraction on toolchain changes.
 
 - Preserve OpenSavedTripIntent's parameterized Summary and SavedTripEntity parameter type.
 - Keep TripShortcuts' ten static AppShortcut declarations directly in its builder.

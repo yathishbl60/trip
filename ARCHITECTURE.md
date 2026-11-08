@@ -1,45 +1,30 @@
 # Architecture and source ownership
 
-Trip uses View–Controller–Model with eight local Swift package targets. Each
-controller is a struct holding its model; observable UI state stays on MainActor.
-Workers receive Sendable snapshots. No framework owns navigation or feature state.
+Trip has two app features, Explore and Trips, composed by an App host, plus eight
+local Swift package products. Start with the owner of the behavior you want to
+change; a screen does not automatically need a new module.
 
-```text
-trip/                         App target
-  App/                        Composition, cross-feature flows, navigation, intents
-    Dependencies/             Production service factories
-  Features/
-    Explore/                  Map composition, catalog, location, layout
-    Trips/                    Library, presentation, editing, assistant workflows
-  DesignSystem/               Shared theme and interaction styles
-  Shared/Places/              App-specific place presentation and autocomplete state
-  Shared/System/              Host/extension entities, activity runtime, interaction intents
-  Shared/Intelligence/        Host capability policy
-  PreviewSupport/             Deterministic fixtures, compiled only in Debug
-  Assets.xcassets/             App-owned images
-  Resources/                  Bundled place data
-TripWidgets/                  Widget extension, timeline models, and native activity layouts
-Packages/TripKit/
-  Sources/TripLocalization/    Shared text catalog, translations, typed accessors
-  Sources/TripDomain/          Places, trips, service contracts
-  Sources/TripPlaces/          Native text search, MapKit conversion, category mapping
-  Sources/TripRouting/         Routing, directions UI/map content, framing, Maps links
-  Sources/MapEngine/           Layout, collision, indexing, cache, merge policy
-  Sources/TripStorage/         Private SwiftData records and local storage actor
-  Sources/TripIntelligence/    Private generation schema and planning actor
-  Sources/TripIntegrations/    Vision/PDF import, EventKit, AlarmKit, and WeatherKit adapters
-Performance/                  Repeatable standalone checks and baselines
-scripts/                      Ownership/context tools, source audits, builds, performance
-templates/                    Feature, task, decision, and opt-in CI starters
-docs/decisions/               Architecture rationale and tradeoffs
-```
+Use `python3 scripts/workspace.py context <Owner> --json` for source paths,
+consumers, and contracts. Setup and verification are in [Contributing](CONTRIBUTING.md).
 
-## Contents
+## Find the right layer
 
-- [Module graph](#module-graph)
-- [Composition and state ownership](#composition-and-state-ownership)
-- [Feature contracts](#feature-contracts)
-- [Enforced boundaries](#enforced-boundaries)
+| Location | Responsibility | Guide |
+| --- | --- | --- |
+| `trip/App` | Scene composition, navigation, production services, intents and system publication | [App](docs/App.md) |
+| `trip/Features/Explore` | Map discovery, camera, selection and place details | [Explore](docs/Explore.md) |
+| `trip/Features/Trips` | Saved library, editing, planning and travel workflows | [Trips](docs/Trips.md) |
+| `trip/DesignSystem` | Shared visual tokens and components | [Design system](docs/DesignSystem.md) |
+| `trip/Shared/Places` | App autocomplete state and resource-backed place presentation | [Search](docs/Search.md) |
+| `trip/Shared/System`, `TripWidgets` | Shared entities, bounded snapshots, widgets and activities | [System integrations](SYSTEM-INTEGRATIONS.md) |
+| `trip/Shared/Intelligence` | Host capability and entitlement policy | [Dependencies](docs/Dependencies.md) |
+| `trip/PreviewSupport` | DEBUG-only local fixtures | [Previews](docs/PreviewSupport.md) |
+| `Packages/TripKit` | Reusable domain, native adapters, algorithms and storage | [TripKit](Packages/TripKit/README.md) |
+
+Views render state and delegate actions to struct controllers whose only stored
+property is their model. MainActor models own mutable UI state and behavior;
+smaller workflow models own independent drafts and requests. Actors and concurrent
+workers receive Sendable values. Keep `MapProxy` inside live map callbacks.
 
 ## Module graph
 
@@ -53,133 +38,81 @@ graph TD
     App --> Storage[TripStorage]
     App --> Intelligence[TripIntelligence]
     App --> Integrations[TripIntegrations]
-    Integrations --> Domain
-    Integrations --> Localization
+    Domain --> Localization
     Places --> Domain
     Places --> Localization
     Routing --> Domain
-    Map --> Domain
-    Storage --> Domain
-    Intelligence --> Domain
-    Domain --> Localization
     Routing --> Localization
+    Map --> Domain
     Map --> Localization
+    Storage --> Domain
     Storage --> Localization
+    Intelligence --> Domain
     Intelligence --> Localization
+    Integrations --> Domain
+    Integrations --> Localization
 ```
 
-The six implementation modules can compile independently once TripDomain and
-TripLocalization are available. TripLocalization depends only on Foundation.
-SwiftData schema edits do not create a dependency on the map engine;
-itinerary generation changes do not make storage depend on Foundation Models.
-Keep public APIs small: internal changes retain the best opportunity for cached
-builds, while shared public API changes legitimately affect their consumers.
+The package targets iOS, macOS and visionOS 27.3; the app targets iOS/iPadOS and
+visionOS 27.3. Swift 6 and MainActor default isolation apply throughout. The six
+implementation modules depend on TripDomain and TripLocalization, not each other.
+Package code never depends on app types or app assets. TripDomain still uses
+MapKit/CoreLocation; it is an Apple-platform domain module.
 
-| Module | Exposed boundary | Private implementation |
-| --- | --- | --- |
-| TripLocalization | TripText labels, messages, counts, and deferred resources | Foundation-only catalog bundle; English, Kannada, and Hindi |
-| TripDomain | Sendable values, TripLimits, PlaceProviding, TripStoring, ItineraryPlanning | No SwiftUI, SwiftData, or Foundation Models dependency |
-| TripPlaces | PlaceTextSearch, PlaceFactory.make, PlaceCategory.mapCategories | Native search handle and category resolution; no app resources or feature state |
-| TripRouting | Waypoints/options, provider, routes, Maps links, DirectionsModel, sheet/map content, map geometry | Native cancellation, leg assembly, route identity, auxiliary controls and search |
-| MapEngine | Layout requests/results, layout actor, policies, geographic index, PlaceRepository | Ranking, spatial hash, sorted axes |
-| TripIntegrations | TripBookingReader, AppleTripSystemActions, AppleTripWeatherService | Local document extraction, permission handling, export ledger, alarm reconciliation, bounded forecast cache |
-| TripStorage | TripStore implementing TripStoring | ModelContainer, records, migrations, revision handling |
-| TripIntelligence | TripPlanningService, TripStopOrderService, TripDetailSearchService implementing TripDetailSearching | Generable schemas, prompts, validation, geographic ordering, typed detail-query interpretation |
-
-TripDomain still uses MapKit/CoreLocation for geographic values and search areas.
-It is an Apple-platform domain module, not a platform-neutral networking schema.
-Package targets do not read app resources. Explore’s ApplePlaceProvider supplies
-live search results; local preview fixtures own bundled place-data loading.
-TripPlaces owns MapKit item conversion and the cancellable text-search operation
-used by both features; Trips never depends on Explore. Shared/Places retains
-app annotation presentation and resource-backed colors. `DesignSystem/Colors.xcassets` is compiled into the app and
-widget extension so both targets resolve the same semantic palette in their own
-bundle. Package targets never read that catalog. Image assets retain their bundle
-and names.
-
-TripDomain owns PlaceSearchQuery's word matching/relevance and PlaceSearchResults'
-bounded duplicate-listing policy. Explore's repository actor prepares cached result
-snapshots; each feature retains its own cancellable search lifecycle. Trip lookup
-combines native text, day and category filters while keeping raw field input separate
-from its normalized saved-data query. See [search behavior](docs/Search.md).
-Shared/Places owns the MainActor autocomplete adapter and native completion tokens;
-TripDomain owns only immutable suggestion display values. Explore and trip pickers
-own their independent query modes and resolution lifetimes. Submitted searches and
-selected completions use native MapKit resolution before becoming real places.
+TripRouting owns reusable directions state and SwiftUI UI. TripPlaces owns native
+search operations and MapKit conversion used by both features. App autocomplete,
+colors and resource loading stay outside that package. The semantic color catalog
+is included in both app and widget bundles; packages do not read it.
 
 ## Composition and state ownership
 
-| Scope | Owner | Contract |
+| Lifetime | Owner | Contract |
 | --- | --- | --- |
-| App session | AppRuntime | Shared revisioned library and durable system publication |
-| Window | AppModel | Explore, Trips, navigation, and host callbacks |
-| Saved plans | TripLibraryModel | Mutation methods, revisions, load/save failures and retry |
-| Transient workflows | Feature models | Drafts, search, generation, selection and presentation |
-| Checklist and packing | TripChecklistModel | Window-local naming draft and packing session; shared library mutations |
-| Collections | TripCollectionsModel | Naming/deletion sessions, notices, and saved-place edits through the shared library |
-| Native services | AppTripServices | Production implementations injected through domain contracts |
-| Previews | PreviewTripServices | Isolated local providers and deterministic values |
-| System surfaces | Shared/System and TripWidgets | Bounded saved-data projections; no direct widget database access |
+| App session | `AppRuntime` | Shared revisioned library and durable system publisher |
+| Window | `AppModel` | Explore, Trips, navigation and host callbacks |
+| Saved data | `TripLibraryModel` | Canonical snapshots, mutation methods and load/save recovery |
+| Trip workspace | `TripModel` | Workflow composition and cross-workflow actions |
+| Checklist and packing | `TripChecklistModel` | Naming draft, packing session and injected generation worker |
+| Collections | `TripCollectionsModel` | Naming/deletion sessions and saved-place edits |
+| Native services | `AppTripServices` | Explicit production factories and shared service lifetimes |
+| Component preview | `PreviewTripServices` | Isolated local providers and deterministic values |
 
-Features do not retain sibling models. App wires `ExploreEnvironment` and
-`TripEnvironment` callbacks with weak captures. Models own behavior, views render
-state, and struct controllers delegate actions. Read [App](docs/App.md) for host
-flows and [Dependencies](docs/Dependencies.md) for provider lifetimes.
+App connects `ExploreEnvironment` and `TripEnvironment` with weak captures.
+Features do not retain one another or decide the host's tab navigation. App enters
+Trips through semantic host operations; Trips sequences its own child workflows.
+Checklist and Collection views receive their focused controllers. The parent
+supplies section navigation and cross-workflow callbacks rather than exposing its
+entire controller to those subtrees.
 
-Checklist views use TripChecklistController. TripModel composes the workflow and
-supplies feedback, Reminders review, and entity-identifier callbacks through
-TripChecklistEnvironment. TripEditorView supplies section navigation. App enters
-Trips workflows through semantic host methods; feature internals own their sequencing.
-
-Collection views use TripCollectionsController. TripCollectionsModel owns its
-editing sessions and collection mutations. TripCollectionsEnvironment delegates
-map navigation and day insertion to the parent; the root retains save-sheet
-dismissal and supplies section navigation at TripEditorView. Collections has no
-root controller dependency and shares only the durable library with other workflows.
-
-Durable edits use the library's mutation methods. Drafts carry stable identities
-and validate current saved data before committing. Background work uses cancellation
-and generation checks so late results cannot overwrite newer state. UI models stay
-on MainActor; reusable workers exchange Sendable values.
-
-## Feature contracts
-
-| Change | Authoritative guide |
-| --- | --- |
-| Camera, projection, caching, annotation lifecycle | [Explore](docs/Explore.md) |
-| Search, autocomplete, matching, saved-detail filters | [Search](docs/Search.md) |
-| Directions host API, cancellation, geometry | [Directions integration](DIRECTIONS.md) |
-| Trip editing, persistence, planning and journey events | [Trips developer guide](docs/Trips.md) |
-| Civil dates, zones, DST and Today | [Destination times](docs/TripTimeAndToday.md) |
-| App Groups, intents, widgets and activity data | [System integrations](SYSTEM-INTEGRATIONS.md) |
-| Import, exports, alarms and weather | [Native travel services](docs/NativeTravelServices.md) |
-| Adaptive navigation and window behavior | [Universal app](UNIVERSAL-APP.md) |
-| Shared text and native metadata | [Localization](docs/Localization.md) |
-
-Keep `MapProxy` inside live map callbacks; packages and actors receive plain
-coordinates. TripRouting owns directions state and UI independently of Explore.
-Trips depends on reusable routing contracts, never on Explore implementation types.
+All durable edits go through the library. Drafts carry stable identities, revalidate
+current saved data, and merge only their intended changes. Cancellation and
+generation checks prevent old async results from replacing newer work. See
+[Dependencies](docs/Dependencies.md) for factories and [App](docs/App.md) for delivery
+and durable publication lifetimes.
 
 ## Enforced boundaries
 
-`Packages/TripKit/modules.json` records package dependencies.
-`scripts/architecture/app-ownership.json` records app owners, permitted imports,
-guides, and entry points. Feature folders share an app binary; package targets
-provide separate compiler-enforced modules. Shared code and DesignSystem cannot
-depend on app composition or features. PreviewSupport references require DEBUG guards.
+[`modules.json`](Packages/TripKit/modules.json) records package edges and must match
+[`Package.swift`](Packages/TripKit/Package.swift).
+[`app-ownership.json`](scripts/architecture/app-ownership.json) records app owners,
+permitted dependencies, guides and entry points. Shared code and DesignSystem
+cannot depend on features or app composition; PreviewSupport references require
+DEBUG guards.
 
-TripPlaces is a compiler boundary for shared native adapters. Explore, Trips,
-and their focused workflow owners still share the app module. This extraction
-does not establish independent feature compilation or a measured build-time gain.
+Package targets are compiler boundaries. Explore, Trips and focused workflow
+folders still share the app module: their source boundaries are checked lexically.
+TripPlaces does not make either full feature independently compilable. Neither
+folder organization nor the module graph establishes a measured build-time gain.
 
-Run `python3 scripts/check_architecture.py` after moving sources or changing
-module dependencies. It validates manifests, imports, linkage, source coverage,
-and direct type references. Lexical checks cannot prove every inferred dependency;
-compilation and review remain separate evidence. Update the guide and manifests
-with a deliberate boundary change rather than weakening an allowance.
+After moving sources or changing dependencies, update the manifests and owning
+guide together and run `python3 scripts/check_architecture.py`. Direct-reference
+checks cannot prove every inferred dependency; compilation and review remain
+separate. Keep public APIs small and justify new modules by actual consumers or
+independent ownership, not file count.
 
-`bash scripts/check.sh` also audits source limits, previews, localization and
-project skills. The standalone performance harness compiles selected production
-files with `TRIP_STANDALONE`; app and package builds do not define that flag.
-See [Contributing](CONTRIBUTING.md) for verification commands and
-[Development](docs/Development.md) for change workflow.
+## Related contracts
+
+- [Trips](docs/Trips.md), [destination times](docs/TripTimeAndToday.md), and [search](docs/Search.md).
+- [Directions integration](DIRECTIONS.md), [native services](docs/NativeTravelServices.md), and [adaptive layouts](UNIVERSAL-APP.md).
+- [Localization](docs/Localization.md), [testing](docs/Testing.md), and [development workflow](docs/Development.md).
+- [Architecture decisions](docs/decisions/README.md) explain the tradeoffs behind these boundaries.

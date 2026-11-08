@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible problem with Trip or its developer tools.
+body:
+  - type: markdown
+    attributes:
+      value: Search existing issues first. Remove private trip details, booking references, and credentials from examples and logs.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened, and what did you expect?
+      description: Describe the user task or command that is affected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the starting state and the smallest sequence that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the revision, device or simulator, OS, window size or hinge state if relevant, and Xcode/Python versions for tooling issues.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or relevant logs
+      description: Optional. Include only the useful portion and remove private data.

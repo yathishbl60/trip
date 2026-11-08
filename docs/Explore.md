@@ -1,276 +1,169 @@
-# Explore
+# Explore contributor guide
 
-Start at `Views/Map/MapExperienceView.swift`. Its host supplies a detail builder;
-`ExploreModel` owns only the map experience. The app's AppExploreView adds saving.
+Explore owns map discovery and place presentation. Start at
+`trip/Features/Explore/Views/Map/MapExperienceView.swift`, backed by `ExploreModel`.
+Its host supplies the detail builder; `AppExploreView` adds trip-saving integration.
+Use [Architecture](../ARCHITECTURE.md) for package boundaries and
+[Contributing](../CONTRIBUTING.md) for setup/verification.
 
-| Work | Entry points |
+## Find the owner
+
+Paths below are relative to `trip/Features/Explore` unless a package is named.
+
+| Change | Entry points |
 | --- | --- |
-| Search | CatalogController, Models/Catalog, ExploreModel+Search |
-| Filters | FilterController, FilterModel, Views/Filters |
-| Camera and map callbacks | MapController, Models/Camera, ExploreModel+Projection |
-| Annotation placement | Models/Annotations, ExploreModel+Layout, package MapEngine |
-| Selection/details | PlaceController, PlaceSelectionModel, ExploreModel+Selection |
-| Map styles and traffic | MapAppearanceController, MapAppearanceModel, MapAppearanceRestoration |
-| Street-level imagery | PlaceLookAroundController, PlaceLookAroundModel, PlaceLookAroundView |
-| Routing integration | ExploreDirectionsController, ExploreModel+DirectionsEnvironment |
-| MapKit discovery and provider policy | Services/ApplePlaceProvider, MapSearchService, MapDiscoverySearch |
-| Shared native search and conversion | TripPlaces.PlaceTextSearch, TripPlaces.PlaceFactory, PlaceCategory.mapCategories |
+| Search/catalog | `CatalogController`, `Models/Catalog`, `ExploreModel+Search` |
+| Filters | `FilterController`, `FilterModel`, `Views/Filters` |
+| Camera/projection | `MapController`, `Models/Camera`, `ExploreModel+Projection` |
+| Annotation placement | `Models/Annotations`, `ExploreModel+Layout`, package `MapEngine` |
+| Selection/details | `PlaceController`, `PlaceSelectionModel`, `ExploreModel+Selection` |
+| Map style/traffic | `MapAppearanceController`, `MapAppearanceModel`, `MapAppearanceRestoration` |
+| Look Around | `PlaceLookAroundController`, `PlaceLookAroundModel`, `PlaceLookAroundView` |
+| Directions host | `ExploreDirectionsController`, `ExploreModel+DirectionsEnvironment`, `+RouteFraming` |
+| Discovery provider | `Services/ApplePlaceProvider`, `MapSearchService`, `MapDiscoverySearch` |
+| Native search/conversion | Package `TripPlaces`: `PlaceTextSearch`, `PlaceFactory`, category mapping |
 
-ExploreEnvironment is the host contract for saving: optional savePlace,
-dismissSave, and isSavingPlace. Supply all three for a save-enabled host. The save
-button also respects MapConfiguration.showsTrips. Explore has no Trips, storage,
-or app-navigation dependency. Directions UI, overlays, and geometry are provided
-by the TripRouting product. Explore supplies only host adapters and camera application.
+`ExploreEnvironment` is the save boundary: optional `savePlace`, `dismissSave`,
+and `isSavingPlace` callbacks, together with `MapConfiguration.showsTrips`.
+Explore does not depend on Trips, storage, or app navigation. Directions sheet,
+overlays, and geometry belong to `TripRouting`; Explore supplies its environment
+and applies camera changes. See [map composition](../REUSE.md) and
+[Directions](../DIRECTIONS.md).
 
-PlaceProviding is injectable. MapEngine.PlaceRepository owns the bounded cache,
-merge, and indexing worker and requires a provider. MapKit objects stay in their
-MainActor service; workers exchange Sendable snapshots. Catalog generation and
-activation revisions reject stale work. `start()`/`stop()` own the visible lifetime.
+## State and search lifetime
 
-TripPlaces provides the shared native adapters used by Explore and Trips. Its
-public search operation does not own camera discovery, caching, or UI sessions.
-Shared/Places still owns the observable autocomplete adapter, native completion
-tokens, annotation text, and app asset colors. Import TripPlaces in each file
-using its operations or category-mapping extension; no app resources move into it.
+`start()`/`stop()` own the visible lifetime. Catalog generations and activation
+revisions reject obsolete results. Inject `PlaceProviding`; `PlaceRepository`
+owns bounded caching, merging, and indexing in MapEngine. Native MapKit objects
+stay in their service's isolation boundary; workers exchange Sendable values.
 
-Text searches render the latest matching result snapshot, while the full loaded
-catalog stays available when the query is cleared. Search merging resolves results
-to canonical place IDs before building either index, so a live match keeps an
-existing marker's identity. Nearby-place choices use the same visible index.
-Compatible cached matches remain visible during refinements and failed refreshes.
-Explicit search/retry bypasses the
-repository cache; camera-driven discovery remains debounced and cached. A timeout
-cancels the owned request before clearing its handle and invalidating its generation.
-MapCanvasView reads SwiftUI's dismissSearch action inside the searchable hierarchy;
-closing the presentation also ends the native search interaction and keyboard focus.
-The presentation binding remains the only activation source.
+Typing uses native autocomplete. Selecting a completion resolves it before opening
+an exact place; multiple matches remain choices. Closing search, panning, selecting
+another destination, or backgrounding cancels owned resolution and advances its
+generation. A submitted map search may finish after the text field closes.
+`dismissSearch` is read inside the searchable hierarchy so closing ends keyboard
+interaction; the presentation binding remains the activation source.
 
-Resolving an autocomplete suggestion belongs to the search presentation. Closing
-search, panning the map, or selecting another destination cancels that resolution
-and advances its generation, so a late result cannot reopen details or move the
-camera. A submitted text search can continue updating its map results after the
-search field closes. Completed requests release their resolution handle.
+Compatible results/suggestions stay visible during refinement or a failed refresh.
+Clearing the query restores the full loaded catalog. Canonical IDs are resolved
+before indexing, preserving existing marker identity. Explicit submission/retry
+bypasses repository cache; camera discovery is debounced and cached. Timeouts cancel
+the request before releasing its handle. Failed/timed-out areas have a two-second
+retry cooldown, not successful five-minute coverage. Explicit retry bypasses it.
 
-Fetch activity is observable so suggestion controls and opening-place feedback
-update immediately. Retrying autocomplete clears the previous resolution failure;
-the native Search places action also remains available when suggestions are
-loading, missing, or unhelpful. Existing compatible suggestions remain visible.
-Local previews cover resolution loading, failure recovery, and submitted-search
-failure. Source validation does not establish keyboard, VoiceOver, or live MapKit
-behavior; exercise dismiss-during-resolution, retry, submit, and choose/save on a
-device when runtime verification is requested.
+A gesture cancels a pending debounce while allowing an active discovery request to
+finish. A newer settled area, query, retry, or suspension supersedes that request.
+Cached entries retain their original fetch time/area: panning cannot renew stale
+coverage or accumulate drift. The bounded LRU accepts successful empty results,
+never failed responses. See [Search](Search.md) for matching and shared behavior.
 
-Cached word matching, result identity validation, no-results recovery and the
-shared behavior across planning searches are described in [Search](Search.md).
+## Launch discovery and controls
 
-## Contents
+The default viewport starts over Bangkok, not the device location. An unfiltered
+nearby POI request can cluster all results near the center. The provider may add
+one area-wide search when results are empty or confined to the central 30% of
+both viewport spans. It uses a Things to do/category query with required region
+priority; it does not alter the visible query or camera. Named searches use one
+request. Both requests share the cancellable operation and 15-second catalog deadline.
+Useful nearby results survive a failed supplement; an empty result plus a failed
+supplement reports the error.
 
-- [Gesture responsiveness and search continuity](#gesture-responsiveness-and-search-continuity)
-- [Calibrated zoom and annotation lifecycle](#calibrated-zoom-and-annotation-lifecycle)
-- [Styles and place details](#styles-and-place-details)
-- [Launch discovery](#launch-discovery)
+The map menu offers Search this area while idle. Failure notices offer Retry;
+empty notices explain no results. Active search owns its status instead of also
+showing a floating map notice. Filters live in the existing sheet: one adaptive
+category grid, a vertical list at accessibility sizes, an All categories reset,
+and loaded counts. The map menu shows active filter state without a persistent
+category strip over the canvas.
 
-## Gesture responsiveness and search continuity
+Keep `ExploreMapView`'s native location button, compass, and scale in `mapControls`
+inside the existing MapReader structure. Do not relocate them to a separate toolbar
+host or introduce a duplicate tracking control. Safe areas, attribution, selection,
+and camera state must survive resize/fold transitions.
 
-Map options → Filters opens the existing filter sheet. Category buttons share a
-Liquid Glass container and stable effect identities in an adaptive grid, with
-animated selection symbols and loaded-place counts. Show places dismisses the
-sheet; no category strip or summary remains over the map. Active filters remain
-visible in the existing map menu's badge and category summary. Accessibility text
-sizes use the vertical category list. visionOS uses native bordered controls.
+## Projection and placement invariants
 
-Category controls never reserve canvas space or change native map safe areas,
-attribution or camera position. Reduce Motion disables the glass morph and
-selection animation. The existing catalog filtering, search scheduling and
-selection identities own the actual result updates.
+- Keep native `Annotation` coordinates/gesture handling and stable place IDs.
+  Project with the live `MapProxy`; never retain it or approximate points using
+  latitude/longitude spans. Finish conversion before publishing state.
+- Retain exactly three stages: dots, compact icons/images, and labeled views.
+  Selection preserves its stage; selecting a dot zooms to at least the compact
+  stage. Crowding downgrades appearance rather than displacing coordinates.
+- Camera feedback is non-observable and detects small accumulated movement.
+  Gestures immediately cancel settled refinement; projection remains coalesced
+  by movement thresholds and cadence. Zoom updates even with an empty catalog.
+- Geographic candidates pass a bounded, deterministic priority buffer before
+  projection. Selection, continuity, category filtering, and stable ID ties remain.
+  Dense rotated/pitched views can still spend this budget on offscreen candidates;
+  the algorithm does not guarantee every visible place is considered.
+- Test visible artwork separately from collision/touch bounds. Zero-area tangency
+  cannot consume a visible slot; partially visible artwork can. Selected labels
+  need readable clearance and may fall back to compact artwork at an edge.
+- Validate finite obstruction geometry before clipping, including rejection of
+  `CGRect.infinite`. Empty sheets must not inflate into obstacles. Clip sheets,
+  notices, safe areas, and reserved regions into the live map's coordinate space.
+- Geometry changes cancel old placement/refinement immediately, then coalesce a
+  fresh projection. Search notices measure their actual pill/control bounds;
+  surrounding blank space remains available for map input.
+- Unappeared superseded annotations release reservations immediately. Appeared
+  annotations retain a bounded fade/retirement lifetime. Separate visibility from
+  representation so reentry cannot animate from stale card geometry.
+- Reduce Motion suppresses nonessential transitions/camera animation. Keep one
+  restrained representation transition and entry fade, without entry scaling.
 
-Camera feedback detects movement even when each callback advances by less than a
-pixel or a very small zoom step. Activity detection cancels settled annotation
-work immediately; expensive projection still uses the accumulated movement
-threshold and configured interval. Camera feedback remains non-observable, so it
-does not publish a new annotation tree on every frame.
+Ground-scale calibration captures sampled meters-per-point and camera distance
+as one pair. Compatible viewport/pitch measurements guide zoom commands; invalid
+or changed geometry uses distance presets until a fresh measurement exists.
+MapKit remains authoritative. Calibration is an estimate, not an alternate projection.
 
-Geographic selection streams candidates through a bounded priority buffer before
-MapProxy conversion. It retains only the projection budget, deduplicates stable
-place IDs, and sorts that retained set. Selection, continuity weighting, category
-filtering, and deterministic ID ties remain in force. Native annotations still
-use the same three appearances and live MapProxy coordinates; there are no new
-map controls or approximate screen-coordinate calculations.
+## Tune at the owning definition
 
-A gesture cancels a pending search debounce while allowing an active request to
-finish. A newer settled area, changed query, explicit retry, or suspension still
-supersedes/cancels it through generation checks. Compatible results remain visible
-during refresh. Failed and timed-out requests use a two-second retry cooldown;
-they do not count as successful five-minute coverage. Explicit retry bypasses the
-cooldown and cache.
-
-The repository reuses requests within the existing query/category/area/zoom
-tolerance. Cached responses retain their original fetch time and area, so moving
-around a cached result cannot extend its lifetime or accumulate coverage drift.
-The bounded cache evicts its least recently used area; replacing an existing key
-does not evict a second entry. Empty successful responses are cacheable, while
-failed requests never enter that cache.
-
-In very dense rotated or highly pitched views, offscreen candidates
-can still consume the geographic projection budget; the bounded ranking change
-does not claim exact visible-area coverage or device speed measurements.
-
-Keep MapProxy in live MapReader callbacks. Preserve marker IDs, native annotations,
-dot/icon/label stages, hysteresis, cancellation, and camera intent. Package geometry
-must match rendering. Persistent chrome and temporary sheet occlusion have
-different owners; read the project map skill before changing them.
-
-Use PreviewFixtures.explore/hotels/dense/searching/offline. These providers are
-local; PreviewFixtures.app includes the save integration. Run source checks after
-changes. Requested algorithm checks live in Performance; native gesture, sheet,
-and attribution verification remains a separate device/Canvas task.
-
-## Calibrated zoom and annotation lifecycle
-
-The Map Scale choices use `ZoomLevel.preferredMetersPerPoint`, safely inside each
-stage's hysteresis band. Explore captures ground scale and the sampled camera
-distance together in `CameraGroundScale`; later camera feedback cannot change the
-distance paired with that measurement. Compatible measurements adapt zoom commands
-and dot selection to the current viewport and pitch. Changed viewport dimensions,
-changed pitch, or failed projection use the existing distance presets until a new
-measurement is available. Zoom state also updates when the catalog is empty.
-Calibration is a local estimate; native MapKit projection remains authoritative.
-
-Layout ranking uses the visible artwork footprint and permitted styles before
-applying its candidate cutoff. Invisible touch padding, collision clearance, and
-zero-area edge tangency cannot consume a visible marker slot. Partially visible
-artwork remains eligible, including subpoint edge overlap. This preserves budget for visible candidates
-without changing coordinates or dropping partly visible edge markers. The earlier
-geographic projection budget still applies; this does not guarantee every visible
-place can be considered in a dense tilted map.
-
-Collision and hit-test bounds remain separate from visual eligibility. Selected
-labels still require full readable clearance; they can fall back to compact artwork
-at an edge. Invalid/nonfinite exclusions and reservations are rejected before
-clipping, including CoreGraphics' infinite-rectangle sentinel. Finite covering
-obstacles and a marker's ability to ignore its own reservation remain authoritative.
-
-Measured place/directions sheets and search notices join safe-area and native
-reserved-region exclusions in map-local coordinates. Empty sheets are checked
-before clearance inflation, off-map rectangles are discarded, and each obstacle
-is clipped to the live map frame. Geometry updates cancel obsolete placement and
-refinement immediately while coalescing the fresh projection. They do not change
-native safe areas, attribution, map controls, or camera positioning.
-Search notices report their content/control bounds before the outer centering
-frame and padding. The retry target remains at least the platform control size,
-while blank space around the pill remains available to map interaction.
-
-Annotations superseded before native appearance release their reservations and
-are removed immediately. Appeared annotations retain their fade, collision space,
-and bounded retirement lifetime. The existing native identity and Reduce Motion
-behavior remain.
-
-### Reading and tuning the map code
-
-Rules are grouped by the decision they control. Numeric values at those definitions
-are intentional tuning defaults; calculation sites use names, units, and explicit
-stage/visibility decisions. Ordinary geometry such as half a width stays local.
-
-| Decision | Owning code |
+| Decision | Owner |
 | --- | --- |
-| Dot → icon/image → label thresholds, hysteresis, zoom targets | `ZoomLevel` |
-| Candidate/marker budgets and projection frequency | `MarkerLayoutPolicy` |
-| Collision spacing, image density, continuity ranking | `MarkerLayoutPolicy+Placement` |
-| Camera distance bounds, dot-selection zoom, 3D focus | `CameraNavigationPolicy` |
+| Stages, hysteresis, zoom targets | `ZoomLevel` |
+| Candidate/marker budgets and cadence | `MarkerLayoutPolicy` |
+| Collision spacing, image density, continuity | `MarkerLayoutPolicy+Placement` |
+| Camera distance, dot selection, 3D focus | `CameraNavigationPolicy` |
 | Overscan, ground-scale sampling, movement sensitivity | `CameraProjectionPolicy` |
-| Sheet/location exclusions and selection edge spacing | `MapViewportPolicy.swift` |
-| Global-to-local obstruction clipping | `MapViewportOcclusion.swift` |
-| Fade/morph duration and settling allowances | `MapMotion` |
-| Adaptive camera animation timing | `CameraTransitionTiming` in `CameraModel+Motion` |
+| Sheet/location exclusions and edge clearance | `MapViewportPolicy`, `MapViewportOcclusion` |
+| Fade/morph and retirement timing | `MapMotion` |
+| Camera transition duration | `CameraTransitionTiming` in `CameraModel+Motion` |
 
-`CameraSample.differs` names each movement condition separately. `ZoomLevel.resolve`
-names each starting stage and its permitted transitions. Layout ranks eligible
-places, chooses a collision-free appearance, and reserves its bounds. Marker
-reservations are explicit lifecycle state shared with refinement scheduling.
+Rendering and collision geometry must agree. Detailed annotation artwork is
+184×64 points before accessibility scaling; its caption uses 110×52 points
+(35 title, 3 gap, 14 metadata). Long names truncate rather than shrink, with full
+meaning in accessibility/detail content. Unrated places show category metadata.
+No photo assets are bundled, so artwork falls back to category symbols even for
+saved/sample image names. See [Place gallery](PlaceGallery.md).
 
 ## Styles and place details
 
-The map menu provides Standard, Satellite, and Hybrid styles. Traffic is offered
-for Standard and Hybrid, the native styles that support it. SceneStorage restores
-appearance per window. Changing a style updates the existing Map rather than
-recreating its camera, annotations, or selected route. The style menu remains
-available above a place or directions sheet; search and save presentations retain
-their existing toolbar behavior.
+Standard, Satellite, and Hybrid update the existing Map; Standard/Hybrid support
+traffic. `SceneStorage` restores appearance per window without resetting selection,
+route, or camera. Place Details uses a leading native sheet on iOS/iPadOS and a
+sidebar on visionOS. The exposed map remains interactive. Measured panel bounds
+inform framing, including same-size selection changes; the spatial map uses its
+column's viewport. Compact detents keep identity/toolbars and the detail path.
 
-Detailed annotations preserve a 184×64-point surface and a 110×52-point caption
-area before map accessibility scaling. The shared caption metrics allocate 35
-points to the two-line name, a three-point gap, and 14 points to metadata. Long
-names truncate rather than shrinking below the intended font size; the complete
-name/category remains in the annotation's accessibility label and place details.
-Unrated places show their category instead of a repeated View details prompt.
-Category symbols grow within the existing artwork area at the detailed stage.
-No place photographs are bundled, so live, saved, and sample annotations use
-category artwork; the leaf artwork view enforces that fallback as well as its host.
+Directions and Save are primary actions; Share and secondary actions stay in the
+toolbar. MapKit supplies address, validated website, telephone, and real metadata.
+Older saved records can lack telephone values. New live results have no synthetic
+ratings; retained sample ratings remain labeled. 3D focus and nearby category
+search remain contextual actions.
 
-Catalog name matching uses the nearest existing place inside the configured
-radius, with a stable ID tie-break; an exact provider ID takes precedence. A
-refresh near one branch must not move another same-name branch's annotation.
-Cancelled merges stop before snapshot preparation, including empty-input merges.
-Public proximity queries reject malformed rectangles; indexed queries validate
-the viewport once before visiting the retained candidate slice.
+Look Around starts only on request. It owns a native scene request/preview,
+distinguishes no coverage from failure, and offers retry/cancel with a 20-second
+deadline. Hiding/backgrounding cancels work; generations reject late responses;
+coordinate changes clear the old scene. There is no global imagery cache.
 
-See [the MapEngine review](MapEngineReview.md) for concrete findings and verification scope.
+## Check an Explore change
 
-Place Details and Directions use a native leading sheet on iOS and iPadOS, and a
-native sidebar beside the map on visionOS. The traveler can pan and select on the
-exposed map while either tool is open. The iOS camera uses the measured panel
-bounds, including after a same-size selection change. The spatial camera uses
-the map column's own viewport. The native compact place detent retains the place
-name and toolbar while preserving the detail navigation path. Accessibility text
-uses taller detents. Directions and Save remain the primary actions, with Share
-directly in the toolbar. Information rows
-show an address, validated website, and telephone action when returned by MapKit.
-Older saved places decode without a telephone value. New live search results have
-no synthetic ratings; previously saved sample ratings remain explicitly labeled.
-The exploration section offers a focused 3D camera move and nearby category discovery.
+Use local `PreviewFixtures.explore`, `hotels`, `dense`, `searching`, and `offline`;
+`PreviewFixtures.app` adds saving. Keep previews at the component that owns the state.
+Use the [map review workflow](MapEngineReview.md) for placement, identity, and
+geometry changes. Algorithm checks live in [Performance](../Performance/README.md).
 
-Look Around loads on request, using MKLookAroundSceneRequest and the native
-LookAroundPreview with its navigation controls. It distinguishes no coverage from
-request failures, offers retry and cancel, and has a 20-second deadline. Requests
-cancel when hidden/backgrounded; generation checks reject late completions. A
-coordinate change clears the prior scene. The view owns just its current scene;
-there is no global imagery cache. Previews cover local idle/loading/failure/no-coverage
-states and do not automatically request live imagery. Coverage and native viewer
-interaction still require device verification when authorized.
-
-## Launch discovery
-
-An unfiltered nearby POI request can reach MapKit's result limit within a small
-central cluster. Decluttering correctly collapses those coordinates, leaving the
-rest of a city-scale viewport bare. ApplePlaceProvider now retains those nearby
-results and makes at most one supplemental area-wide search if all results lie
-inside the central 30% of each viewport span, or the response is empty. The
-supplement uses Things to do for all categories, category names for a subset,
-point-of-interest results, and required region priority. It never changes the
-camera or visible search query. Repository merging retains canonical identities.
-
-Both requests share the existing cancellable operation wrapper and the catalog's
-15-second deadline, generation checks, debounce, and cache. If the supplement
-fails, useful nearby results survive; an empty response with a failed supplement
-reports the error. Named searches still make one request. No sample places,
-synthetic coordinates, search fan-out, or durable location tracking were added.
-
-The existing map menu always offers Search this area when idle. Failure/empty
-notices distinguish no results from failures; failure notices expose Retry directly.
-Active search owns its own status instead of also
-showing a floating map notice. Search uses a shorter prompt and primary/secondary
-result contrast. Filters use one category grid (a list at accessibility sizes),
-All categories to reset, and a loaded-count footer instead of a duplicate summary
-panel and Reset action.
-
-ExploreMapView uses automatic MapKit hosting for the native location button,
-compass, and scale through mapControls. The toolbar relocation was reverted at
-the user's request on 2026-11-08. Keep the original MapReader structure and native
-control placement; no separate toolbar host or explicit map namespace is needed.
-
-Keep exactly one tracking control through resizing and fold transitions. After
-scope or hosting changes, verify fresh annotation projection after pan, zoom,
-and search selection, plus tracking, compass, route framing, and attribution.
-Existing markers or an enabled tracking button alone do not verify MapProxy.
-App composition shows save confirmations inside an open place sheet, and above
-the tab bar when the map itself is visible.
+For an authorized runtime review, include pan/zoom reversal, search selection and
+retry, dismiss-during-resolution, filters, selection reentry, sheets/folds,
+tracking/compass, route framing, Legal attribution, long text, VoiceOver, and
+Reduce Motion. Existing markers or an enabled location button alone do not verify
+fresh projection. Source checks do not establish live MapKit behavior or frame pacing.

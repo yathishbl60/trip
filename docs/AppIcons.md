@@ -1,8 +1,9 @@
 # Trip app icons
 
-The folded map, winding route, and location pin use Trip's existing teal and mint
-palette. The asset catalog contains the selected generated artwork; the prompts below
-record its reproducible design inputs.
+Use this guide when updating the app icon or adding a required appearance. Inspect
+the existing asset catalog first and preserve the folded map, winding route,
+location pin, and teal/mint identity unless a redesign is explicitly in scope.
+Keep icon work separate from ordinary feature symbols; see [SF Symbols](../SF-SYMBOLS.md).
 
 ## Project assets
 
@@ -24,12 +25,17 @@ describes the single-size variants, transparent dark background, grayscale tinte
 artwork, and visionOS layers. See also
 [Apple's icon design guidance](https://developer.apple.com/design/human-interface-guidelines/app-icons).
 
-## Generation prompts
+## Prepare related appearances
 
-These are the exact prompts for the selected assets. The foreground extraction
-and subsequent edge-repair edit were applied in sequence; other foreground
-experiments were discarded. Each edit referenced the corresponding generated
-image, with the default icon serving as the initial source.
+Use one accepted light icon as the source for related variants. Preserve its
+silhouette, scale, route, and position so appearance changes do not change the
+identity. Inspect transparency around the outer contour and pin opening; repair
+fringes before using the foreground in dark and spatial appearances.
+
+The following prompt recipes encode Trip's artwork constraints. Supply the named
+reference image for each edit and inspect the result; prompts do not guarantee an
+identical output or replace review. Use the image-generation skill when generation
+or image editing is requested, rather than regenerating artwork during setup.
 
 ### Light icon
 
@@ -85,12 +91,19 @@ Primary request: Remove the entire map, pin, route, and every associated shadow,
 Constraints: Preserve the original background colors and soft upper-left illumination. Fill the vacated center seamlessly with the same quiet deep teal gradient. A completely empty square opaque gradient, edge to edge, with straight corners. No objects, patterns, silhouettes, holes, highlights shaped like objects, text, icon tiles, borders, watermark, or transparency. Use sRGB deep teal around #006B66, a gently lighter mint-teal upper-left area and a darker teal lower-right area. One square background image.
 ```
 
-## Export and verification
+## Export and check
 
-Selected generated images were resized to 1024 × 1024 with `sips`. RGB artwork
-was tagged sRGB; the tinted asset was matched to Gray Gamma 2.2. Transparent
-artwork retains alpha. The spatial foreground reuses the dark icon bytes.
+1. Export 1024 × 1024 PNGs without a baked-in outer mask. Keep RGB artwork sRGB,
+   the tinted asset Gray Gamma 2.2, and foreground alpha intact. Reuse the same
+   accepted foreground for the dark icon and spatial front layer.
+2. Inspect dimensions, profile, and alpha with `sips -g pixelWidth -g pixelHeight
+   -g profile -g hasAlpha <image.png>`; inspect edge pixels against light and dark
+   backgrounds. Metadata alone cannot reveal a fringe or lost pin opening.
+3. Confirm filenames, appearance entries, and spatial layer order in the catalog's
+   `Contents.json`. Preserve the shared Debug/Release and `xr*` build-setting names.
+4. Run `bash scripts/check.sh` for source policy. For requested build/runtime work,
+   follow [Contributing](../CONTRIBUTING.md) and inspect installed light, dark, and
+   tinted Home Screen appearances plus spatial layering on supported hardware.
 
-After changing artwork, check dimensions, color profiles, alpha and catalog
-membership. Verify installed light, dark and tinted appearances on the Home Screen
-and spatial layering on supported hardware. Source audits cannot establish appearance.
+Check the emblem at small sizes and through the platform mask. Source checks and
+PNG metadata do not establish legibility, appearance switching, or spatial depth.

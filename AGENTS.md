@@ -70,6 +70,7 @@ These are this project's defaults; explicit user instructions take precedence.
 - Use `python3 scripts/workspace.py context <Owner> --json` to find contracts, consumers, guides, and source paths.
 - If only a source path is known, use `python3 scripts/workspace.py locate <path> --json` to resolve its owner. Context skill suggestions are conditional; load only those relevant to the task.
 - Read `docs/Development.md` for task, feature, decision, and review templates; scaffolding defaults to a dry run.
+- Keep Markdown as reusable task guidance: when to use it, owning paths and contracts, steps, and relevant checks. Keep dated delivery reports, commit recaps, and transient verification results out of guides; put execution records in ignored `.build/verification` and report outcomes in the PR or delivery message.
 - Keep Trips production service creation in `trip/App/Dependencies`; inject contracts into feature models, including availability and failure policy.
 - Use local `PreviewTripServices` for Trips component previews; see `docs/Dependencies.md` for lifetimes and `docs/Testing.md` for future tests.
 - Update ownership manifests and their guide/entry-point references in the same change when boundaries move.

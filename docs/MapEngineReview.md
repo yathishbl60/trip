@@ -1,74 +1,71 @@
-# MapEngine review · 2026-11-05
+# Review the map engine
 
-The pre-review work was committed as `b30a519` before this pass. The review follows
-Trip's native MapKit, stable identity, three-stage annotation, bounded work, and
-uncluttered map contracts. It targets concrete defects rather than a new map design.
+Use this workflow when changing geographic lookup, placement, annotation geometry,
+overlay exclusions, camera coordination, or map request scheduling. Start with
+[Explore](Explore.md), [reuse contracts](../REUSE.md), and the
+[map skill](../.agents/skills/trip-map-decluttering/SKILL.md).
+Keep native MapKit interaction and stable identities as acceptance requirements.
 
-| Finding | Correction | Why it matters |
-| --- | --- | --- |
-| Invisible touch padding/clearance could qualify an offscreen marker for a limited slot | Test visible artwork separately from collision/hit bounds; reject zero-area tangency | Visible places retain the scarce candidate/annotation budget without weakening touch clearance |
-| Infinite obstruction sentinels became finite covering rectangles after clipping | Validate before clipping and explicitly reject `CGRect.infinite`; check cancellation during grid setup | Malformed measurements cannot conceal the whole map; legitimate finite obstructions still work |
-| Measured sheets and search notices were absent from annotation exclusions | Clip measured overlays into map-local coordinates; guard empty geometry before inflation | Placement accounts for the actual exposed map while native safe areas and attribution stay put |
-| Geometry movement left obsolete layout/refinement work alive until the coalescing delay | Cancel old work immediately, then request a fresh live projection after geometry settles | Late results cannot reintroduce placement based on old obstructions |
-| Notice measurement and retry hit shape included its outer centering frame | Measure content/control bounds before outer width and padding; clear on hide/disappear | Empty space around a compact notice remains available for map gestures |
-| Same-name refreshes chose the lowest ID within a radius | Choose nearest distance, then stable ID; retain exact-ID precedence | A nearby branch refresh no longer moves another branch's annotation |
-| Cancelled empty merges could still produce snapshots; public proximity helpers accepted malformed bounds | Add early cancellation and explicit bounds validation, retaining index validation outside its loop | Avoid obsolete work and keep public helper behavior aligned with the index |
-| Unavailable sample images hid the main category glyph | Explicitly use category artwork until an actual bundled photo source exists; enforce at the leaf view | Saved/sample places cannot render an empty photo disc |
-| Long labels shrank and unrated cards repeated a generic action prompt | Preserve font size with truncation, use category metadata, and allocate the full title budget | Names stay consistently legible and secondary text helps identify the place |
+## Trace a placement from input to display
 
-## Annotation geometry
+1. Resolve the source owner with `python3 scripts/workspace.py locate <path> --json`.
+   Follow geographic candidates through live projection, exclusions, placement,
+   display stages, and the final native annotation.
+2. Identify which values are immutable inputs and which revision owns the result.
+   Check cancellation before work, during expensive loops, and before publication.
+3. Trace selection and camera updates separately from ordinary placement. A
+   refresh must not move a place to a synthetic coordinate or change its identity.
+4. Compare the visible artwork, collision bounds, and hit target. They serve
+   different purposes and must not share an accidental visibility test.
 
-The visible surfaces remain 12×12, 44×44, and 184×64 points for dots, compact
-artwork, and labeled cards. Existing accessibility scaling and hit bounds remain.
-Detailed captions use 110×52 points: 35 for the title, three for separation, and
-14 for metadata. The retained caption keeps that title budget during reverse
-zoom transitions; clipping/opacity still own hidden-stage visibility.
+## Inspect edge cases
 
-Selection stays at the true coordinate, uses the existing native annotation,
-and retains its stable ID. Full selected labels need readable edge clearance;
-compact fallback remains available. No new map control, synthetic coordinate,
-screen, network request, or larger annotation budget was added.
+| Boundary | Required behavior |
+| --- | --- |
+| Visibility | Visible artwork qualifies a candidate; offscreen hit padding and zero-area tangency do not consume scarce slots |
+| Obstructions | Validate malformed, empty, or infinite geometry before clipping/inflating; legitimate finite obstructions remain effective |
+| Sheet and notice geometry | Convert measured content into map-local coordinates; clear exclusions when hidden or removed |
+| Notice interaction | Measure the actual pill/control, not the outer centering frame; surrounding map space remains interactive |
+| Geometry changes | Cancel obsolete placement/refinement immediately; delayed work obtains a fresh projection after coalescing |
+| Identity refresh | Prefer exact IDs; same-name proximity matching chooses nearest distance, then stable ID for a tie |
+| Cancelled work | Even empty merges and public proximity helpers respect cancellation and invalid bounds |
+| Artwork fallback | Missing sample/photos retain category artwork rather than an empty image disc |
+| Labels | Preserve semantic font size and the title budget; truncate intentionally and use useful secondary metadata |
+| Selection near edges | Keep the true coordinate and native annotation; use readable clearance or the existing compact fallback |
 
-The existing geographic heap cutoff, antimeridian splitting, cache freshness/LRU,
-zoom hysteresis, retirement lifecycle, and native reentry were reviewed. No concrete
-defect justified replacing those mechanisms. Source review is not a speed measurement.
+Preserve the three annotation stages. The current base visible sizes are 12×12
+for dots, 44×44 for compact artwork, and 184×64 for detailed cards. The caption is
+110×52: 35 for title, 3 for separation, and 14 for metadata. These are map geometry,
+not general UI spacing. Keep accessibility scaling and hit bounds intact, including
+reverse zoom transitions where clipping/opacity hide the inactive stage.
 
-## Verification · 2026-11-06
+## Check bounded work and stable transitions
 
-The standalone correctness suites passed on both the baseline and the updated tree.
-The updated suite exercised 74 visual-edge layout requests, 12 obstruction
-layout requests, translated/floating/invalid overlay geometry, notice disappearance,
-generation/refinement invalidation, nearest branches, deterministic ties, exact IDs,
-radius isolation, cancelled empty merges, and invalid geographic bounds.
+Inspect candidate budgets, geographic cutoff, antimeridian splitting, cache
+freshness/LRU, zoom hysteresis, retirement, and reentry. Confirm filtering and
+selection persist while compatible content refreshes. Expensive work belongs
+outside view bodies; MapProxy is used synchronously, never retained across awaits.
+A faster run that drops places or ignores exclusions is not an optimization.
 
-Paired optimized runs on an Apple M5 Max used Swift 6.4.2 and macOS SDK 27.3.
-All 11 workload checksums matched. Each layout stage used 20 warmups and 200
-measured layouts. Times below are in milliseconds.
+For changes to request scheduling, follow scene suspension and cancellation
+through search, location, directions, and layout. A late completion must not
+restore a previous viewport, obstruction set, route, or selection.
 
-| Stage | Median before | Median after | p95 before | p95 after |
-| --- | ---: | ---: | ---: | ---: |
-| Overview | 2.720 | 2.678 | 2.936 | 2.818 |
-| Places | 2.734 | 2.732 | 2.932 | 2.865 |
-| Details | 2.782 | 2.773 | 2.975 | 2.976 |
+## Choose the checks
 
-Every median and p95 stayed within the 20% regression threshold. The largest
-increase was the 2,000-place indexed lookup for a 0.4° span. Its p95 rose from
-5.167 to 5.959 µs (+15.3%) while its median fell from 4.875 to 4.750 µs.
-The JSON writer initially failed on comments and blank lines in the source manifest.
-Both reports were generated from the original timing samples after the writer fix.
-The baseline inputs were verified against commit `b30a519`.
-[Baseline report](../Performance/Baselines/mapengine-review-before-mac.json) ·
-[Updated report](../Performance/Baselines/mapengine-review-after-mac.json)
+Run `bash scripts/check.sh` for source policy. When algorithm execution is
+requested, use `bash scripts/performance.sh check`; see the
+[harness guide](../Performance/README.md) for coverage and limitations. Exercise
+invalid/translated/floating geometry, notice disappearance, reverse zoom,
+nearest-branch ties, exact IDs, radius isolation, and cancelled empty results.
 
-Debug builds succeeded for generic iOS and visionOS Simulator destinations at 27.3.
-The source gate passed for ownership, source registration, Swift size limits,
-previews, localization, and design policy.
+For requested performance work, establish correctness first, then compare the
+same optimized workload, toolchain, hardware, sample counts, and output checksums.
+Use fresh before/after reports and [the performance workflow](../PERFORMANCE.md).
+Do not infer native frame pacing from host algorithm timings.
 
-Verification stopped at compilation for the native UI. Rendered label legibility
-in light and dark appearance, Thai/Hindi/Kannada glyphs, contrast over map tiles,
-hit targets beside sheets, rapid reverse zoom, VoiceOver, Reduce Motion, and
-on-device frame pacing remain open for visual and device review.
-
-Primary framework references: Apple's [native Annotation](https://developer.apple.com/documentation/mapkit/annotation)
-and [SwiftUI performance guidance](https://developer.apple.com/documentation/xcode/understanding-and-improving-swiftui-performance).
-Trip's geometry, density, and scheduling choices remain product-specific contracts.
+For requested native review, include rapid pan/zoom reversal, selected edges,
+long localized labels, light/dark tiles, sheet/fold transitions, Legal attribution,
+VoiceOver, Reduce Motion, and map gestures beside notices and sheets. Describe
+source, algorithm, compilation, and device observations separately; do not treat
+one as proof of the others.

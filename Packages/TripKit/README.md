@@ -1,82 +1,73 @@
 # TripKit
 
-Eight local Swift package products provide the reusable parts of Trip:
+TripKit contains eight local library products. Use the product that owns the
+capability you need; imports are not re-exported. Import TripDomain explicitly
+when referring to values such as `Place`, `TripPlan`, or their service protocols.
 
-- `TripLocalization`: shared localized resources and typed text accessors.
-- `TripDomain`: Sendable values, TripLimits, saved-place selection, injectable service contracts.
-- `TripPlaces`: cancellable native text search, MapKit item conversion, and place-category mapping.
-- `MapEngine`: collision layout, zoom policy, geographic indexing, catalog merging and caching.
-- `TripRouting`: native requests, route values, leg assembly, Maps links, SwiftUI directions UI, route map content, and framing geometry.
-- `TripIntegrations`: bounded booking extraction, explicit Calendar/Reminders exports, native alarms, and visit-time forecasts behind domain contracts.
-- `TripStorage`: local SwiftData actor; model records never escape this target.
-- `TripIntelligence`: itinerary, packing, detail lookup, local stop ordering, and service error presentation behind domain contracts.
+The package uses Swift 6, MainActor default isolation, and iOS/macOS/visionOS 27.3
+minimums. Directions UI is available on iOS and visionOS; its engine and geometry
+also compile for macOS. There are no remote package dependencies.
 
-Implementation targets depend on TripDomain and TripLocalization. No target depends on the
-app or its assets. TripRouting owns its independent observable directions state.
-The package uses Swift 6 language mode with the same default actor isolation as
-the app and targets iOS/macOS/visionOS 27.3. Directions UI supports iOS and visionOS;
-the routing engine and geometry also compile for macOS.
+## Choose a work area
 
-Consumers import the product they use; imports are not re-exported. Add TripDomain
-when referring to values such as Place, TripPlan, or their service protocols.
-The Xcode app links all eight local products, so no package registry is involved.
+Paths below are relative to `Sources/<Target>`.
 
-## Independent work areas
-
-| Target | Start with | Preserve |
+| Product | Start with | Contract to preserve |
 | --- | --- | --- |
-| TripLocalization | Resources/Localizable.xcstrings, TripText | Shared text resources and generated accessors |
-| TripDomain | Places/PlaceProviding, Trips/TripStoring, Trips/ItineraryPlanning, Trips/TripStopOrderSuggesting | Sendable values, Codable compatibility, small public contracts |
-| TripPlaces | PlaceTextSearch, PlaceFactory, PlaceCategory+MapKit | MainActor native requests, place identity/contact values, per-request cancellation |
-| MapEngine | Layout/MarkerLayoutEngine, Catalog/PlaceRepository | Stable IDs, bounded work/cache, cancellation, shared geometry |
-| TripRouting | DirectionsProviding, DirectionsCalculation, DirectionsPlan | MainActor native objects, per-workflow cancellation, stable route identity |
-| TripIntegrations | TripBookingReading, TripSystemActionProviding, TripWeatherProviding | Explicit permission requests, bounded work, stable export identities, stale-result rejection |
-| TripStorage | TripStore → TripDatabase → StoredTrip | Migration, rollback, revision rejection, private SwiftData schema |
-| TripIntelligence | TripPlanningService → ItineraryDraft | Cancellation, supplied-place validation, private generation schema |
+| TripLocalization | `Resources/Localizable.xcstrings`, `TripText.swift` | Shared translations, deferred resources and generated accessors |
+| TripDomain | `Places`, `Trips`, `System` | Sendable values, Codable compatibility, limits and small service protocols |
+| TripPlaces | `PlaceSearching.swift`, `PlaceTextSearch.swift`, `PlaceFactory.swift` | Native search cancellation and stable place conversion |
+| MapEngine | `Layout/MarkerLayoutEngine.swift`, `Catalog/PlaceRepository.swift` | Stable marker IDs, bounded layout/cache work and cancellation |
+| TripRouting | `DirectionsProviding`, `DirectionsCalculation`, `DirectionsPlan` | Native request lifetime, route identity, geometry and host callbacks |
+| TripStorage | `TripStore.swift`, `TripDatabase.swift`, `StoredTrip.swift` | Actor-owned SwiftData records, migration, rollback and revision ordering |
+| TripIntelligence | `TripPlanningService.swift`, `TripStopOrderService.swift`, `TripDetailSearchService.swift` | Cancellation, supplied-data validation and private generation schemas |
+| TripIntegrations | Booking, system-action and weather adapters | Explicit permissions, bounded work, stable export identities and stale-result protection |
 
-PlaceRepository requires a PlaceProviding implementation; the app's
-ApplePlaceProvider supplies live MapKit search results. The package does not
-choose an app bundle or import Explore. Hosts create and retain the public
-DirectionsModel and inject location, search, presentation callbacks, and colors.
-See [directions integration](../../DIRECTIONS.md); no app source copying is needed.
-TripLimits centralizes trip
-editing policy; change consumers together if a public limit changes.
+TripLocalization depends only on Foundation. TripDomain depends on TripLocalization
+and uses Apple geographic frameworks. Every other product depends on those two
+targets, without depending on another implementation product or the app. Keep
+SwiftData records, generated Foundation Models types, and native request handles
+private. [Architecture](../../ARCHITECTURE.md) shows the complete graph.
 
-Coordinate changes to public domain contracts before parallel implementation.
-Keep schemas, MapKit task holders, and generated Foundation Models types private.
+## Host integration
 
-## Shared native place adapters
+The host chooses providers and retains UI-facing sessions. `PlaceRepository`
+accepts `PlaceProviding`; it does not select an app bundle or import Explore.
+`DirectionsModel` receives location, search, presentation and appearance through
+its host contract. See [Directions integration](../../DIRECTIONS.md) for that API.
 
-TripPlaces depends only on TripDomain, TripLocalization, and Apple frameworks.
-`PlaceTextSearch` exposes text and native-completion searches plus cancellation;
-the host supplies it through `PlaceSearching` and the caller retains the operation.
-`PlaceFactory.make` converts an MKMapItem into
-a Place, and `PlaceCategory.mapCategories` supplies search filters. The native
-request handle and reverse category lookup remain internal.
+`TripStore` implements `TripStoring`; records and the local-only ModelContainer stay
+inside TripStorage. Planning, detail lookup, packing, booking import, native exports
+and weather expose domain contracts. The app's `AppTripServices` composes live
+providers; [Dependencies](../../docs/Dependencies.md) describes their lifetimes.
 
-Reusing a search replaces and cancels its previous native operation. Cancelling
-the calling task or invoking `cancel()` prevents that operation from publishing a
-result. Completion cleanup is scoped to the originating operation, so an older
-request cannot clear or cancel a newer one. Features still own their UI generations.
+Coordinate public domain changes with consumers before implementation. `TripLimits`
+is shared editing policy, and Codable defaults are part of persisted-data
+compatibility. A package may not reach into app resources to avoid an explicit
+contract.
 
-Explore and Trips use these adapters. The app's Shared/Places owner retains
-observable autocomplete state, completion tokens, annotation text, and colors
-from app assets. Feature models retain search debounce, timeout, generation,
-selection, and navigation. TripPlaces reads no app resources and imports no
-feature types; it is not an extracted Explore or Trips feature.
+## Native place search
 
-AppTripServices injects the search factory into Trips. Local previews omit that
-capability, so constructing a picker or editing its query cannot start live search.
+`PlaceSearching` exposes text and native-completion search plus cancellation.
+`PlaceTextSearch` retains the native operation; `PlaceFactory.make` converts an
+`MKMapItem` into a `Place`, and `PlaceCategory.mapCategories` supplies native filters.
+Reverse category lookup remains internal.
 
-`Tests/TripPlacesTests` exercises conversion and category mapping through public
-imports with local MKMapItem values. Those tests make no network requests; they
-do not verify live search, autocomplete, or rendered map behavior.
+Reusing an operation cancels its previous request. Task cancellation or `cancel()`
+prevents that request from publishing; cleanup belongs to the originating request
+so an old completion cannot clear a newer one. Features still own debounce,
+timeouts, selection and UI-generation checks.
 
-Run `bash scripts/check.sh` at the repository root after source changes. When a
-build is requested, `bash scripts/build.sh <Target>` compiles that target and its
-dependencies on the host Mac. These checks do not verify iOS UI integration.
-Existing routing tests are documented in [DIRECTIONS.md](../../DIRECTIONS.md);
-algorithm checks and performance baselines live in [Performance](../../Performance/README.md).
+Explore and Trips use this package. Observable autocomplete and app colors stay in
+`trip/Shared/Places`. Trips receives a search factory from App composition; local
+previews omit it and cannot silently start live search. This is a shared adapter
+boundary, not a separately compiled Explore or Trips feature.
 
-See [architecture](../../ARCHITECTURE.md) for dependency rules and
-[contributing](../../CONTRIBUTING.md) for focused builds and source checks.
+## Verification
+
+Follow [Contributing](../../CONTRIBUTING.md) for source checks and focused package
+builds, and [Testing](../../docs/Testing.md) for existing suites and their scope.
+TripPlaces conversion tests use local MapKit values, not live requests. Native
+search, routing UI and system services still need their own runtime verification.
+The [performance harness](../../Performance/README.md) runs selected production
+sources with `TRIP_STANDALONE`; normal app and package builds do not define it.

@@ -1,11 +1,8 @@
-# Skill ownership and task selection
+# Select and maintain task guidance
 
-Use **one global `app-development` skill** for common app engineering. SwiftUI,
-iPad, adaptive layouts, modernization, review, data, and system integrations are
-topics inside that skill, not independent global entrypoints.
-
-Trip keeps only its product contracts in `.agents/skills/trip-*`. Source checks,
-context generation, and scaffolding work without personal global installations.
+Use this guide when choosing instructions for a task or updating reusable guidance.
+Repository Markdown should act as task guidance: a clear purpose, owning paths,
+contracts, steps, and relevant checks. Keep temporary run reports out of it.
 
 ## Find the relevant contracts
 
@@ -14,62 +11,56 @@ python3 scripts/workspace.py locate trip/Features/Explore --json
 python3 scripts/workspace.py context Explore --json
 ```
 
-The context packet identifies owners, dependency guides, and conditional Trip
-skills. Every global route points to `app-development`; its entrypoint selects
-only the references needed for the actual task. Do not read every topic by default.
-A simple copy edit needs no framework guidance.
+Read the owner guide and only the dependency guides crossed by the task. Context
+skill candidates have a `when` condition; do not load every candidate by default.
+A wording correction needs its owning document, not a framework review.
 
-| Task | Trip contract | Topic inside app-development |
+Use the global `app-development` skill for common native app engineering when it is
+installed. SwiftUI, adaptive layouts, concurrency, review, and system integration
+are topics within it. Trip's discoverable skills in `.agents/skills/trip-*` contain
+local adoption contracts.
+
+| Task | Trip skill | Global app-development topic |
 | --- | --- | --- |
 | State ownership and composition | `trip-swiftui-vcm` | Architecture, state, concurrency |
 | Search, markers, camera, map chrome | `trip-map-decluttering` | Maps, gestures, performance |
 | Route engine, sheets, framing, stops | `trip-routing` | Maps, navigation, presentations |
 | Split navigation, scenes, platform integration | `trip-universal-app` | Adaptive layouts, windows, spatial input |
 | Saved-data system surfaces | `trip-system-integrations` | App Intents, widgets, activities, intelligence |
-| Trip previews and requested compilation | `trip-previews-build` | Previews, compiler diagnosis, verification |
-| Trip target configuration and profiling | `trip-xcode-tooling` | Tooling and performance diagnosis |
+| Previews and requested compilation | `trip-previews-build` | Previews, compiler diagnosis, verification |
+| Target configuration and profiling | `trip-xcode-tooling` | Tooling and performance diagnosis |
 
-## Maintain one source of common guidance
+If a global skill is unavailable, continue with Trip contracts, installed SDK
+declarations, and primary documentation. Do not install or vendor a project-local
+copy. Source checks, context generation, and scaffolding must work without personal
+skill directories.
 
-Reusable techniques extend the appropriate reference in `app-development`.
-Trip paths, model names, UX choices, privacy rules, source limits, and commands
-stay in project rules, owner guides, or the relevant Trip skill. Keep versions
-in baseline/evidence content. Do not create another global specialist for a topic
-already covered by the unified skill, or copy/symlink the global skill into Trip.
+## Put each instruction in its owner
 
-The installed global skill lives in the configured user skill directory; on this
-workstation it is `~/.codex/skills/app-development`. Its standalone source package
-is maintained separately and can be shared without Trip or private home-directory
-resources. The user-wide ownership policy lives in `~/.codex/AGENTS.md`.
-Historical third-party originals and migration backups stay outside all skill
-discovery roots and outside the public package.
+Keep Trip paths, model names, UX choices, data rules, source limits, and commands
+in project guides or Trip skills. Extend global guidance for reusable framework
+methods. Do not copy or symlink global skills into the repository or create
+overlapping global specialists.
 
-## Fallback and verification
+Keep formal `SKILL.md` entrypoints in their existing discovery roots; use linked
+project guides for detailed procedures. Name skills by responsibility and put
+platform minimums in their content. Keep historical archives outside discovery
+roots. Each file in a Trip project skill must remain within 50 physical lines.
 
-If the global skill is unavailable, use Trip contracts, installed SDK declarations,
-and primary documentation. Do not install a project-local substitute.
-`workspace.py check` validates context paths and the single global route.
-`check_project_skills.py` checks Trip-only entrypoints, metadata, references, and sizes.
-Both run in `bash scripts/check.sh` without reading personal skill directories.
+Runtime Siri skills under `trip/Resources/Skills.skillsbundle` are application
+resources. Edit them using [System integrations](../SYSTEM-INTEGRATIONS.md); preserve
+tool identifiers, confirmation rules, and resource metadata. Do not rewrite them
+as contributor documentation.
 
-Live `skills/list` discovery checks active names, scope, and parsing errors.
-Package validation checks self-contained links and a single entrypoint. Neither
-proves perfect implicit selection; use realistic task walkthroughs and report
-source checks, builds, and runtime verification separately.
+## Check a guidance change
 
-## Task selection review
+```sh
+python3 scripts/workspace.py check
+python3 scripts/check_project_skills.py
+```
 
-The [engineering lessons](EngineeringLessons.md) map demonstrated problems to their
-owning contracts and checks. Use these concrete walkthroughs when changing routing:
-
-| Example task | Relevant selection | Keep outside scope |
-| --- | --- | --- |
-| Cancel a packing request when its review closes | Trips context, trip-swiftui-vcm, app-development state/concurrency | Map layout and target configuration |
-| Fix a Duo control after unfolding | Explore/App context, trip-map-decluttering and trip-universal-app, adaptive/map references | New custom controls or navigation redesign |
-| Reuse native place conversion in another client | TripPlaces context, app-development architecture | App-owned appearance and autocomplete state |
-| Diagnose a hosted model-test build | App context, trip-previews-build and trip-xcode-tooling, compiler/verification references | Physical Siri evaluation |
-| Correct wording in a guide | Owning document | Framework skill bulk reading |
-
-These are reviewed selection examples, not a claim of automated skill-discovery
-accuracy. Repository route tests validate the catalog; actual task selection still
-requires judgment against the request and available evidence.
+Keep owner-guide references, entry points, and conditional routes synchronized.
+Validate realistic task selection as well as links: packing cancellation should
+lead to Trips/concurrency; a Duo map issue to Explore/adaptive guidance; a hosted
+test build to App/build tooling. Read [Engineering safeguards](EngineeringLessons.md)
+for cross-cutting Trip contracts. Store command outcomes in the PR, not this guide.

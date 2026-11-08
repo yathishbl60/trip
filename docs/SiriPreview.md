@@ -1,212 +1,113 @@
-# Siri preview adoption
+# Siri integration workflow
 
-Work started 2026-11-04 after committing the existing UI changes as `abf1779`.
-The installed toolchain is Xcode 27.3 beta 1 (27C5020n). The user explicitly raised
-Trip's deployment baseline and aligned TripKit platforms to 27.3. This is an implementation
-and verification record; unchecked work is not a claim of delivered behavior.
+Use this guide when exposing a Trip action to Siri, changing saved entities,
+editing runtime app skills, or reviewing generated App Intents metadata. Trip's
+27.3 targets use the installed SDK APIs directly while preserving iOS-only native
+capabilities. [System integrations](../SYSTEM-INTEGRATIONS.md) owns product behavior.
 
-## Requirements and evidence
+## Find the owner
 
-- [x] Commit the existing changes before Siri work; working tree was clean afterward.
-- [x] Read Apple's Siri AI Developer Preview and the referenced Xcode-skills commit.
-- [x] Inspect installed Siri integration/evaluation guidance and public SDK declarations.
-- [x] Update the unified global app-development skill with reusable Siri guidance.
-- [x] Update Trip's system-integration skill with local adoption and verification paths.
-- [x] Review the intent inventory and exposed tools' metadata, execution, errors, and queries.
-- [x] Expose useful actions as 27.3 tools without changing existing Shortcuts identifiers.
-- [x] Make entities discoverable, distinguishable, and authenticated where required.
-- [x] Add useful generable input for a real existing planning task, with canonical validation.
-- [x] Ship app skills for multi-step Trip tasks through a compiled Skills.skillsbundle.
-- [x] Keep snippets and onscreen entities connected to durable records and exact actions.
-- [x] Run source checks, authorized builds, and Siri metadata analysis for en/hi/kn.
-- [x] Add focused deterministic regression checks for new mutation behavior.
-- [x] Prepare, type-check, compile, and link SiriEvaluations scenarios grounded in actual metadata.
-- [x] Honor the latest build-only instruction; leave physical evaluations and
-  per-scenario runtime reports deferred until execution is requested again.
-- [x] Record remaining preview/device limitations separately from compiled behavior.
+| Change | Owning path |
+| --- | --- |
+| App-only intent, entity, or query | `trip/App/Intents` |
+| Canonical execution and foreground handoff | `trip/App/Models/AppRuntime+*.swift` and App request handling |
+| Shared host/widget entity or interaction | `trip/Shared/System` |
+| Reusable saved-data operation | `Packages/TripKit/Sources/TripDomain` |
+| Window-local review and editing | `trip/Features/Trips` |
+| Runtime Siri instructions | `trip/Resources/Skills.skillsbundle/Skills` |
+| Translated metadata | `Packages/TripKit/Sources/TripLocalization` |
+| Siri scenario expectations | `Performance/SiriEvaluations` |
 
-The [prepared evaluation sources](../Performance/SiriEvaluations/README.md) cover
-ten Siri scenarios and compile against iPhoneOS 27.3. The user authorized the
-dedicated `TripSiriEvaluations` target, then explicitly requested compilation
-without execution. The global skill documents scenario authoring, device
-prerequisites, standard metrics, and per-turn report analysis.
+Start with `python3 scripts/workspace.py context App --json` and follow the actual
+contracts crossed by the change. Runtime app skills are compiled app resources;
+they are distinct from repository/global engineering skills.
 
-## Delivered behavior
+## Design an action
 
-The original 28-tool baseline covered opening Explore, Trips, a new-trip form, a saved
-trip, an exact detail, or a checklist; reading an itinerary, day, next step, or
-checklist; adding and setting checklist items; opening packing, itinerary-draft,
-booking-review, and place-search flows; starting day tracking; setting visit
-timing; marking an exact saved place visited; directions to a saved place; creating
-a trip; opening a trip section, day tool, or trip review tool; and editing an exact
-saved detail; renaming checklist items; adding built-in packing presets; and
-preparing a new booking/activity draft. Existing intent identities and the ten
-automatic shortcuts are preserved.
+Identify a concrete user request and reuse its existing workflow. Decide whether
+the action reads saved data, performs an explicit write, or opens a review. A review
+handoff must not imply that the booking, export, alarm, or generated plan is saved.
+Preserve shipped intent names, parameter identities, entity IDs, enum raw values,
+and the ten automatic App Shortcut declarations.
 
-The new navigation tools cover itinerary, Today, map, checklist, collections,
-detail search, day schedules, planning previews, day weather, adding places,
-trip editing, and Calendar/Reminders export reviews. Day-map requests retain the
-requested saved day. Editor/export handoffs require the existing in-app review;
-they do not automatically save a draft or send data to another app.
+Use background execution for suitable saved-data operations. Foreground actions
+must open useful existing UI. Set authentication and execution targets explicitly
+where required. Keep platform-specific actions scoped to their supported platform;
+Review Saved Booking Alarm is iOS-only and cannot accept a saved place visit.
+Configuration and snippet internals do not need to become public tools.
 
-Preset additions and renaming share production domain operations with the UI.
-Presets preserve completed items and require enough capacity for every missing
-item. Explicit renaming preserves identity and completion. Checklist mutations
-protect active editing sessions and return canonical entities after persistence.
-New flight/train/stay/reservation/activity/free-time requests open existing forms
-and revalidate the saved day, event limit, and title before presentation.
+Descriptions should explain the actual travel task, parameters, result, and limits.
+Adopt a system schema only when the saved data and operation satisfy its meaning.
+Do not change travel semantics merely to silence a schema suggestion.
 
-Set Visit Timing uses a generable value separate from the saved target entity.
-It preserves unspecified fields, validates minute ranges, checks destination-local
-clocks including DST, protects unsaved editing, and flushes before success.
-Mark Saved Place Visited verifies the actual tracked trip/day and recorded stop
-after the idempotent operation. Directions opens Apple Maps using saved coordinates.
-Neither tool silently advances another place or treats a booking as a visit.
+## Validate saved data
 
-Saved detail rows expose native context-menu previews and Share actions. Shared
-text contains the saved title, source day, saved times, and location, excluding
-private notes. Lookup rows and next-step snippets provide exact on-screen entity
-identifiers through the app's existing composition boundary. Opening a trip from
-the library donates its matching intent; deletion removes matching donations.
+Resolve entities through the canonical AppRuntime library rather than their display
+properties. Preserve requested identifier order and omit deleted IDs in queries.
+Use trip-qualified identities for nested records and full bounded enumeration when
+implementing EnumerableEntityQuery. Keep privacy-sensitive queries authenticated.
 
-The initial four runtime skills cover day planning, departure preparation, booking review,
-and navigation; the expansion below adds collection organization. Stored-trip/detail entities have described properties, authentication,
-and safe transferable text. Checklist discovery enumerates the bounded canonical
-library without publishing checklist text to Spotlight or App Group snapshots.
+Before mutation, check edit protection, target identity, capacity, timing, and
+repeat-call semantics. Keep validation and the synchronous library update together;
+flush before reporting success. Revalidate deferred foreground requests on delivery.
+New async work needs cancellation and stale-result protection.
 
-## Workflow coverage expansion on 2026-11-08
+| Workflow | Contract to preserve |
+| --- | --- |
+| Visit timing | Separate saved target from generated changes; preserve omitted fields and validate destination-local clocks/DST |
+| Collections | Reuse one normalized-name match, reject ambiguity, preserve identity on rename, avoid duplicate saved places |
+| Visit movement | Move within the saved trip; preserve visit identity/notes/timing and reject booking, duplicate, or full targets |
+| Review handoff | Preserve existing edits and require the existing in-app confirmation |
+| Day directions/stop order | Use feature-owned coordinate/capacity/tracking checks; show notices on the itinerary; apply only reviewed proposals |
 
-The new collection tools create, rename, read, and save existing itinerary places
-into collections. Authenticated collection discovery includes unscheduled saved
-names without adding them to Spotlight or shared widget snapshots. An additional
-runtime skill explains shortlist semantics, ambiguity, and duplicate-safe edits.
+Private notes stay out of entity properties, system projections, answers, and shared
+detail text. Authenticated checklist/collection actions can expose their task data
+without publishing it to Spotlight or widget snapshots. Optional projection fields
+must preserve legacy decoding.
 
-Move Saved Place to Day shares its canonical operation with the UI, preserves the
-original visit, and rejects bookings, capacity violations, and duplicate places.
-Optional saved-minute properties let Siri inspect duration and personal allowances
-before relative timing changes. Existing snippets and Spotlight use the same projection;
-older snapshots decode the new optional fields as missing.
+## Maintain runtime skills
 
-Day tool choices now include directions and stop-order review. An iOS-only booking
-alarm tool opens the existing review for an exact booking. End Trip Day Tracking
-is exposed as a tool with authentication and a description of its retained data.
-The ten automatic shortcuts and existing action/entity identifiers remain unchanged.
+The bundle contains day planning, departure preparation, booking review, navigation,
+and collection organization. Extend the owning skill for the corresponding task.
+Use exact shipped tool meanings and distinguish opening a review from completing it.
+Describe ambiguity, canonical reads, recoverable errors, and requested mutations.
+Skills must not invent bookings, authorize unrelated actions, or claim success after
+a failed tool call. Every tool must remain useful without a skill orchestrating it.
 
-Widget timeline relevance uses confirmed saved time boundaries, explicit tracking,
-and unfinished departure checklists. It informs native Smart Rotate on iPhone/iPad;
-it neither promises placement nor adds location collection or background polling.
+## Metadata and localization
 
-Source, compilation, and metadata evidence are recorded separately under ignored
-`.build/verification` and `.build/system-coverage`. No new tests are introduced;
-the existing day-tool test's case list retains its original five reviewed tools.
-New behavior, Siri routing, native permission/review flows, and Smart Stack placement
-remain for manual verification. Hindi/Kannada additions retain `needs_review`.
+Keep titles, parameter descriptions, entity properties, and summaries in the shared
+catalog with English, Hindi, and Kannada entries. Mark translations needing language
+review honestly. Run the localization generator rather than editing generated host
+catalogs/accessors. Follow [localization](Localization.md).
 
-### Remaining gaps identified in this review
+Preserve concrete KeyPath interpolation in parameter summaries and the static
+AppShortcut builder. App compilation must complete metadata extraction; Swift
+source parsing or type-checking alone does not establish exported metadata.
 
-- Collections can expose unscheduled names, but individual unscheduled places still
-  need their own stable entity before Siri can schedule them directly.
-- Exact-target undo is needed before exposing repeat-safe visit recovery as a tool;
-  the existing undo-last Shortcuts action is not expanded into a custom Siri tool.
-- Calendar export currently covers bookings, not every scheduled visit.
-- Reminders export remains a copy operation; external deletion/edit reconciliation
-  needs native item identifiers and an explicit recovery policy.
-- Native property filtering for saved trips and a complete typed day entity remain
-  separate improvements; existing queries and day-number actions keep their contracts.
-- WeatherKit and Private Cloud Compute retain their documented signing/availability
-  limits. The app does not claim live services that are disabled in its configuration.
+```sh
+bash scripts/check.sh
+bash scripts/build.sh app Debug
+bash scripts/build.sh visionOS Debug
+xcrun sirimetadataanalyzer .build/xcode/Build/Products/Debug-iphonesimulator/trip.app --format json --language en
+xcrun sirimetadataanalyzer .build/visionos/Build/Products/Debug-xrsimulator/trip.app --format json --language en
+```
 
-## Expanded coverage on 2026-11-05
+Run builds and analyzer commands within the requested verification scope. Repeat
+language analysis for supported metadata locales when relevant. Inspect tool/entity/
+skill exports and every diagnostic; analyzer suggestions and exported counts do not
+prove routing, conversation success, or language quality.
 
-The existing evaluation target now contains ten Siri scenarios and 50 local-model
-cases covering navigation, preparation, booking drafts, day tools, saved-data
-privacy, timing, and persistence recovery. These sources compile and link in a
-generic iPhoneOS Debug `build-for-testing`; none have been executed. See the
-[coverage inventory](../Performance/SiriEvaluations/README.md) for scope and limitations.
+## Review native behavior
 
-## Navigation update verification on 2026-11-05
+For requested runtime work, follow [Siri evaluations](../Performance/SiriEvaluations/README.md)
+using dedicated fixtures. Check cold launch, exact and ambiguous targets, deleted
+records, current edits, repeated requests, persistence failure/retry, onscreen
+context, and the distinction between a review and a completed write. Review native
+sharing, Maps handoff, permissions, and platform availability in their owning flows.
 
-- Generic iOS Simulator Debug app/widget compilation passes with Xcode 27.3 beta 1.
-- Generic iPhoneOS Debug `build-for-testing` passes, including the existing eight
-  Siri scenarios and five new local-model wayfinding checks. No tests were executed.
-- English metadata analysis reports 42 actions, 25 tools, four entities, and four
-  compiled app skills, with zero errors/warnings. Six SMA701 suggestions compare
-  travel tools to unrelated schemas; the tool descriptions retain their travel meaning.
-- Source checks cover architecture, previews, localization, and file/member limits.
-  New Hindi/Kannada translations are present and marked `needs_review`.
-- The new title menus, native transitions, row editing, voice routing, and keyboard
-  behavior have not been exercised in a simulator or on a device. This update's
-  visionOS configuration is unchanged and has not been compiled.
-
-## Earlier baseline verification on 2026-11-05
-
-- `bash scripts/check.sh`: ownership, localization, previews, Swift/member limits,
-  project skills, and platform contracts pass.
-- `bash scripts/build.sh app Debug`: generic iOS Simulator build passes with
-  Xcode 27.3 beta 1, including TripWidgets and App Intents metadata extraction.
-- `bash scripts/build_siri_evaluations.sh Debug`: generic iPhoneOS 27.3
-  `build-for-testing` passes. The app, widgets, and hosted test bundle compile and
-  link with strict Swift 6 concurrency; the log reports `TEST BUILD SUCCEEDED`
-  without compiler errors or warnings. Tests were not executed.
-- The app contains `Metadata.appintents/Skills.skillsc`; all three skills appear
-  in the public metadata analyzer output.
-- Analyzer en/hi/kn: 38 actions, 20 tools, four entities, zero errors/warnings.
-  Four SMA701 suggestions match unrelated Find My, books, presentation, and photos
-  schemas. Trip keeps its actual travel semantics instead of adopting those schemas.
-- Hindi/Kannada metadata is present; those translations retain `needs_review`.
-  The analyzer skips or limits some language-dependent rules outside English.
-- Saved-data regression checks pass, including timing validation, preservation,
-  repeated edits, next-day arrivals, missing/repeated DST clocks, and privacy.
-- The app installs and launches on the iOS 27.3 iPhone 18 Pro simulator. Visual
-  review was not completed because Device Hub computer-use access was not approved.
-- Physical Siri conversations/evaluations, donation delivery, sharing presentation,
-  actual Maps handoff, and this revision's visionOS compilation remain unverified.
-  The latest user instruction is build-only; no additional runtime checks run.
-
-Logs and analyzer reports are local ignored artifacts under `.build/siri-preview`.
-Global skill edits live outside this Git repository; only Trip adoption guidance
-is committed here. The global quick validator passes using an isolated, SHA-256
-verified PyYAML dependency from PyPI; no system Python installation was changed.
-The skill installer also checked links, hashes, and project file limits.
-
-## Adoption decisions
-
-Existing intents keep their types, parameters, and automatic phrases. The user
-approved a 27.3 minimum, so tools and entity property descriptions use the APIs
-directly without redundant 27.3 availability gates. Private notes remain excluded
-from system metadata. Engineering guidance retains availability rules for other apps.
-
-Siri finds stored records through Spotlight or supported entity enumeration.
-Existing Shortcuts search actions remain available without becoming duplicate Siri
-search tools. UI-only snippet/control intents remain internal. Every exposed tool
-must work from a cold launch or return an actionable error, independently of skills.
-
-The app's Siri skills are runtime resources, distinct from Codex engineering skills.
-They explain Trip-specific travel semantics and multi-step tasks; they do not add
-screens or map controls. Siri-generated data must pass the same saved-data rules
-as manual editing, and success requires durable persistence.
-
-## Referenced update coverage
-
-The pinned upstream commit changes 30 files. Its new Siri integration entrypoint
-and five references cover tools, generable values, entity metadata, runtime skill
-bundles, and metadata analysis. The new evaluation entrypoint and four references
-cover scenario authoring, public APIs, device execution, and report analysis.
-Both App Intents entrypoint changes revise discovery descriptions rather than API
-contracts. Device interaction adds foldable hinge input. Swift Testing guidance
-is reorganized and clarified. The macOS touch entrypoint and twelve task references
-concern AppKit direct-touch handling; Trip has no macOS/AppKit target, so those
-cannot justify adding AppKit or UIKit to this app. Review reusable guidance in its
-global owner. Repository/plugin metadata files describe packaging, not app features.
-
-## Sources and preview limits
-
-- [Apple overview](https://developer.apple.com/documentation/appintents/siri-ai-developer-preview)
-- [Custom actions and content](https://developer.apple.com/documentation/appintents/bringing-custom-actions-and-content-to-siri)
-- [App skills](https://developer.apple.com/documentation/appintents/orchestrating-complex-actions-with-app-skills)
-- [Pinned upstream update](https://github.com/artemnovichkov/xcode-skills/commit/6fa4005b8836f2c7eae4f45ab418cfc9ec5dec1e)
-
-Apple restricts preview execution to development-signed builds and internal
-TestFlight on supported Apple Intelligence devices. External TestFlight and App
-Store distribution do not enable this preview. SiriEvaluations requires a physical
-27.3+ device; simulator compilation and metadata analysis do not prove Siri behavior.
+Check Apple's current [Siri AI Developer Preview requirements](https://developer.apple.com/documentation/appintents/siri-ai-developer-preview)
+for device eligibility, signing, and distribution before evaluating. Simulator
+compilation and metadata analysis do not establish runtime availability. Primary
+API references are [custom actions and content](https://developer.apple.com/documentation/appintents/bringing-custom-actions-and-content-to-siri)
+and [app skills](https://developer.apple.com/documentation/appintents/orchestrating-complex-actions-with-app-skills).

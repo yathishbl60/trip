@@ -1,53 +1,61 @@
-# Visual consistency review · 2026-11-05
+# Review visual consistency
 
-Scope: source review of shared components, Explore filters/details/gallery/map
-presentation, Trips library/editor/save/checklist/schedule/journey/assistant views,
-reusable directions, Siri snippets, widgets, and Live Activities. The task is to
-make existing planning and travel flows easier to read and more predictable.
+Use this workflow for changes to existing Trip screens, shared components,
+directions, widgets, and Live Activities. Start from the user task and the
+[design-system contract](DesignSystem.md); a review does not authorize a redesign.
+For framework techniques, use the relevant topics in the global app-development
+skill through [Skills](Skills.md).
 
-| Finding | Change and reason |
-| --- | --- |
-| Similar row relationships used 2, 3, 4, or 6 point text gaps, with 10/12/14/16 point surrounding gaps | Adopt the existing 4/8/12/16/20 content scale; reserve 2 for compact artwork/system surfaces. Shared numerical checks keep routing/widgets aligned without app dependencies. |
-| Save destinations duplicated place-row layout and used smaller metadata text | Reuse TripPlaceLabel with headline identity, secondary subheadline metadata, and the same title/subtitle gap. |
-| Fixed symbol/number frames could become smaller than their scalable text | Scale symbol tiles, itinerary numbers, and direction step/picker badges relative to their semantic text role. Place labels stack at accessibility sizes. |
-| A scaled minimum category-column width could exceed a narrow container | Use one flexible column at accessibility sizes, with counts below the title. Keep the existing glass selection animation inside the filter sheet. |
-| Orange clock warnings and red error paragraphs differed from existing neutral schedule warnings | Reuse TripWarningLabel: primary text, an explanatory warning symbol, and wrapping. Native Delete roles stay destructive. |
-| Similar completion/value changes used several slightly different timings | Centralize ordinary feedback at 0.2 seconds, selection/completion at 0.25, and custom press feedback at 0.16, all with explicit Reduce Motion handling. |
-| Category symbol transition was applied to the whole button; the controller also opened a broad animation transaction | Scope replacement to the symbol and let the filter view own selection motion. Downstream map/search work no longer inherits the controller transaction. |
-| Live Activity action buttons shared a horizontal row with large text | Stack the activity footer at accessibility sizes, keeping actions below its context. |
-| Existing adaptive palette had no automated contrast/variant gate | Preserve the established palette and add checks for all appearance variants, solid reference contrast, 12% tint washes, and increasing contrast. |
+## Locate the owner and adjacent surfaces
 
-## Preserved decisions
+1. Identify the changed view, its controller/model, and the token or component it
+   consumes. Use `python3 scripts/workspace.py locate <source-path> --json`.
+2. Read the owning guide and inspect the current container: native list/form,
+   sheet, map overlay, sidebar, widget, or activity. Preserve its navigation.
+3. Find consumers of a shared change. Include app, routing, and extension surfaces
+   without introducing dependencies between them merely to share presentation.
+4. Choose local fixtures that expose long content, empty/loading/error states,
+   large text, selection, and the smallest supported container.
 
-Explore/Trips navigation, native forms/toolbars/sheets, map annotation geometry,
-camera timing, saved data, and existing contextual actions retain their owners.
-This pass adds no screens or permanent map controls. Map glyph/caption sizing and
-clearance remain documented geometry exceptions; ordinary content must not copy
-those fixed sizes. Widgets retain their native compact hierarchy and rendering modes.
+## Review the relationships
 
-The palette itself did not need replacement: all 23 named colors meet the 4.5:1
-reference threshold across light/dark and increased-contrast variants. The minimum
-tested reference pair is 5.27:1. This does not measure translucent materials, imagery,
-system surfaces, or the actual device's appearance.
+| Area | Check | Trip owner or rule |
+| --- | --- | --- |
+| Spacing | Similar title/metadata and row relationships use the same scale; fixed map geometry stays intentional | Design-system spacing; documented geometry exceptions |
+| Place identity | Title, category, address, and selected state stay recognizable across saving, search, and detail | Reuse `TripPlaceLabel` where it fits the same task |
+| Typography | Long text wraps or truncates intentionally; it does not shrink to hide layout problems | Semantic text roles; headline identity and secondary metadata |
+| Symbols and numbers | Badges grow with their text; color is not the only state cue | Scaled symbol tiles and itinerary/directions badges |
+| Narrow and accessibility layouts | Columns become flexible or stack; counts/actions remain associated with their content | Category choices, place rows, and activity footers |
+| Warnings and recovery | Explain the issue and next action without inventing competing error styling | `TripWarningLabel`; native destructive roles for Delete |
+| Motion | The smallest owning view animates the changed value; background work does not inherit broad transactions | Shared motion recipes and explicit Reduce Motion behavior |
+| Palette | Semantic colors remain legible in every catalog variant and over the actual surface | Adaptive palette; distinguish reference contrast from rendered materials |
+| Native interaction | Toolbars, sheets, forms, gestures, and dismissal remain predictable | Existing platform presentation and feature owner |
 
-## Verification boundary
+A geometry exception is a reasoned product decision, not a substitute for using
+an existing spacing or text token. Map glyph/caption dimensions and collision
+clearance belong to the map contract; ordinary content must not copy them.
 
-- Source architecture, ownership, localization, preview presence, Swift file/member
-  limits, skill limits, and the new design-policy gate are checked by `scripts/check.sh`.
-- The source gate passed across 927 Swift files and 236 view files; its design-policy
-  subset covered 654 Swift files and 23 adaptive colors. Isolated temporary fixtures
-  confirmed rejection of fixed fonts, literal spacing/insets/colors/motion, colored
-  warnings, repeated animation, missing palette variants, weak contrast, and spacing
-  drift between targets. Native/tokenized styles and preview-only geometry passed.
-- Deterministic previews were added or extended for narrow category choices, large
-  symbols, save destinations, warning forms, routing search, and activity footers.
-  Preview declarations have not been rendered in this pass.
-- The final UI changes have not been compiled. Earlier successful iOS app and Siri
-  evaluation-target builds predate this visual pass; the subsequent build request
-  was declined, so no further build or app execution was performed.
-- Runtime acceptance remains open for compact/wide iOS and visionOS layouts, actual
-  materials, VoiceOver, increased contrast, Reduce Motion/Transparency, rapid changes,
-  and navigation/dismissal. Source checks do not establish those outcomes.
+## Exercise the interaction when runtime review is requested
 
-Future changes follow [the shared visual contract](DesignSystem.md); AGENTS.md and
-the development workflow point contributors to the same rules and source gate.
+- Compare compact, wide, short, and accessibility-size layouts in their real
+  containers. Include long localized names and empty or partially available data.
+- Check light/dark appearance, increased contrast, Reduce Transparency, and
+  readability over map tiles, images, and materials.
+- Use VoiceOver and keyboard/focus navigation. Confirm labels, selected traits,
+  action order, touch targets, and equivalent actions for gesture-only flows.
+- Toggle Reduce Motion, repeat selection changes, and dismiss during an update.
+  Inspect replacement motion on the symbol rather than the whole row/control.
+- Revisit adjacent save/edit/cancel/delete, map gestures, sheet resizing, and
+  navigation flows. A shared component change can affect all of them.
+
+## Check and describe the change
+
+Run `python3 scripts/check_design_system.py` for the focused source policy, or
+`bash scripts/check.sh` for the complete source gate. Keep geometry exceptions in
+`scripts/design_system_policy.json` with a current anchor and a concrete reason.
+Do not add broad exclusions to make a local layout pass.
+
+Use the requested build/runtime scope from [Contributing](../CONTRIBUTING.md).
+Record affected components, fixtures, exercised cases, and unresolved behavior in
+the change description. Source checks establish policy compliance; compilation
+and rendered interaction checks answer different questions.

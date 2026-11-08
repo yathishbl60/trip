@@ -1,6 +1,7 @@
 # Place photo gallery
 
-The gallery code is retained in Explore, but the app currently supplies no photos.
+Use this guide to maintain the retained gallery or connect a real photo source.
+The gallery code is in Explore, but the app currently supplies no photos.
 `PlaceDetailPhotoView` constructs `PlaceGalleryModel(photos: [])`, so the gallery
 entry is hidden. There is no live photo provider or bundled gallery image set.
 
@@ -50,7 +51,8 @@ Reduce Motion suppresses custom motion and interactive grid interpolation.
 4. Check compact/wide layouts, pinch cancellation and anchors, paging versus zoom,
    return positioning, sharing, accessibility and Reduce Motion.
 
-The layout was designed around a small collection. It has no enforced twelve-photo
+Keep loading and layout bounded: the implementation targets a small collection.
+It has no enforced twelve-photo
 limit and should not be treated as an unbounded library implementation. Source
 checks are available through `bash scripts/check.sh`; compilation and interaction
 verification require separate requested builds and runtime checks.

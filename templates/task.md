@@ -1,5 +1,9 @@
 # Task: <concrete user outcome>
 
+Use this brief for a substantial feature or cross-owner change. For a focused fix,
+use the PR description. Remove fields that do not apply; keep completed execution
+results in the PR rather than adding task logs to the permanent guides.
+
 ## User value and acceptance
 
 - Current task and friction:
@@ -24,7 +28,6 @@
 - Coherent implementation steps:
 - Deterministic preview cases:
 - Authorized verification commands:
-- Source checks / compilation / executable checks / visual verification results:
-- Remaining unverified behavior:
+- Checks needed for source / compilation / behavior / visual review:
 - Documentation or decision record:
-- Final review: acceptance cases met, adjacent workflows preserved, and known gaps stated:
+- Review focus: acceptance cases, adjacent workflows, and recovery paths:

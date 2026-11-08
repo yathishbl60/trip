@@ -1,93 +1,98 @@
-# Trip Siri behavior evaluations
+# Siri evaluations
 
-The `TripSiriEvaluations` Swift Testing target supports a physical iOS 27.3+
-destination and has its own shared scheme. The user authorized the target, then
-restricted verification to compilation on 2026-11-05. Do not run its scenarios
-until execution is explicitly requested again.
+`TripSiriEvaluations` is the existing hosted Swift Testing target for Siri scenarios
+and related local-model contracts. It has a shared Xcode scheme and a physical
+iOS 27.3+ evaluation destination. It is separate from the deterministic general
+`TripAppTests` / `TripModels` host described in [Testing](../../docs/Testing.md).
 
-`bash scripts/build_siri_evaluations.sh Debug` compiles and links the app, widgets,
-and test bundle with `build-for-testing`, an explicit iPhoneOS SDK, and signing
-disabled. It does not install an app, select a physical device, or execute tests.
-This Debug build passed with Xcode 27.3 beta 1 on 2026-11-05. Xcode places the
-hosted bundle at `trip.app/PlugIns/TripSiriEvaluations.xctest` in the build products.
-This is compilation/link evidence only; the ten Siri scenario results are unverified.
+## Choose the check
 
-The target also compiles 50 local-model cases across seven suites, including
-parameterized sections, day tools, event kinds, presets, and invalid inputs.
-These checks use local services, do not call Siri, and need no device fixture.
-They have not been executed.
-They compile only with the Debug app module available; the standalone API
-type-check command below does not check their app-owned dependencies.
+Run only the verification requested for the task:
 
-`bash scripts/check_siri_evaluations.sh` type-checks the public APIs and macros
-against the installed iPhoneOS SDK. It neither links a test bundle nor runs Siri.
-The script honors `DEVELOPER_DIR` and keeps its compiler cache under `.build`.
+```sh
+# Type-check public SiriEvaluations APIs/macros; no app linking or execution.
+bash scripts/check_siri_evaluations.sh
 
-## Ten Siri scenarios
+# Compile/link host, widget, and hosted test bundle; no execution.
+bash scripts/build_siri_evaluations.sh Debug
+```
 
-| Group | Observable requirement |
+Both scripts honor `DEVELOPER_DIR` and write to `.build/siri-evaluations`. The
+build script uses generic iPhoneOS, signing disabled, and `build-for-testing`.
+The API-only check excludes Debug app-owned cases guarded by `canImport(trip)`;
+it cannot prove their dependencies compile. Hosted local-model cases require the
+Debug app module. The linked bundle is inside `trip.app/PlugIns`.
+
+Use compilation to check API/target integration and execution to evaluate behavior.
+Do not treat a compiled target or exported intent inventory as a scenario result.
+Follow [Siri integration](../../docs/SiriPreview.md) when changing tools or skills.
+
+## Conversation scenarios
+
+| Group | Prepared expectation |
 | --- | --- |
-| Navigation, two scenarios | Open the requested Trips or Explore surface |
-| Saved navigation, two scenarios | Open Today or the day-two map using the exact saved trip, enum value, and day; do not start Maps directions |
-| Saved reads, two scenarios | Read itinerary/checklist for the exact staged UUID and find that entity |
-| On-screen context, one scenario | Resolve “this trip” to the visible staged UUID |
-| App skills, three scenarios | Load each shipped skill for its intended planning, preparation, or booking-review task |
+| Navigation: two | Open Trips or Explore as requested |
+| Saved navigation: two | Resolve the exact saved trip, section, and day-two map without starting Maps directions |
+| Saved reads: two | Read itinerary/checklist for the staged trip UUID and find that entity |
+| Onscreen context: one | Resolve “this trip” to the visible staged UUID |
+| Skills: three | Load day-planning, departure-preparation, or booking-review skill for the corresponding task |
 
-Each scenario checks for twelve forbidden mutation/tracking/draft intents. These checks
-observe behavior; they do not prevent an incorrectly selected action from running.
-Use dedicated fixture data for actual evaluation. Skill loading and
-intent correctness have separate metrics. Only facets with expectations are gated;
-an ignored or missing metric is never treated as a passing result. These scenarios
-do not prove timing-write correctness, exact visit advancement, Maps handoff, or
-native sharing. The deterministic harness covers timing values and privacy.
+Match scenario coverage to the changed workflow. The skill scenarios assert the
+three listed skills; navigation and collection instructions require their own
+expectations when those workflows are evaluated. Forbidden
+intent expectations observe unexpected mutations; they cannot prevent an incorrectly
+chosen tool from running. Dedicated, nonprivate fixtures are required for evaluation.
+Only configured metrics are graded; an absent/ignored metric is not a pass.
 
-## Local-model coverage (compiled, not executed)
+## Local-model coverage
 
-| Suite | Cases | Scope |
+These suites use local providers and do not call Siri. Extend the owning suite for
+authorized behavior changes; keep fixtures deterministic and assertions about the
+contract rather than implementation details.
+
+| Suite | Cases | Prepared scope |
 | --- | ---: | --- |
-| Wayfinding | 5 | Native Back state, day identity, drafts, missing trips, exact booking selection |
-| Sections | 11 | All sections, retained search filters, deleted targets, export review context |
-| Preparation | 11 | Every preset, atomic capacity checks, rename identity/completion, invalid titles, shared UI behavior |
-| Booking drafts | 10 | Every event kind, cancellation, stale day/capacity checks, wrong trip, invalid title, draft protection |
-| Day tools | 6 | Every day tool and timezone-review recovery |
-| Saved data | 4 | Private-note exclusion, combined filters, entity identity, idempotent timing edits |
-| Persistence | 3 | Save failure/retry, publication timing, obsolete loads, repeated flushes |
+| Wayfinding | 5 | Back-binding identity, day map, drafts, missing trip, exact booking |
+| Sections | 11 | Sections, retained search, stale targets, export review context |
+| Preparation | 11 | Presets, atomic capacity, rename identity, invalid titles, shared UI policy |
+| Booking drafts | 10 | Event kinds, cancellation, changed day/capacity, wrong trip, edit protection |
+| Day tools | 6 | Original five choices and timezone-review recovery |
+| Saved data | 4 | Privacy, filters, detail identity, repeat-safe timing edits |
+| Persistence | 3 | Failure/retry, publication, obsolete load, repeated flush |
 
-These checks do not replace accessibility, animation, gesture, or navigation
-presentation review on a running app. The Siri conversation tests and local-model
-tests are distinct suites in the existing target; no additional target is needed.
+Choose relevant cases explicitly. Do not infer coverage for directions, stop order,
+collections, visit movement, alarms, or widget relevance from a generic suite name.
+Native presentation, accessibility, and multi-window delivery need runtime review.
 
-## Device preparation and fixture
+## Device preparation
 
-Use a development-signed, installed Trip build and launch it before evaluating.
-The physical device must support Apple Intelligence, run 27.3+, have Developer Mode
-and Siri/Apple Intelligence enabled, and finish downloading its models. Keep it
-unlocked and untouched during the run. Automation Mode may request the passcode.
-Do not change these settings or install a device build without execution authority.
+For an explicitly requested Siri run, use an eligible physical Apple Intelligence
+device on 27.3+, a development-signed build, Developer Mode, enabled Siri/Apple
+Intelligence, and downloaded models. Check Apple's current
+[preview requirements](https://developer.apple.com/documentation/appintents/siri-ai-developer-preview).
+Launch Trip before evaluating and keep the device unlocked and undisturbed.
+Signing, installation, device settings, and execution are separate from compilation.
 
-Create one dedicated trip named **Siri Review** with two days, a saved place,
-and an incomplete checklist item such as **Sample umbrella**. Use test content,
-not private notes or bookings. Save and let Trip publish its system projections.
-Run `TripSiriFixtureTests.fixtureIdentifier` alone and read its
-`TRIP_SIRI_TRIP_ID` attachment. Set that exact UUID as the evaluation test scheme's
-`TRIP_SIRI_TRIP_ID` environment variable. The fixture is validated before every
-saved-data scenario; missing or wrong fixtures fail before Siri runs.
+Create a dedicated **Siri Review** trip with two days, a saved place, and an incomplete
+sample checklist item. Do not use valued travel data. Save it and allow publication.
+Run `TripSiriFixtureTests.fixtureIdentifier` first and use its `TRIP_SIRI_TRIP_ID`
+attachment as the scheme's environment variable. Saved-data scenarios validate that
+exact fixture before invoking Siri; setup does not create or mutate the fixture.
 
-The on-screen evaluation opens that trip through its public intent before starting
-Siri. Failure to observe the editor is a real setup/UI issue, not grounds to remove
-the `OnScreen` expectation. The test setup does not create, edit, or delete fixtures.
+The onscreen scenario opens the trip through its public intent. A missing editor
+or failed onscreen expectation is a setup/behavior issue, not a reason to remove
+the assertion. Use the English Siri locale for the authored utterances; other
+languages need reviewed utterances and their own execution evidence.
 
-## Execution, only when requested again
+## Evaluate and report
 
-Select the `TripSiriEvaluations` scheme, which hosts the tests in `com.native.trip`.
-Use Xcode's standard test runner with parallel testing disabled and one physical
-destination. The schemes keep ordinary app builds separate. The suites are
-serialized. Run only the fixture inspection first, then one evaluation test at a
-time. Select English Siri for the authored utterances; other languages need their
-own reviewed utterances and execution evidence.
+Use the `TripSiriEvaluations` scheme with parallel testing disabled and one physical
+destination. Run the fixture check, then individual scenario groups. Inspect the
+Xcode report or export `.xcevalresult` attachments using
+`xcrun xcresulttool export attachments`.
 
-Open the Xcode evaluation report or export its `.xcevalresult` attachments with
-`xcrun xcresulttool export attachments`. Inspect diagnostics, completed turns,
-selected tools and arguments, found/on-screen IDs, loaded skills, and failed rows.
-Record app revision, toolchain, locale, destination, fixture, and results. A run
-that stops before grading is an environment failure; retain the expectations.
+Record revision/source state, toolchain, locale, device, fixture, selected tools and
+arguments, entity IDs, loaded skills, completed turns, and graded results. A run
+that stops before grading is incomplete, not a passing evaluation. Retain diagnostics
+and describe any unavailable metric. Do not infer device behavior from the app's
+metadata counts or the standalone algorithm harness.

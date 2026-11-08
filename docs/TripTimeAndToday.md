@@ -1,69 +1,82 @@
 # Destination times and Today
 
-## Destination time zones
+Use this guide when changing departure dates, booking clocks, schedule arithmetic,
+Today, or time values shared with system surfaces. A trip's civil date and saved
+zone are distinct from the device clock and from a booking endpoint's zone.
 
-Edit trip → Time zone lets the traveler choose the calendar zone and review the
-departure date. Existing trips without this data stay marked for review; opening
-them never guesses and permanently saves a zone. Saving the reviewed choice
-preserves existing wall-clock booking times and converts them into zoned values.
-An unchanged legacy trip can still be opened and edited without migration.
+## Find the owning code
 
-TripPlan stores a civil start date and zone identifier. Its calendar-day arithmetic
-uses that zone, including 23- and 25-hour days. TripZonedDateTime stores a local
-date, clock minute, zone identifier, and repeated-time occurrence. Instants are
-resolved from those values rather than the device's current time zone.
+| Responsibility | Start with |
+| --- | --- |
+| Civil calendar values and trip dates | `Packages/TripKit/Sources/TripDomain/Trips/TripLocalDate.swift`, `TripPlan+Calendar.swift` |
+| Zoned clocks and repeated-time resolution | `TripDomain/Trips/TripZonedDateTime.swift` |
+| Day schedule and visit timing | `TripDomain/Trips/TripDaySchedule`, `TripStopTiming`, `TripDayTimeline` |
+| Editable clocks and zone selection | `trip/Features/Trips/Models/Scheduling`, `Models/Editing/TripEventDraft+ZonedTime.swift` |
+| Today projection | `TripDomain/Trips/TripTodaySnapshot`, `TripTodayProjection`, `TripTodayItem` |
+| Today presentation | `trip/Features/Trips/Models/Journey/TripTodayModel.swift`, `Views/Today` |
 
-Event → Date and time edits departure and arrival independently, including their
-local dates and zones. Itinerary day placement stays separate from those local
-dates, allowing overnight and date-line travel. Elapsed time compares instants.
-Changing the trip date or destination zone does not move saved zoned bookings.
+`TripDomain/...` entries are relative to `Packages/TripKit/Sources`.
 
-Times skipped by a clock change cannot be saved. Repeated times require an
-explicit first/second occurrence, labeled with its UTC offset. The same rules
-apply to fixed place arrivals and day start/finish targets. Invalid older targets
-show Review schedule; Today does not derive leave-by guidance from them.
+## Preserve civil time semantics
 
-Native date pickers use a neutral calendar for editing civil components so they
-cannot silently normalize a nonexistent wall-clock time. Presentation uses the
-saved zone. Library date badges, itinerary rows, sharing, lookup, Siri briefings,
-widgets, and Live Activities use these values. Older system snapshots still decode.
-Date and zone changes in another window reject stale schedule or event saves.
+Edit Trip → Time zone lets the traveler review the calendar zone and departure
+date. Legacy trips without reviewed zone data remain marked for review. Opening
+one must not guess and persist a zone. Saving the reviewed choice preserves prior
+wall-clock booking times when converting to zoned values; unrelated legacy edits
+can remain unmigrated.
 
-## Today inside Trips
+TripPlan stores a civil start date and zone ID. Calendar-day arithmetic follows
+that zone, including 23- and 25-hour days. `TripZonedDateTime` stores local date,
+clock minute, zone ID and repeated-time occurrence; resolve the instant from those
+values, not the device's current zone.
 
-An active itinerary day exposes a Today row inside the existing trip editor.
-Today chooses the next saved commitment, provides one main action, and reveals
-the remaining day in a disclosure group. Upcoming timed commitments precede
-flexible plans; ongoing hotel stays do not hide the next place. Visit completion
-uses explicit progress for the same trip and day, never inferred location.
+Booking departure and arrival have independent dates and zones. Itinerary day
+placement remains separate, allowing overnight and date-line travel. Compare
+instants for elapsed duration. Changing a trip date or zone does not move already
+saved zoned bookings.
 
-On a partially open Duo, a fold across Today lets the traveler keep **Up Next**
-in view while scrolling **Rest of the Day** independently. A horizontal fold places
-the next commitment above the agenda. A vertical fold puts it on the leading side.
-The destination uses the measured division in its own window. If either side is
-too small for readable rows, or only one section has content to show, the list
-uses the larger side. Returning to one list restores its prior disclosure choice.
+Reject nonexistent times skipped by a clock change. Repeated times require an
+explicit first/second occurrence, labeled with UTC offset. Apply this to booking
+endpoints, fixed arrivals and day start/finish targets. Invalid older targets show
+Review schedule; they must not produce leave-by guidance.
 
-Directions opens the existing route flow for exactly the selected place. Saved
-events open their existing detail editor. Their saved location and notes also
-appear directly in Today, including without a connection. A standalone host
-without a directions callback offers Show on map. Missing trip/day/content and
-unreviewed time states have native recovery paths.
+Civil-component pickers use a neutral calendar so native date normalization cannot
+silently turn a nonexistent time into a different one. Display and share saved
+values in their saved zones. Keep backward-compatible decoding for system snapshots
+and reject draft saves when another window changes the relevant date/zone context.
 
-Leave-by guidance subtracts the user's manual travel and buffer allowances from
-the planned arrival. The first place's incoming allowance is editable without
-changing the day timeline's first-arrival semantics. Events have an optional
-manual travel allowance in Date and time. These values are clearly labeled;
-there is no live traffic, automatic ETA, or automatic completion claim.
+## Keep Today focused
 
-Today updates its time-based presentation once per minute while presented. It
-reads bounded local snapshots and makes no search or routing requests itself.
-Routing remains subject to the existing route flow's connection requirements.
+The itinerary shows a Today entry when the active day has saved commitments or the
+trip needs time-zone review. Today chooses the next saved commitment, one primary
+action and the remaining agenda. Upcoming timed commitments precede flexible plans;
+an ongoing stay must not hide the next place. Completion comes from explicit visit
+progress for the same trip/day, never inferred location.
 
-Ticket/document attachments depend on roadmap #4 and are not implemented here.
-Today currently provides saved event details and notes; it has no placeholder
-ticket button. The ticket portion of roadmap #3's ship bar remains dependent on #4.
+Place actions open the existing directions flow; saved events open their editor.
+Saved location and notes remain readable offline. A host without directions offers
+Show on map. Missing trip/day/content and unreviewed clocks retain recovery paths.
 
-## Verification
+Leave-by guidance subtracts manual travel and buffer allowances from planned arrival.
+The first place's incoming allowance is editable without changing the timeline's
+first-arrival semantics. Events have optional manual travel allowances. Do not label
+these as live traffic, automatic ETA or automatic completion.
 
-Use the source gate in [Contributing](../CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.
+Today refreshes its bounded local projection once per minute while presented. It
+must not start search or routing itself. Native directions retain their own network
+requirements. Saved event details and notes are available; ticket attachments are
+not an implemented Today capability.
+
+On a partially open Duo, Up Next and Rest of the Day can use independently scrollable
+panes along the measured fold. Use one larger pane when either side is too small or
+only one section has content. Returning to one list restores disclosure state. See
+[Adaptive app](../UNIVERSAL-APP.md) for the shared layout contract.
+
+## Change checklist
+
+Check legacy decoding, skipped/repeated clocks, overnight and date-line bookings,
+23/25-hour days, device-zone changes and concurrent edits. Confirm that library,
+sharing, lookup and system surfaces display the saved zone consistently. Use
+`TripClockPreview`, `TripSchedulePreview` and `TripTodayPreview` for focused local
+states. [Testing](Testing.md) and [Contributing](../CONTRIBUTING.md) describe checks;
+rendered behavior and real device clocks require separate verification.

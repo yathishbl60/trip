@@ -1,82 +1,97 @@
 # Local trip planning
 
-Trips are stored locally with SwiftData. `TripLibraryModel`, composed by
-`TripModel`, owns editable `TripPlan` snapshots on the main actor. All durable
-edits use the library’s mutation methods and schedule persistence automatically.
-`TripStore` and `TripDatabase` create and use
-a local-only model container on a storage actor. Cloud-backed collaboration is
-intentionally not part of this version.
+Trips keeps saved places, bookings, day plans, collections and checklists in a local
+library. Manual planning works without Apple Intelligence. Cloud sync and shared
+editing between people are not implemented.
 
-## Planning flow
+Use this guide to preserve the traveler-facing flow when changing Trips. Start
+with the [Trips developer guide](docs/Trips.md) for source paths and editing
+contracts, then review the affected entry points below.
 
-Open **Trips** from the app tab bar, create a named trip, choose a departure
-date, and add days. Creating a trip opens its itinerary. From Explore, select
-a place and choose **Save to trip**; creating a trip there saves the first stop
-and returns to the map.
+## Create and organize a trip
 
-The itinerary shows each day's places and notes. **Edit** enables reordering,
-deleting, and day/stop note fields. **Edit Trip** in the options menu opens a
-cancellable draft for the name, departure date, and trip notes. Saving changes
-only edited fields, preserving other windows' itinerary edits. **Collections**
-opens saved places for later; each place can be added to a day or shown on the map.
-Day menus offer visit tracking when supported. The trip list offers duplication
-and sharing; the itinerary also has a native Share action.
+Open **Trips**, create a named trip, choose its departure date and destination time
+zone, and add days. Creating a trip opens the itinerary. From Explore, **Save to
+trip** can add a place to a day or a Save for Later collection; creating a trip
+there saves the place and returns to the map.
 
-**Trip map** shows numbered stops for each day with a native day picker, camera fit,
-and a selectable place list. Wide windows show the map and list side by side.
-Use **Map this day** from a day menu to open it directly, or continue to directions
-for the day's places in their saved order.
+The itinerary is the main detail view. Each day shows its places and bookings.
+**Add to day** offers places, flights, trains, stays, reservations, activities and
+free time. Tap a booking to edit its details; multi-day stays remain one saved
+record. **Edit Trip** opens a cancellable draft for the trip's settings and notes.
 
-For days with at least three places, **Suggest stop order** offers a local, reviewable
-way to reduce geographic backtracking while keeping the first stop fixed. Compare
-the current and suggested order, then apply it explicitly. Distances are straight
-line estimates, not road routes or travel times. Reservations and opening hours are
-not considered. Suggestions preserve notes and refuse to overwrite changed days.
-**Share this day** sends a readable itinerary with addresses and Apple Maps links
-through the native share sheet; private day and stop notes are excluded.
+Use native Edit controls for reordering and deleting. Flexible places also support
+dragging between days; fixed arrivals and bookings retain their timing constraints.
+**Collections** holds places for later, with actions to add a place to a day or show
+it on the map. **Checklist** keeps preparation items, reusable templates and optional
+packing suggestions. Duplicating a trip resets checklist completion.
 
-The local store migrates the earlier `trips.json` snapshot from Application
-Support the first time it opens. The import is marked complete in SwiftData so
-deleting every trip does not resurrect old data. Preview fixtures use isolated local providers and never touch the user's database.
+## Plan a day
+
+| Task | Entry point | What it does |
+| --- | --- | --- |
+| Add several places | Add to day → Places | Searches saved places and Apple Maps; keeps the sheet open and offers Undo for the latest addition |
+| Review order and travel | Day options → Preview day | Reviews visit order, route estimates and the proposed schedule before Apply |
+| Set a schedule | Day options → Plan times | Edits first arrival and target finish; visit editors hold duration, travel and buffer allowances |
+| Inspect saved locations | Trip options → Map, or Show day on map | Shows numbered saved stops and a reachable list for each day |
+| Get directions | Day options or Trip map → Directions | Opens the route flow for the day's places in saved order |
+| Reduce backtracking | Day options → Suggest stop order | Offers a local geographic proposal for eligible days with at least three places |
+
+Preview day keeps changes local until Apply. Save to Trip can open the same review
+with a suggested insertion position. Route estimates use MapKit conditions and do
+not overwrite manual allowances. Missing routes remain explicit.
+
+Suggest stop order keeps the first stop fixed and requires explicit application.
+Its distances are straight-line estimates, not road routes or travel times; it does
+not consider opening hours or reservations. Changed days invalidate the proposal.
+
+Schedules use saved destination time zones. Booking departure and arrival can have
+different dates and zones. Clock changes requiring review are shown explicitly;
+changing devices' time zones does not redefine saved zoned bookings. See
+[Destination times and Today](docs/TripTimeAndToday.md).
+
+## Use the plan while traveling
+
+Today surfaces the next saved commitment and the rest of the active day. It opens
+the existing directions or booking editor. Leave-by guidance uses manually entered
+travel and buffer allowances; it is not live traffic or automatic ETA.
+
+Day menus offer visit tracking where supported. Completion is explicit, not inferred
+from location. Widgets and Live Activities show saved trip context and progress.
+Siri and Shortcuts can read and act on saved trips, collections, checklists and
+visits, or open existing review workflows. See [System integrations](SYSTEM-INTEGRATIONS.md)
+for the exact action coverage and platform requirements.
+
+Trip and day Share actions send readable itinerary text through the native share
+sheet, not private database records. Day shares exclude private day and stop notes;
+booking notes also remain private.
 
 ## On-device itinerary assistant
 
-**Draft an itinerary** opens the optional Apple Intelligence assistant. Choose up
-to 24 saved places, a 1–5 day duration, pace, and interests. The model receives
-place names, categories, coordinates and nearby distances; private notes and
-checklist contents are excluded. Suggestions use supplied places and do not
-invent opening hours, prices or travel times.
+**Draft an itinerary** offers optional Apple Intelligence planning for up to 24
+saved places and 1–5 days, with pace, interests and preferences. The model receives
+place metadata and calculated nearby distances, not private notes or checklist
+contents. Suggestions use supplied places and do not invent opening hours, prices
+or travel times.
 
-Review or refine the draft before applying it to the current trip or saving a new
-trip. Applying validates the source itinerary and protects scheduled visits, stable
-identities, notes and checklist state. Saving a new trip preserves the original
-and carries over local notes with a reset checklist. Changed choices invalidate
-old drafts; cancellation rejects late results.
+Review or refine the proposal before applying it. Replacing the current itinerary
+requires an unchanged compatible source and preserves stable identities and notes;
+scheduled visits, bookings and other protected states can require saving a new trip
+instead. A new trip preserves the original and resets checklist completion.
+Changing inputs invalidates old drafts, and cancellation rejects late results.
 
-Availability messages explain unsupported hardware, disabled Intelligence or an
-unfinished model download. Manual planning remains usable. Private Cloud Compute
-is disabled in the checked-in configuration.
+Availability messages explain unsupported hardware, disabled Intelligence or model
+downloads. Private Cloud Compute is disabled in the checked-in configuration;
+manual planning remains available.
 
-## Persistence behavior
+## Saving and recovery
 
-Edits are coalesced for 250 milliseconds so typing notes does not write on every
-keystroke. Only changed trip payloads are encoded when possible; list position
-updates remain cheap. A revision guard prevents an older async write from
-overwriting a newer one. Pending edits flush when the scene leaves the active
-state, and a retry banner appears if a save fails.
+Trips uses local SwiftData storage. Edits are coalesced for 250 milliseconds, writes
+are revision guarded, and pending changes flush when a scene becomes inactive.
+Failed writes retain pending edits and offer retry. The earlier `trips.json` format
+is imported once; deleting the library does not resurrect that legacy data.
 
-## Shortcuts and sharing
-
-Siri and App Shortcuts open saved trips, create named and dated trips, read itineraries,
-draft plans with Apple Intelligence, and track visits. Create Trip saves only after
-Siri or Shortcuts supplies the name and departure date. Widgets and Live Activities
-show the next place and progress; [SYSTEM-INTEGRATIONS.md](SYSTEM-INTEGRATIONS.md)
-describes configuration, App Groups, and verification. Trip `ShareLink` actions share
-readable itinerary text; they do not publish private database records.
-
-Trip plans are local to this device for now. A future sync layer can sit behind
-`TripStore` without changing the SwiftUI views or the `TripPlan` value model.
-
-For state ownership, injection, and editor change recipes, read the
-[Trips developer guide](docs/Trips.md). AppModel owns map/trip integration through
-ExploreEnvironment and TripEnvironment; neither feature owns the other.
+When changing these flows, use local fixtures and check save/cancel, stale edits,
+failed-write recovery and the surrounding navigation. Fixtures never touch the
+user's database. See [Dependencies](docs/Dependencies.md) for provider lifetimes and
+[Contributing](CONTRIBUTING.md) for contribution setup and scoped checks.

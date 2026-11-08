@@ -1,8 +1,9 @@
-# Documentation
+# Choose a task guide
 
-Start with the guide for the task you are doing. Feature guides describe current
-contracts; the roadmap contains proposals. Source code and ownership manifests
-settle implementation details when documentation and code differ.
+Use the guide for the task you are doing. Each guide should tell you where to work,
+which contracts to preserve, and how to check the result. Read only the areas your
+change crosses. Use source code and ownership manifests to resolve implementation
+details, then correct the owning guide when it drifts.
 
 ## Get started
 
@@ -45,7 +46,7 @@ settle implementation details when documentation and code differ.
 | String catalogs and generated accessors | [Localization](Localization.md) |
 | Local fixtures | [Preview support](PreviewSupport.md) |
 
-## Verification and planning
+## Review and plan a change
 
 | Task | Guide |
 | --- | --- |
@@ -53,14 +54,18 @@ settle implementation details when documentation and code differ.
 | Run requested algorithm checks and benchmarks | [Performance harness](../Performance/README.md) |
 | Profile app behavior and report evidence | [Performance validation](../PERFORMANCE.md) |
 | Choose test seams | [Testing](Testing.md) |
+| Review visual consistency | [Design review procedure](DesignConsistencyReview.md) |
+| Review map quality and performance | [MapEngine review procedure](MapEngineReview.md) |
+| Apply cross-cutting safeguards | [Engineering safeguards](EngineeringLessons.md) |
 | Understand architectural decisions | [Decisions](decisions/README.md) |
-| Evaluate future work | [Feature roadmap](FeatureRoadmap.md) |
+| Evaluate feature proposals | [Feature planning](FeatureRoadmap.md) |
 | Prepare a focused change | [Task template](../templates/task.md) and [decision template](../templates/decision.md) |
 
 ## Maintain the docs
 
-Keep each contract in its owning guide and link to it from overviews. Update
-paths, commands, dependencies and limitations with the relevant implementation.
-Remove obsolete progress logs and duplicate explanations. Keep proposals distinct
-from implemented behavior and verification instructions distinct from measured
-results. Do not treat an old successful build as evidence for a new revision.
+Keep each contract in its owning guide and link to it from overviews. Explain when
+to use the guide, owning paths, steps, constraints, and relevant checks. Update
+guidance with the implementation. Keep feature proposals clearly conditional.
+Put dated execution results, commit recaps, and delivery summaries in PRs or ignored
+verification records; do not add them to these reusable instructions. Follow
+[Skills](Skills.md) for guidance ownership and formal skill entrypoints.

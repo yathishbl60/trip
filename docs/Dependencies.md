@@ -1,98 +1,83 @@
 # Dependency ownership and lifetimes
 
-The composition root chooses live services; feature models accept contracts.
-This keeps previews local and creates seams for future tests without a global
-service registry. Existing window, task, and persistence lifetimes remain explicit.
+Create live Trips services in `trip/App/Dependencies/AppTripServices.swift` and its
+extensions. Feature models accept contracts; they do not construct storage,
+intelligence or native-service fallbacks. This makes lifetime and failure policy
+visible and lets the same models run with local fixtures.
 
-```mermaid
-graph TD
-    Runtime[AppRuntime] --> Live[AppTripServices]
-    Live --> Store[TripStorage.TripStore]
-    Live --> AI[TripIntelligence services]
-    Live --> Feature[TripModel and workflow models]
-    Feature --> Contracts[TripDomain protocols and values]
-    Preview[PreviewTripServices] --> Feature
-    Preview --> Local[Local preview actors and value providers]
-```
+## Choose the lifetime
 
-| Boundary | Host supplies | Lifetime |
+| Consumer | Injected boundary | Lifetime |
 | --- | --- | --- |
-| TripLibraryModel | any TripStoring | One shared library and revision sequence per store session |
-| TripAssistantModel | TripAIClient<any ItineraryPlanning> | Window-local state; fresh service for selected processing mode |
-| TripLookupModel | TripAIClient<any TripDetailSearching> | Window-local query or isolated intent lookup |
-| TripChecklistModel | Shared library, packing model, TripChecklistEnvironment | Window-local naming draft and packing review |
-| TripCollectionsModel | Shared library, TripCollectionsEnvironment | Window-local naming, deletion, and notices |
-| TripPackingModel | TripAIClient<any TripPackingPlanning> | Suggestions owned by Checklist; on-device factory per request |
-| TripStopOrderModel | any TripStopOrderSuggesting | Isolated review; caller owns async task cancellation |
-| TripModel | Library, workflow models, ordering service, tracking | One per scene; only durable library is shared |
-| ExploreModel | PlaceProviding and MapConfiguration | One map per window; repository owns its cache |
-| DirectionsModel | DirectionsProviding and DirectionsEnvironment | Host-retained routing session |
-| TripPlaces.PlaceTextSearch | Query or native completion | One caller-owned cancellable MapKit operation |
+| `TripLibraryModel` | `any TripStoring` | One shared library and revision sequence per store session |
+| `TripAssistantModel` | `TripAIClient<any ItineraryPlanning>` | Window-local draft; service factory selects processing mode |
+| `TripLookupModel` | `TripAIClient<any TripDetailSearching>` | Window-local query, or isolated intent lookup |
+| `TripChecklistModel` | Library, packing model, `TripChecklistEnvironment` | Window-local naming and packing review |
+| `TripPackingModel` | `TripAIClient<any TripPackingPlanning>` | Checklist-owned suggestions; on-device service factory |
+| `TripCollectionsModel` | Library, `TripCollectionsEnvironment` | Window-local naming, deletion and notices |
+| `TripStopOrderModel` | `any TripStopOrderSuggesting` | Isolated proposal; caller owns task cancellation |
+| `TripModel` | Library, workflow models, ordering, tracking, optional search factory | One workspace per scene |
+| `TripBookingImportModel` | `any TripBookingReading` | Scene-local review, shared reader actor |
+| `TripSystemActionsModel` | `any TripSystemActionProviding`, library | Scene-local review, shared native adapter |
+| `TripWeatherModel` | `any TripWeatherProviding` | Scene-local review, shared configured provider/cache |
+| `ExploreModel` | `PlaceProviding`, `MapConfiguration` | One map per window; repository owns its cache |
+| `DirectionsModel` | `DirectionsProviding`, `DirectionsEnvironment` | Host-retained routing session |
+| `TripPlaces.PlaceTextSearch` | Query or native completion | Caller-owned cancellable native operation |
 
-`TripAIClient` is a small immutable MainActor value containing a typed factory,
-availability policy, and error-to-message function. Workers remain Sendable actors
-or values. Availability and failures can be controlled independently of device
-eligibility in previews and future tests. The live host combines its entitlement
-policy with TripAIAvailability. TripAIFailure owns service-specific message mapping
-inside TripIntelligence; the Trips feature imports neither FoundationModels nor
-TripIntelligence. No optional service silently falls back to a live implementation.
+`AppRuntime` retains the durable library and system publisher. AppTripServices
+creates each scene's workflow models and isolated assistant/lookup models for
+intents. AppModel connects Explore and Trips with weak callbacks; neither feature
+owns its sibling. Tracking models are scene-local facades over the shared journey
+runtime. See [App](App.md) for activation and publication.
 
-AppRuntime retains the shared library and connects its successful saves to system
-publishing. AppTripServices makes each scene's workflow models. Intents construct
-their isolated assistant/lookup through the same factory. AppModel connects host
-callbacks between Explore and Trips. It does not let either feature own the other.
+## Availability and failure policy
 
-TripModel composes Checklist with the same durable library and injected packing
-worker. Its environment supplies feedback, Reminders review, and system identifiers
-without retaining the parent through callbacks. Naming drafts and packing sessions
-remain inside Checklist; TripModel includes their editing status in navigation
-protection. Suspension cancels generation while retaining the visible review.
+`TripAIClient` is an immutable MainActor value containing a typed factory,
+availability policy and error-to-message function. Workers are Sendable actors or
+values. The live host combines entitlement policy with `TripAIAvailability`;
+`TripAIFailure` maps service failures inside TripIntelligence. Trips imports neither
+FoundationModels nor TripIntelligence. A failure never silently selects a different
+live service.
 
-TripModel also composes Collections with the shared library. Its environment supplies
-map navigation, success feedback, notices for the save sheet, and a callback to the
-parent's existing day-insertion policy. Collections owns its editing sessions and
-saved-place mutations; callbacks do not retain the parent model. Selecting another
-trip clears the focused presentation while preserving saved plans.
+Trips receives `makePlaceSearch` explicitly in production. Omitting the optional
+factory keeps saved/local picker behavior available without live MapKit text
+search. TripPlaces owns native operation cancellation and conversion;
+`Shared/Places` owns autocomplete tokens and app presentation. Each feature retains
+its debounce, timeout, selection and stale-result policy. See [Search](Search.md).
 
-Use `PreviewTripServices.makeTrips(plans)` for local Trips composition. Each call
-creates its own PreviewTripStore actor and deterministic planning providers.
-It never opens SwiftData or calls Foundation Models. Lookup previews return a
-fixed stays query; they are fixtures, not a natural-language interpreter. Maps
-may still require system basemap data. ContentView previews intentionally use
-live app composition and remain labeled accordingly.
+AppTripServices retains the booking reader, configured weather provider and
+MainActor system-action adapter across scenes. EventKit and the export/alarm ledger
+are initialized on first use. Permission prompts belong to explicit user actions.
+Durable saves and foreground activation reconcile alarms with current bookings.
+Import and forecasts reject cancelled or stale results.
 
-Use `PreviewTripServices.makeChecklist(plans)` for Checklist and packing components.
-It creates only the focused workflow, local library, and planning provider; it does
-not construct TripModel or unrelated workflow services.
-Use `PreviewTripServices.makeCollections(plans)` for collection components; it
-constructs only a local library and the focused collection model.
+The checked-in configuration injects `UnavailableTripWeatherService`. A host
+explicitly enabled and provisioned for WeatherKit can inject
+`AppleTripWeatherService`. Private Cloud Compute is also disabled by host policy.
+See [Native travel services](NativeTravelServices.md) for review and failure behavior.
 
-Shared code has three separately enforced capabilities: Places, System, and
-IntelligenceConfiguration. Explore can consume Places; it cannot reach into shared
-system persistence. Widgets consume System and cannot depend on feature models or
-inference. App and Trips use only their declared capabilities. DesignSystem owns
-visual primitives and has no feature dependency. These are source boundaries in
-the app target; reusable packages provide actual compiler-enforced module boundaries.
+## Focused workflow callbacks
 
-TripPlaces contains shared MapKit conversion, text search, and category mapping.
-Explore, Trips, and the app autocomplete adapter import that product explicitly.
-Shared/Places keeps observable autocomplete state and resource-backed presentation.
-Each feature retains its debounce, timeout, cancellation, and stale-result policy;
-the package neither chooses navigation nor owns a feature's search session.
+Checklist owns its naming draft and packing session. Its environment supplies
+feedback, Reminders review and entity identifiers. TripModel includes Checklist's
+editing state in navigation protection; suspension cancels generation while keeping
+the review visible.
 
-## Native travel services
+Collections owns naming/deletion sessions and saved-place mutations. Its environment
+supplies map navigation, feedback, save-sheet notices and the parent's day-insertion
+policy. Selecting another trip clears focused presentation, not saved data. Both
+workflows share only the library and use weak parent captures in their callbacks.
 
-AppTripServices retains one booking reader actor, configured weather provider, and MainActor
-AppleTripSystemActions adapter. Each scene receives independent import, export, and
-weather models. Trips imports only their TripDomain contracts. PreviewTripServices
-injects local document, weather, and system-action fixtures without permission prompts.
+## Local composition
 
-The system adapter creates and retains its EventKit store and durable export/alarm
-ledger on first use, keeping native-service setup out of scene construction.
-Successful trip saves and foreground activation reconcile pending alarms with canonical bookings.
-Import and forecasts use cancellation plus generation checks. No provider is created
-inside a view or silently substituted after a failure. See [native travel services](NativeTravelServices.md).
+Use `PreviewTripServices.makeTrips(plans)`, `makeChecklist(plans)` or
+`makeCollections(plans)` for the smallest component under review. Each creates an
+isolated PreviewTripStore and local providers. They do not open SwiftData, invoke
+Foundation Models, prompt for permissions or fall back to live place search.
+Native maps may still need system basemap data. Full ContentView previews use live
+composition and are labeled accordingly.
 
-The checked-in weather-disabled configuration injects UnavailableTripWeatherService.
-A host explicitly enabled and provisioned for WeatherKit injects the shared
-AppleTripWeatherService actor/cache. Previews always use a local provider.
+[Preview support](PreviewSupport.md) lists factories and [Testing](Testing.md)
+describes controlled test providers. For a new dependency, define the owning
+contract, inject it from App, provide a local fixture, and document availability,
+cancellation and lifetime here. Follow [Contributing](../CONTRIBUTING.md) for checks.

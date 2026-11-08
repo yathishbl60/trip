@@ -1,68 +1,58 @@
-# 0002: Focused workflows and request delivery
+# Focused workflows and request delivery
 
-Status: accepted for implementation, 2026-11-08.
+Use this decision when a root model accumulates unrelated state, a view receives
+more capability than it needs, or an external request can race with local editing.
+The goal is a coherent workflow boundary with explicit entry and lifetime rules.
 
-## Problem
+## Focused state ownership
 
-Small files did not prevent Checklist views from receiving the entire Trips
-controller, or App from coordinating individual feature workers. Navigation
-requests and restoration also had different cancellation lifetimes.
+Checklist owns its naming draft, packing session and generation worker through
+`TripChecklistModel` and `TripChecklistController`. Collections owns naming,
+deletion, notices and saved-place edits through its corresponding model/controller.
+Both share the canonical library rather than copying durable state.
 
-## Decision
+Session identities protect dismissal, confirmation and commit. TripModel supplies
+cross-workflow policy through narrow environments: day insertion, save-sheet
+dismissal, feedback and native entity identifiers. TripEditorView supplies section
+navigation. A shared row receives its specific action rather than the root controller.
 
-Keep VCM and existing package responsibilities. Compose a focused Checklist model and
-controller, with the shared library as its durable-data boundary. Checklist owns
-its naming draft and packing review. App receives semantic feature operations;
-it does not configure a sequence of internal presentation flags.
+This keeps local composition useful without inventing a generic workflow framework.
+Apply the same pattern only where a workflow has its own task, state lifetime and
+entry contract. [Trips](../Trips.md) identifies the current owners.
 
-Collections follows the same ownership rule: its model owns naming, deletion,
-reordering, and saved-place edits. Session identities prevent stale dismissal or
-confirmation from affecting a newer session. Root Trips retains cross-workflow
-day scheduling and save-sheet dismissal through narrow callbacks. The shared stop
-row receives a show-place action instead of the entire Trips controller.
+## Semantic host operations
 
-Separate App screen destinations from workflow requests. Resolve ingress through
-one scene-owned request generation. A newer user action invalidates older suspended
-work, including restoration. Resolve canonical IDs and recheck draft protection
-at delivery. The launch mailbox delivers once to an eligible foreground scene.
+App calls semantic operations in `TripModel+HostNavigation` and
+`TripModel+HostWorkflows`. It does not sequence internal presentation flags or
+configure child workers. Features retain their own cancellation and setup rules.
 
-TripRouting continues to own geographic directions independently. Preserve its
-generation, session, cancellation, geometry and host-publication contracts.
+`AppRequest` separates destinations from workflow commands. Each scene owns a
+request generation; a new action invalidates older suspended work, including
+restoration. Resolve canonical IDs and recheck draft protection at delivery. The
+launch mailbox consumes a pending request once in an eligible foreground scene.
+See [App](../App.md) for missing-ID, repeated-route and activation behavior.
 
-Extract `TripPlaces` as a bounded compiler pilot: native text search, MapKit item
-conversion, and category filters serve both Explore and Trips through a small API.
-It depends only on TripDomain and TripLocalization. App appearance/resources and
-observable autocomplete state stay in Shared/Places. Full feature packages would
-first need smaller shared UI, resource, preview, and host contracts; this change
-does not claim independent feature compilation or measured build-time improvement.
+## Compiler boundaries
 
-AppTripServices injects the native search factory and AppSystemModel's existing
-providers. Trips has no live search fallback; local fixtures can render without a
-provider. Each native search operation owns cancellation and cleanup, while its
-feature retains debounce, timeout, and UI-generation policy. Scene activation has
-its own lifetime guard before delivering results after foreground work suspends.
+TripPlaces is a bounded shared adapter module: native text search, MapKit item
+conversion and category filters serve Explore and Trips. It depends only on
+TripDomain and TripLocalization. App resources and observable autocomplete state
+remain in Shared/Places. TripRouting independently owns directions state and UI.
 
-## Parallel contribution
+The host injects a search factory; Trips has no live fallback. Native operations
+own cancellation and cleanup, while features own debounce, timeout and generation
+policy. Full feature extraction would first require explicit UI, resource, preview
+and host contracts. Moving a folder does not establish independent compilation or
+a measured build-time improvement.
 
-Assign bounded workflow paths and agree crossing contracts first. Use separate
-worktrees and build outputs. One integration owner coordinates composition,
-target wiring, package dependencies and ownership manifests. Shared mutable draft
-state never becomes a global service or a sibling-feature dependency.
+## Apply and review
 
-## Acceptance
-
-- Checklist views depend on Checklist capability, not the root Trip controller.
-- Collections views depend on Collections capability with scoped draft/deletion identity.
-- Checklist UI and intents share completion mutation rules.
-- App invokes semantic feature operations for workflow entry and suspension.
-- Older requests and restoration cannot overwrite newer user intent.
-- Missing/deleted IDs and protected drafts preserve useful context.
-- Deterministic model checks use isolated services and do not open production data.
-- Source, compilation, behavioral and visual results are reported independently.
-
-## Limits
-
-A focused ownership boundary is a prerequisite for package extraction, not proof
-that moving a folder will improve build time. Public API size, resources, consumers,
-and independent verification decide each extraction. Preserve current source limits;
-logical-type metrics are advisory, not a reason to split methods artificially.
+- Give each contributor bounded owning paths and agree cross-owner contracts first.
+- Coordinate composition, target wiring and manifests through one integrator;
+  separate worktrees and output directories avoid different classes of collision.
+- Keep drafts scene-local and preserve stable identities during library updates.
+- Reuse domain mutation rules for UI and intent actions, including Checklist completion
+  and Collection edits.
+- Review stale requests, deleted IDs, changed drafts and reopened destinations.
+- Use [Preview support](../PreviewSupport.md) and [Testing](../Testing.md); keep source,
+  compilation, executable and visual checks distinct.
