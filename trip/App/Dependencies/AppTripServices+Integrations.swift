@@ -6,6 +6,10 @@ extension AppTripServices {
     static let bookingReader: any TripBookingReading = TripBookingReader()
     static let systemActions: any TripSystemActionProviding = makeSystemActionProvider()
 
+    static func makeSystem() -> AppSystemModel {
+        AppSystemModel(systemActions: systemActions, journey: .shared)
+    }
+
     static func makeBookingImport() -> TripBookingImportModel {
         TripBookingImportModel(reader: bookingReader)
     }

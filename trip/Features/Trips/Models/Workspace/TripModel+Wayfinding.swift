@@ -7,7 +7,7 @@ extension TripModel {
         guard !hasEditingSession, let trip = library.trip(tripID) else { return }
         selectTrip(tripID)
         let route = section.destination.map { TripDetailRoute(tripID: tripID, destination: $0) }
-        guard presentation.detailRoute != route else { return }
+        guard !TripDetailRoute.sameDestination(presentation.detailRoute, route) else { return }
         if section == .details { lookup.prepare(trip) }
         presentation.detailRoute = route
     }
@@ -30,7 +30,7 @@ extension TripModel {
         case .planning: beginPlanning(dayID: dayID, tripID: tripID)
         case .weather: beginWeather(dayID: dayID, tripID: tripID)
         case .addPlaces: beginSavedPlaces(dayID: dayID, tripID: tripID)
-        case .map: presentation.detailRoute = TripDetailRoute(tripID: tripID, destination: .map, dayID: dayID)
+        case .map: presentation.detailRoute = TripDetailRoute(tripID: tripID, dayID: dayID)
         }
     }
 

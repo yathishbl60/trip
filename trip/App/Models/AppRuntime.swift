@@ -5,7 +5,7 @@ import Foundation
 /// Windows share durable data; each scene owns its navigation, map, and drafts.
 @MainActor enum AppRuntime {
     static let savedTrips = makeLibrary()
-    static let system = AppSystemModel()
+    static let system = AppTripServices.makeSystem()
     static weak var activeScene: AppModel?
 
     static func makeScene() -> AppModel {

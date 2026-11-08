@@ -15,7 +15,4 @@ extension TripController {
         model.environment.tripEntityIdentifier(tripID)
     }
 
-    func checklistEntityIdentifier(_ itemID: UUID, tripID: UUID) -> EntityIdentifier? {
-        model.environment.checklistEntityIdentifier(TripChecklistIdentity(tripID: tripID, itemID: itemID))
-    }
 }

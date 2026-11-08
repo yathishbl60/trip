@@ -13,7 +13,8 @@ Start at `Views/Map/MapExperienceView.swift`. Its host supplies a detail builder
 | Map styles and traffic | MapAppearanceController, MapAppearanceModel, MapAppearanceRestoration |
 | Street-level imagery | PlaceLookAroundController, PlaceLookAroundModel, PlaceLookAroundView |
 | Routing integration | ExploreDirectionsController, ExploreModel+DirectionsEnvironment |
-| MapKit search and place conversion | Services/ApplePlaceProvider, MapSearchService, PlaceFactory |
+| MapKit discovery and provider policy | Services/ApplePlaceProvider, MapSearchService, MapDiscoverySearch |
+| Shared native search and conversion | TripPlaces.PlaceTextSearch, TripPlaces.PlaceFactory, PlaceCategory.mapCategories |
 
 ExploreEnvironment is the host contract for saving: optional savePlace,
 dismissSave, and isSavingPlace. Supply all three for a save-enabled host. The save
@@ -25,6 +26,12 @@ PlaceProviding is injectable. MapEngine.PlaceRepository owns the bounded cache,
 merge, and indexing worker and requires a provider. MapKit objects stay in their
 MainActor service; workers exchange Sendable snapshots. Catalog generation and
 activation revisions reject stale work. `start()`/`stop()` own the visible lifetime.
+
+TripPlaces provides the shared native adapters used by Explore and Trips. Its
+public search operation does not own camera discovery, caching, or UI sessions.
+Shared/Places still owns the observable autocomplete adapter, native completion
+tokens, annotation text, and app asset colors. Import TripPlaces in each file
+using its operations or category-mapping extension; no app resources move into it.
 
 Text searches render the latest matching result snapshot, while the full loaded
 catalog stays available when the query is cleared. Search merging resolves results
@@ -256,14 +263,10 @@ result contrast. Filters use one category grid (a list at accessibility sizes),
 All categories to reset, and a loaded-count footer instead of a duplicate summary
 panel and Reset action.
 
-ExploreMapView owns one stable namespace shared by its Map and native controls;
-mapScope encloses the existing MapReader, whose live projection callbacks remain
-in place. ExploreMapTrackingToolbar owns the native MapUserLocationButton in every
-layout, alongside map options using topBarLeading. The iOS verticalPreferred axis
-behavior lets the system place tracking beneath map options in a vertical bar.
-Compass and scale retain automatic mapControls hosting. The tracking button stays
-in the same native toolbar as layout changes; no device, hinge, or environment
-condition transfers it between toolbar and mapControls hosts.
+ExploreMapView uses automatic MapKit hosting for the native location button,
+compass, and scale through mapControls. The toolbar relocation was reverted at
+the user's request on 2026-11-08. Keep the original MapReader structure and native
+control placement; no separate toolbar host or explicit map namespace is needed.
 
 Keep exactly one tracking control through resizing and fold transitions. After
 scope or hosting changes, verify fresh annotation projection after pan, zoom,

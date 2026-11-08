@@ -32,8 +32,12 @@ struct TripEditorView: View {
         case .map:
             TripMapView(tripID: route.tripID, initialDayID: route.dayID, controller: controller)
                 .id(route.dayID).modifier(TripHingeObservation())
-        case .checklist: TripChecklistView(tripID: route.tripID, controller: controller)
-        case .collections: TripCollectionsView(tripID: route.tripID, controller: controller)
+        case .checklist:
+            TripChecklistView(tripID: route.tripID, controller: TripChecklistController(model: controller.model.checklist))
+                .tripWayfinding(.checklist, tripID: route.tripID, controller: controller)
+        case .collections:
+            TripCollectionsView(tripID: route.tripID, controller: controller.collections)
+                .tripWayfinding(.collections, tripID: route.tripID, controller: controller)
         case .lookup: TripLookupView(tripID: route.tripID, controller: controller)
         case .today:
             TripTodayView(tripID: route.tripID, controller: controller).modifier(TripHingeObservation())
@@ -79,6 +83,14 @@ struct TripEditorView: View {
     let model = TripSchedulePreview.planner(overloaded: true)
     NavigationStack {
         TripEditorView(tripID: model.library.trips[0].id, controller: TripController(model: model))
+    }
+}
+#Preview("Checklist host navigation · local data") {
+    let model = PreviewFixtures.tripPlanner()
+    let tripID = model.library.trips[0].id
+    NavigationStack {
+        TripChecklistView(tripID: tripID, controller: TripChecklistController(model: model.checklist))
+            .tripWayfinding(.checklist, tripID: tripID, controller: TripController(model: model))
     }
 }
 #endif

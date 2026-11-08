@@ -5,11 +5,11 @@ import SwiftUI
 struct TripCollectionView: View {
     let tripID: UUID
     let collectionID: UUID
-    let controller: TripController
+    let controller: TripCollectionsController
 
     var body: some View {
         Group {
-            if let collection = controller.model.library.trip(tripID)?.collections.first(where: { $0.id == collectionID }) {
+            if let collection = controller.model.collection(collectionID, in: tripID) {
                 content(collection)
             } else {
                 ContentUnavailableView(TripText.collectionUnavailable.resource, systemImage: "square.stack")
@@ -19,7 +19,7 @@ struct TripCollectionView: View {
 
     private func content(_ collection: TripCollection) -> some View {
         List {
-            if let notice = controller.model.presentation.notice { Text(notice).foregroundStyle(.secondary) }
+            if let notice = controller.model.notice { Text(notice).foregroundStyle(.secondary) }
             if collection.stops.isEmpty {
                 ContentUnavailableView(TripText.noSavedPlaces.resource, systemImage: "bookmark",
                                        description: Text(TripText.savePlacesFromTheMapToThisCollection.resource))
@@ -37,9 +37,9 @@ struct TripCollectionView: View {
 
     private func stopRow(_ stop: TripStop) -> some View {
         HStack {
-            TripStopRow(stop: stop, controller: controller, showsMapIndicator: false)
+            TripStopRow(stop: stop, showsMapIndicator: false) { controller.showOnMap(stop.place) }
             Menu {
-                ForEach(controller.model.library.trip(tripID)?.days ?? []) { day in
+                ForEach(controller.model.trip(tripID)?.days ?? []) { day in
                     Button(day.title) { controller.schedule(stop.place, on: day.id, tripID: tripID) }
                 }
             } label: {
@@ -55,19 +55,19 @@ struct TripCollectionView: View {
 
 #if DEBUG
 #Preview("Saved places collection") {
-    let model = PreviewFixtures.tripPlanner()
+    let model = PreviewFixtures.collections()
     NavigationStack {
         TripCollectionView(tripID: model.library.trips[0].id,
                            collectionID: model.library.trips[0].collections[0].id,
-                           controller: TripController(model: model))
+                           controller: TripCollectionsController(model: model))
     }
 }
 #Preview("Collection · large text") {
-    let model = PreviewFixtures.tripPlanner()
+    let model = PreviewFixtures.collections()
     NavigationStack {
         TripCollectionView(tripID: model.library.trips[0].id,
                            collectionID: model.library.trips[0].collections[0].id,
-                           controller: TripController(model: model))
+                           controller: TripCollectionsController(model: model))
     }.dynamicTypeSize(.accessibility2)
 }
 #endif

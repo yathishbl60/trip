@@ -17,8 +17,8 @@ Read [DIRECTIONS.md](../../../../DIRECTIONS.md) for current APIs and supported c
 
 - Keep Explore's navigation header clear in loading, failure, and ready states.
 - Use native MapUserLocationButton, compass, scale, and Apple's Maps/Legal attribution.
-- ExploreMapView shares one stable namespace across Map, MapReader's environment, and native controls.
-- ExploreMapTrackingToolbar alone owns tracking in every layout; compass and scale use automatic mapControls.
+- ExploreMapView hosts location, compass, and scale together through automatic mapControls.
+- Preserve the original MapReader structure; the toolbar tracking relocation was reverted by user request.
 - Reserve native map safe-area space only for persistent UI that covers or blocks attribution.
 - Keep transient overlays, including bottom sheets, out of map safe-area insets.
 - Float notices above attribution; showing or resizing a sheet must not move it.

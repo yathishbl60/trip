@@ -3,8 +3,8 @@ import Foundation
 import TripDomain
 
 @MainActor enum TripPackingPreview {
-    static func planner(unavailable: Bool = false) -> TripModel {
-        let model = PreviewFixtures.tripPlanner()
+    static func planner(unavailable: Bool = false) -> TripChecklistModel {
+        let model = PreviewFixtures.checklist()
         model.openPacking(model.library.trips[0].id)
         model.packing.unavailableReason = unavailable ? "Apple Intelligence isn’t available. Travel essentials still works." : nil
         if !unavailable {

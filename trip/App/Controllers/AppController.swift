@@ -14,8 +14,8 @@ import Foundation
                 set: { if !$0 { model.navigation.notice = nil } })
     }
 
-    var mapSaveDestination: Binding<Place?> {
-        let destination = TripController(model: model.trips).pendingPlace
+    var mapSaveDestination: Binding<TripPlaceSaveSession?> {
+        let destination = TripController(model: model.trips).placeSaveDestination
         return Binding(get: { model.explore.selectedPlace == nil ? destination.wrappedValue : nil },
                        set: { destination.wrappedValue = $0 })
     }

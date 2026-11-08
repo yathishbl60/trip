@@ -35,6 +35,13 @@ public nonisolated enum TripChecklistEditing {
         return true
     }
 
+    @discardableResult public static func setComplete(_ itemID: UUID, complete: Bool, in plan: inout TripPlan) -> Bool {
+        guard let index = plan.checklist.firstIndex(where: { $0.id == itemID }),
+              plan.checklist[index].isComplete != complete else { return false }
+        plan.checklist[index].isComplete = complete
+        return true
+    }
+
     public static func appendTemplate(_ template: TripChecklistTemplate, to plan: inout TripPlan) -> Int? {
         let additions = missing(template.items, from: plan.checklist)
         guard additions.count <= max(0, TripLimits.checklistItems - plan.checklist.count) else { return nil }

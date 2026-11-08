@@ -1,3 +1,4 @@
+import TripPlaces
 import TripLocalization
 import Foundation
 import TripDomain
@@ -5,7 +6,7 @@ import TripDomain
 extension TripPlaceSearchModel {
     func search(_ query: String, near coordinate: Coordinate?, suggestionID: String? = nil,
                 autocomplete: PlaceAutocompleteModel? = nil) async {
-        guard allowsLiveSearch, !Task.isCancelled else { return }
+        guard canSearch, !Task.isCancelled else { return }
         prepare(query)
         guard !query.isEmpty else { return }
         let token = generation
@@ -22,23 +23,19 @@ extension TripPlaceSearchModel {
 
     private func fetch(_ query: String, near coordinate: Coordinate?, token: Int, suggestionID: String?,
                        autocomplete: PlaceAutocompleteModel?) async throws {
-        let operation = PlaceTextSearch()
+        guard let operation = makeOperation?() else { return }
         self.operation = operation
+        defer { if self.operation === operation { self.operation = nil } }
         startDeadline(token)
-        let results = try await withTaskCancellationHandler {
-            try await resolve(query, near: coordinate, suggestionID: suggestionID,
-                              autocomplete: autocomplete, using: operation)
-        } onCancel: {
-            Task { @MainActor in operation.cancel() }
-        }
+        let results = try await resolve(query, near: coordinate, suggestionID: suggestionID,
+                                        autocomplete: autocomplete, using: operation)
         guard token == generation, !Task.isCancelled else { return }
         places = results
         resolvedQuery = query
-        self.operation = nil
     }
 
     private func resolve(_ query: String, near coordinate: Coordinate?, suggestionID: String?,
-                         autocomplete: PlaceAutocompleteModel?, using operation: PlaceTextSearch) async throws -> [Place] {
+                         autocomplete: PlaceAutocompleteModel?, using operation: any PlaceSearching) async throws -> [Place] {
         if let suggestionID, let autocomplete {
             return try await autocomplete.resolve(suggestionID, using: operation)
         }

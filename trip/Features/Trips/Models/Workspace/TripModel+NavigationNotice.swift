@@ -6,6 +6,7 @@ extension TripModel {
         else if let draft = presentation.stopTiming { draft.error = message }
         else if let draft = presentation.planning { draft.notice = message }
         else if presentation.assistantTripID != nil { assistant.error = message }
+        else if collections.hasEditingSession { collections.showNotice(message) }
         else { presentation.notice = message }
     }
 }

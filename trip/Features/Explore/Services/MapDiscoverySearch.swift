@@ -1,3 +1,4 @@
+import TripPlaces
 import TripLocalization
 import TripDomain
 import MapKit

@@ -1,0 +1,83 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Tooling regression checks
+        run: python3 scripts/verify.py --kind tooling --output .build/verification/tooling.json -- python3 -m unittest discover -s scripts -p 'test_*.py'
+      - name: Changed commit whitespace
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ -n "$BASE" && "$BASE" != 0000000000000000000000000000000000000000 ]]; then
+            python3 scripts/check_whitespace.py --base "$BASE"
+          else
+            python3 scripts/check_whitespace.py
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: tooling-evidence
+          path: .build/verification/
+
+  native:
+    # Enable when the hosted image provides the required SDKs and Simulator.
+    if: vars.TRIP_MACOS_CI_ENABLED == 'true'
+    needs: tooling
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      TRIP_TEST_DESTINATION: ${{ vars.TRIP_TEST_DESTINATION }}
+      DEVELOPER_DIR: ${{ vars.TRIP_DEVELOPER_DIR }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Check native prerequisites
+        run: python3 scripts/workspace.py doctor --require-ready --json
+      - name: Source and syntax checks
+        run: |
+          python3 scripts/verify.py --kind source --output .build/verification/source.json -- bash scripts/check.sh
+          bash scripts/test_source_audit.sh
+      - name: iOS compilation
+        run: python3 scripts/verify.py --kind compilation --platform iOS --configuration Debug --output .build/verification/ios.json -- bash scripts/build.sh app Debug
+      - name: visionOS compilation
+        run: python3 scripts/verify.py --kind compilation --platform visionOS --configuration Debug --output .build/verification/visionos.json -- bash scripts/build.sh visionOS Debug
+      - name: Package behavior
+        run: python3 scripts/verify.py --kind executable --platform macOS --output .build/verification/package.json -- bash scripts/test.sh package
+      - name: Deterministic algorithm behavior
+        run: |
+          python3 scripts/verify.py --kind executable --platform macOS --output .build/verification/algorithms.json -- bash scripts/performance.sh check
+          python3 scripts/verify.py --kind executable --platform macOS --output .build/verification/integrations.json -- bash scripts/performance.sh system-check
+      - name: Isolated app-model behavior
+        run: python3 scripts/verify.py --kind executable --platform iOS --output .build/verification/models.json -- bash scripts/test.sh models
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-evidence
+          path: .build/verification/

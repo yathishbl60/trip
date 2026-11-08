@@ -3,7 +3,7 @@ import SwiftUI
 import TripDomain
 
 struct TripPackingPreferences: View {
-    let controller: TripController
+    let controller: TripChecklistController
     let tripID: UUID
 
     var body: some View {
@@ -19,7 +19,7 @@ struct TripPackingPreferences: View {
                 controller.addChecklistTemplate(.essentials, tripID: tripID)
                 controller.refreshPacking(tripID)
             }
-            .disabled(controller.model.library.trip(tripID)?.canAddChecklistItem != true)
+            .disabled(controller.model.trip(tripID)?.canAddChecklistItem != true)
         } footer: {
             Text(TripText.generatedOnThisDeviceUsingTripDurationActivityCategories.resource)
         }
@@ -29,6 +29,6 @@ struct TripPackingPreferences: View {
 #if DEBUG
 #Preview("Packing preferences · unavailable") {
     let model = TripPackingPreview.planner(unavailable: true)
-    Form { TripPackingPreferences(controller: TripController(model: model), tripID: model.library.trips[0].id) }
+    Form { TripPackingPreferences(controller: TripChecklistController(model: model), tripID: model.library.trips[0].id) }
 }
 #endif

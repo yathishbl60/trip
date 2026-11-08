@@ -4,7 +4,7 @@ import SwiftSyntax
 
 let root = URL(fileURLWithPath: CommandLine.arguments[1])
 let manager = FileManager.default
-let files = ["trip", "TripWidgets", "Packages/TripKit/Sources", "Packages/TripKit/Tests", "Performance", "scripts"].flatMap { directory in
+let files = ["trip", "TripWidgets", "TripAppTests", "Packages/TripKit/Sources", "Packages/TripKit/Tests", "Performance", "scripts"].flatMap { directory in
     manager.enumerator(at: root.appendingPathComponent(directory), includingPropertiesForKeys: nil)!
         .compactMap { $0 as? URL }.filter { $0.pathExtension == "swift" }
 } + [root.appendingPathComponent("Packages/TripKit/Package.swift")]
@@ -28,9 +28,12 @@ for file in files {
     audit.walk(tree)
     issues += audit.errors
     members += audit.members
+    let previews = PreviewAudit(tree, file: file.path)
+    previews.walk(tree)
+    issues += previews.errors
     if audit.views > 0 {
         views += 1
-        if !source.contains("#Preview") { issues.append("Missing preview: \(file.path)") }
+        if previews.names.isEmpty { issues.append("Missing named preview: \(file.path)") }
     }
 }
 let skills = manager.enumerator(at: root.appendingPathComponent(".agents/skills"), includingPropertiesForKeys: nil)!

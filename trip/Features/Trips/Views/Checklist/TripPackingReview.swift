@@ -2,7 +2,7 @@ import TripLocalization
 import SwiftUI
 
 struct TripPackingReview: View {
-    let controller: TripController
+    let controller: TripChecklistController
 
     var body: some View {
         if !controller.model.packing.suggestions.isEmpty {
@@ -21,6 +21,6 @@ struct TripPackingReview: View {
 #if DEBUG
 #Preview("Packing selection · long text") {
     let model = TripPackingPreview.planner()
-    Form { TripPackingReview(controller: TripController(model: model)) }.dynamicTypeSize(.accessibility2)
+    Form { TripPackingReview(controller: TripChecklistController(model: model)) }.dynamicTypeSize(.accessibility2)
 }
 #endif

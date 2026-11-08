@@ -228,6 +228,17 @@
           "app-development"
         ]
       }
+    ],
+    "TripPlaces": [
+      {
+        "when": "Changing native place search or MapKit conversion contracts",
+        "project": [
+          "trip-map-decluttering"
+        ],
+        "global": [
+          "app-development"
+        ]
+      }
     ]
   }
 }

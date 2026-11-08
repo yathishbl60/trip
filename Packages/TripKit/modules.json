@@ -22,5 +22,9 @@
   "TripIntegrations": [
     "TripDomain",
     "TripLocalization"
+  ],
+  "TripPlaces": [
+    "TripDomain",
+    "TripLocalization"
   ]
 }

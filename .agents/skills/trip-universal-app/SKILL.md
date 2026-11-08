@@ -24,7 +24,8 @@ Platform API evidence lives in global `app-development`; this skill owns Trip's 
 
 - AppRuntime shares TripLibraryModel and the system publisher, not an AppModel or map.
 - ContentView owns each window's AppModel, ExploreModel, presentation, assistant, search, and sort.
-- Commands use the focused scene; foreground intents queue validated destinations for an active scene.
+- Commands use the focused scene; foreground intents queue AppRequests for one eligible scene.
+- Links and restoration share scene request generations; newer user actions invalidate older loading.
 - SceneStorage restores tab and selected trip; validate IDs after load and cross-window deletion.
 - Trip windows use value-based WindowGroup; ordinary row taps stay in their current window.
 - iOS and visionOS host/extension settings and shared-source membership must agree.

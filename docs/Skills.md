@@ -56,3 +56,20 @@ Live `skills/list` discovery checks active names, scope, and parsing errors.
 Package validation checks self-contained links and a single entrypoint. Neither
 proves perfect implicit selection; use realistic task walkthroughs and report
 source checks, builds, and runtime verification separately.
+
+## Task selection review
+
+The [engineering lessons](EngineeringLessons.md) map demonstrated problems to their
+owning contracts and checks. Use these concrete walkthroughs when changing routing:
+
+| Example task | Relevant selection | Keep outside scope |
+| --- | --- | --- |
+| Cancel a packing request when its review closes | Trips context, trip-swiftui-vcm, app-development state/concurrency | Map layout and target configuration |
+| Fix a Duo control after unfolding | Explore/App context, trip-map-decluttering and trip-universal-app, adaptive/map references | New custom controls or navigation redesign |
+| Reuse native place conversion in another client | TripPlaces context, app-development architecture | App-owned appearance and autocomplete state |
+| Diagnose a hosted model-test build | App context, trip-previews-build and trip-xcode-tooling, compiler/verification references | Physical Siri evaluation |
+| Correct wording in a guide | Owning document | Framework skill bulk reading |
+
+These are reviewed selection examples, not a claim of automated skill-discovery
+accuracy. Repository route tests validate the catalog; actual task selection still
+requires judgment against the request and available evidence.

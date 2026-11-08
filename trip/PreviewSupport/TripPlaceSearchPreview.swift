@@ -6,7 +6,7 @@ enum TripPlaceSearchPreview {
                        error: String? = nil, isSearching: Bool = false) -> TripSavedPlacePickerModel {
         let trip = model.library.trips[0]
         let search = TripPlaceSearchModel(places: places, query: query, error: error,
-                                         isSearching: isSearching, allowsLiveSearch: false)
+                                         isSearching: isSearching)
         let picker = TripSavedPlacePickerModel(tripID: trip.id, dayID: trip.days[dayIndex].id, search: search)
         picker.query = query
         picker.isSubmittedSearch = !query.isEmpty

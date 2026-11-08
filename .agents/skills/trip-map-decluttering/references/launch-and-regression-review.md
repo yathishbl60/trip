@@ -24,13 +24,13 @@ a UI result limit cannot create missing suggestions. Resolve the selected native
 completion with MKLocalSearch.Request(completion:), retaining query/session guards.
 Check both Explore and Add places; show provider results rather than hardcoded names.
 
-- Keep ExploreMapTrackingToolbar as the only tracking host across all layouts.
-  Compass and scale use automatic mapControls; never transfer tracking between hosts
-  during adaptation. Do not infer a control frame from its surrounding container.
+- Keep location, compass, and scale in automatic mapControls across all layouts.
+  The toolbar tracking relocation was reverted by user request.
+  Do not infer a control frame from its surrounding container.
 - Validate every proposed exclusion against the live viewport. A container-sized
   rectangle can exclude all markers; a successful build will not detect it.
-- ExploreMapView keeps MapReader in place and shares one stable namespace with its Map,
-  toolbar tracking button, compass, and scale. Preserve this scope when changing hosts.
+- ExploreMapView keeps its original MapReader and automatic native control scope.
+  Preserve this structure when changing nearby toolbar or presentation code.
   Check fresh projection after pan/search, continuous/end callbacks, tracking, compass,
   selection/framing, attribution, and single-control ownership through fold transitions.
 - Keep MapProxy inside live callbacks. Do not substitute approximate projection,

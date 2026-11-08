@@ -3,7 +3,7 @@ import TripDomain
 extension TripSavedPlacePickerModel {
     func searchSuggestions() {
         search.cancel()
-        guard search.allowsLiveSearch else { return }
+        guard search.canSearch else { return }
         autocomplete.update(searchTerm, near: searchOrigin?.coordinate)
     }
 

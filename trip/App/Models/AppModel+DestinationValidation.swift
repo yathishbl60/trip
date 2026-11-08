@@ -23,6 +23,15 @@ extension AppModel {
         return true
     }
 
+    func openSavedDay(_ tripID: UUID, dayID: UUID, resetDestination: Bool) -> Bool {
+        guard allowNavigation(), let plan = navigationPlan(tripID) else { return false }
+        guard plan.days.contains(where: { $0.id == dayID }) else {
+            navigation.notice = TripIntentError.missingDay.errorDescription
+            return false
+        }
+        return openSavedTrip(tripID, resetDestination: resetDestination)
+    }
+
     func openNewEvent(_ request: TripNewEventRequest) {
         guard let plan = navigationPlan(request.tripID) else { return }
         do {

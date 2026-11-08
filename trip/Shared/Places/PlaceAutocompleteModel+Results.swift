@@ -1,3 +1,4 @@
+import TripPlaces
 import TripLocalization
 import MapKit
 import TripDomain
@@ -28,7 +29,7 @@ extension PlaceAutocompleteModel: @MainActor MKLocalSearchCompleterDelegate {
         deadline?.cancel()
     }
 
-    func resolve(_ id: String, using search: PlaceTextSearch) async throws -> [Place] {
+    func resolve(_ id: String, using search: any PlaceSearching) async throws -> [Place] {
         guard suggestions.contains(where: { $0.id == id }), let completion = completions[id] else {
             throw CancellationError()
         }

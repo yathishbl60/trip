@@ -11,5 +11,8 @@ Read only the relevant `app-development` state/performance topic when additional
 - Controller setters preserve validation and save semantics when introducing bindings.
 - Trip package text stays bundle-aware and deferred; follow [localization](../../../../docs/Localization.md).
 - Fixtures inject independent models and services rather than the shared AppRuntime.
+- AppRequest separates destinations from workflows; one scene generation governs suspended ingress.
+- New requests invalidate restoration; revalidate IDs and draft protection after loading.
+- Checklist naming and packing identities protect newer sessions from stale dismissals.
 
 For a source extraction, preserve existing state lifetimes and inspect the affected consumers.

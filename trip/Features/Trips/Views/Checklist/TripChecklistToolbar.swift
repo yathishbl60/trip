@@ -4,7 +4,7 @@ import TripDomain
 
 struct TripChecklistToolbar: ToolbarContent {
     let trip: TripPlan
-    let controller: TripController
+    let controller: TripChecklistController
     let reset: () -> Void
 
     var body: some ToolbarContent {
@@ -35,10 +35,10 @@ struct TripChecklistToolbar: ToolbarContent {
 
 #if DEBUG
 #Preview("Checklist controls") {
-    let model = PreviewFixtures.tripPlanner()
+    let model = PreviewFixtures.checklist()
     NavigationStack {
         Text("Checklist").toolbar {
-            TripChecklistToolbar(trip: model.library.trips[0], controller: TripController(model: model), reset: {})
+            TripChecklistToolbar(trip: model.library.trips[0], controller: TripChecklistController(model: model), reset: {})
         }
     }
 }

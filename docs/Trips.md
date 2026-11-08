@@ -9,11 +9,14 @@ local component composition uses `PreviewTripServices`. See [Dependencies](Depen
 | --- | --- |
 | Saved plans, filtering, load/save errors, revisions | Models/Library/TripLibraryModel |
 | Dialog targets, pending saves, selected trip | Models/Presentation/TripPresentationModel |
+| Save-sheet visit identity, independent of the saved place | TripPlaceSaveSession |
 | Trip name, date, and notes draft, validation, field merge | TripEditDraft |
-| Draft save/cancel, day/stop edits, collections | TripModel workflow extensions |
+| Trip draft save/cancel, day/stop edits | TripModel workflow extensions |
+| Collection naming, deletion, and saved-place edits | TripCollectionsModel, TripCollectionsController |
 | Draft generation and cancellation | TripAssistantModel, TripModel+Assistant |
 | Temporary success message | TripFeedbackModel |
-| Packing and preparation checklist | TripModel+Checklist, TripChecklistDraft |
+| Checklist edits, naming draft, packing review | TripChecklistModel, TripChecklistController, TripChecklistDraft |
+| Packing generation and stale-result protection | TripPackingModel, injected into Checklist |
 | Saved-place picker, moving stops and days | TripModel+DayPlanning, TripSavedPlacePickerModel |
 | Day schedules, visit timings, editing sessions | TripModel+Scheduling, TripDayScheduleDraft, TripStopTimingDraft |
 | Timeline calculation, timing limits, backward-compatible values | TripDomain/Trips schedule types |
@@ -45,7 +48,11 @@ TripStorage's schema/migrations remain behind TripStoring.
 
 `loadedTrips` initializes a known snapshot for fixtures or an already-loaded host;
 normal construction leaves it nil and loads the store. PreviewFixtures.tripPlanner
-and emptyTripPlanner use an in-memory store. They return TripModel directly;
+and emptyTripPlanner use an in-memory store. They return TripModel directly.
+Checklist components use `PreviewFixtures.checklist()` or
+`PreviewTripServices.makeChecklist(plans)` and receive only TripChecklistModel.
+Collection components use `PreviewFixtures.collections()` or
+`PreviewTripServices.makeCollections(plans)` and receive only TripCollectionsModel.
 PreviewFixtures.app is reserved for cross-feature integration previews.
 
 For a new trip settings field, add the value to TripDomain if durable, then to
@@ -83,13 +90,33 @@ shared load task coalesces callers; failure restores Retry and success opens the
 ## Model folders
 
 `Workspace` contains TripModel composition and cross-workflow actions. `Library`
-owns persistence. `Assistant`, `Checklist`, `Lookup`, `Journey`, and `Tracking`
+owns persistence. `Assistant`, `Checklist`, `Collections`, `Lookup`, `Journey`, and `Tracking`
 contain their respective state. `Editing` owns value drafts, `Scheduling` owns clock
 and timing presentation, `Search` owns picker lifetimes, `Map` owns saved-place
 framing, `Ordering` owns proposal review, and `Planning` owns day review/routes.
 `Presentation` contains shared feature presentation state and display extensions.
 `Dependencies` contains the small injected AI client contract. Add behavior to the
 focused owner before adding another TripModel extension.
+
+Checklist views and packing views receive TripChecklistController. TripChecklistModel
+owns their naming draft, packing session, and injected generation worker; the shared
+library remains the only durable mutation path. TripChecklistEnvironment supplies
+feedback, Reminders review, and entity identifiers. TripEditorView adds the existing
+section navigation, so the focused subtree does not depend on TripController.
+
+TripModel includes Checklist's editing status in navigation protection and resets
+its presentation when selecting another trip. Backgrounding cancels packing work
+without discarding the review. Naming and packing dismissal bindings check session
+identity so an old dismissal cannot close a replacement. UI and intent completion
+actions both use TripDomain's `TripChecklistEditing.setComplete`.
+
+Collection views receive TripCollectionsController. TripCollectionsModel owns naming
+and deletion sessions, notices, collection mutations, and identity-based stop edits.
+Its environment supplies map navigation, feedback, and day-scheduling callbacks;
+TripModel keeps day insertion policy and save-sheet dismissal. TripEditorView adds
+the existing section navigation. Naming and deletion callbacks validate the active
+session identity, and selecting another trip resets collection presentation.
+All durable changes still pass through the shared library's revisioned mutations.
 
 ## Planning workflows
 

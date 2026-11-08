@@ -22,7 +22,8 @@ General preview design and verification practice live in global `app-development
 
 `bash scripts/check.sh` audits ownership, previews, limits, localization, and prohibited UIKit use.
 `python3 scripts/check_architecture.py` is required after moving sources or changing dependencies.
-Source checks do not type-check Swift or extract App Intents metadata.
+Source checks verify named preview syntax, not rendered coverage, and do not type-check Swift.
+Use `scripts/verify.py` for revision/source-digest evidence; see [testing](../../../docs/Testing.md).
 Read [compiler boundaries](references/compiler-boundaries.md) before changing shared helpers or queries.
 
 Builds and benchmarks run only when requested; a reported build failure requests repair and compilation.
@@ -30,7 +31,9 @@ Use `bash scripts/build.sh app Debug` for the generic iOS Simulator configuratio
 The app build includes widgets; inspect both targets and AppIntentsMetadataProcessing.
 Use named package targets from [contributing](../../../CONTRIBUTING.md) for requested package builds.
 Keep independent iOS/visionOS verification scope from [universal support](../../../UNIVERSAL-APP.md).
-Keep output in ignored .build; scripts honor DEVELOPER_DIR without changing global Xcode selection.
+Keep output in ignored .build; build/test scripts accept absolute TRIP_BUILD_ROOT for isolated worktrees.
+Scripts honor DEVELOPER_DIR without changing global Xcode selection.
+Requested model checks use TripAppTests/TripModels with an explicit Simulator destination.
 For requested algorithm checks use `bash scripts/performance.sh`; read [Performance](../../../Performance/README.md).
 Use [trip-xcode-tooling](../trip-xcode-tooling/SKILL.md) for target wiring and profiling ownership.
 

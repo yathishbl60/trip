@@ -6,7 +6,7 @@ import TripDomain
 struct TripChecklistRow: View {
     let item: TripChecklistItem
     let tripID: UUID
-    let controller: TripController
+    let controller: TripChecklistController
 
     var body: some View {
         Button { controller.toggleChecklistItem(item.id, tripID: tripID) } label: {
@@ -35,12 +35,12 @@ struct TripChecklistRow: View {
 #if DEBUG
 #Preview("Checklist item", traits: .sizeThatFitsLayout) {
     TripChecklistRow(item: TripChecklistItem(title: "Confirm hotel reservations"), tripID: UUID(),
-                     controller: TripController(model: PreviewFixtures.tripPlanner())).padding()
+                     controller: TripChecklistController(model: PreviewFixtures.checklist())).padding()
 }
 #Preview("Completed item · large text", traits: .sizeThatFitsLayout) {
     var item = TripChecklistItem(title: "Download offline maps for the whole journey")
     item.isComplete = true
-    return TripChecklistRow(item: item, tripID: UUID(), controller: TripController(model: PreviewFixtures.tripPlanner()))
+    return TripChecklistRow(item: item, tripID: UUID(), controller: TripChecklistController(model: PreviewFixtures.checklist()))
         .padding().dynamicTypeSize(.accessibility2)
 }
 #endif

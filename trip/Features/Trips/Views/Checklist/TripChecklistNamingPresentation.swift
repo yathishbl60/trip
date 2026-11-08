@@ -3,8 +3,8 @@ import SwiftUI
 import TripDomain
 
 extension View {
-    func tripChecklistNamingAlert(_ controller: TripController, tripID: UUID) -> some View {
-        let draft = controller.model.presentation.checklistDraft
+    func tripChecklistNamingAlert(_ controller: TripChecklistController, tripID: UUID) -> some View {
+        let draft = controller.model.draft
         return alert(draft?.navigationTitle ?? TripText.checklist.text, isPresented: controller.checklistNaming(in: tripID),
                      presenting: draft) { draft in
             TextField(TripText.item.resource, text: controller.checklistTitle(draft))

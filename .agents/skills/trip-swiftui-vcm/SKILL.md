@@ -23,13 +23,15 @@ The global skill owns the implementation workflow; this skill defines Trip's con
 
 - AppRuntime shares the durable library and system publisher; ContentView owns each window's AppModel.
 - ExploreModel composes camera, catalog, filter, layout, location, and TripRouting models.
-- TripModel composes library, presentation, assistant, tracking, and feedback; library edits own persistence.
+- TripModel composes focused Checklist and Collections owners; each owns its drafts and library-backed edits.
 - AppTripServices selects live services; PreviewTripServices supplies isolated workers.
 - Inject providers, availability, failure presentation, and host callbacks; no live-service fallback in Trips models.
 - MapEngine's PlaceRepository owns caching; MarkerLayoutEngine owns layout history.
 - TripDomain owns Sendable contracts; implementation packages depend on it and TripLocalization.
 - Check `scripts/architecture/app-ownership.json` before introducing dependencies.
-- Shared/Places owns MapKit item conversion and text search; Trips must not reach into Explore.
+- TripPlaces owns native search and item conversion; Shared/Places retains autocomplete UI and appearance.
+- Checklist/Collections views use focused controllers; App invokes semantic Trips host operations.
+- AppTripServices injects the Trips search factory; local previews have no live-search fallback.
 
 ## Product-specific UI and compiler policy
 

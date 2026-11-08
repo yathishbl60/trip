@@ -33,7 +33,7 @@ import AppIntents
         explore.environment = ExploreEnvironment(
             savePlace: { [weak trips] in trips?.chooseDestination(for: $0) },
             dismissSave: { [weak trips] in trips?.dismissDestination() },
-            isSavingPlace: { [weak trips] in trips?.presentation.pendingPlace != nil }
+            isSavingPlace: { [weak trips] in trips?.hasPendingPlaceSave == true }
         )
         trips.environment = TripEnvironment(
             showExplore: { [weak self] in self?.showExplore() },

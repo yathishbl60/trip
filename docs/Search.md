@@ -1,5 +1,26 @@
 # Search across Trip
 
+## Ownership
+
+TripDomain owns immutable search values, text matching, and result deduplication.
+TripPlaces owns `PlaceTextSearch`, `PlaceFactory.make`, and
+`PlaceCategory.mapCategories`, shared by Explore and Trips through a package
+boundary. Native request handles and reverse category resolution stay internal.
+Each search owns its native cancellation and cleanup; replacing a request cancels
+the prior operation without allowing its completion to clear the current handle.
+
+Shared/Places retains observable autocomplete state and completion tokens, plus
+app annotation presentation and asset colors. Explore owns camera-driven discovery
+and catalog search; Trips owns day-picker search. Each feature controls debounce,
+timeouts, session cancellation, and stale-result checks. TripPlaces does not own navigation,
+selection, or the lifetime of a feature search session.
+
+AppTripServices injects Trips' `PlaceSearching` operation factory through TripModel.
+TripPlaceSearchModel never constructs a live provider. An absent factory is the
+local-preview configuration; both native autocomplete and submitted search stay
+disabled while supplied results can still render. Production composition supplies
+PlaceTextSearch explicitly. Explore retains its own catalog/search composition.
+
 ## Prefix suggestions
 
 Explore and Add places use `MKLocalSearchCompleter` while typing, with up to
@@ -68,4 +89,7 @@ the existing cancellable interpretation and saved-data results.
 
 ## Verification
 
-Use the source gate in [Contributing](../CONTRIBUTING.md). Request compilation and runtime checks separately; source checks do not verify rendered behavior.
+Use the source gate in [Contributing](../CONTRIBUTING.md). TripPlacesTests uses
+local MKMapItem values to check conversion and category mapping through public
+imports. It makes no live searches. Request compilation and runtime checks
+separately; source checks do not verify rendered behavior or MapKit provider results.

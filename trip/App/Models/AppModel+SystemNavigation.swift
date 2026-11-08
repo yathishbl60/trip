@@ -1,60 +1,51 @@
-import TripLocalization
 import Foundation
 import TripDomain
 
 extension AppModel {
-    func request(_ destination: AppDestination) {
-        cancelPendingLink()
-        guard allowNavigation() else { return }
+    func openDestination(_ destination: AppDestination) {
         switch destination {
-        case .explore: showExplore()
+        case .explore: navigation.tab = .explore
         case .trips: openTripLibrary()
         case .savedTrip(let id): openSavedTrip(id)
-        case .newTrip: createNewTrip()
-        case .draftTrip(let id, let preferences, let days, let processing):
-            draftTrip(id, preferences: preferences, days: days, processing: processing)
-        case .findTrip(let id, let question):
-            findTrip(id, question: question)
-        case .savedDetail(let identity): openDetail(identity)
-        case .checklist(let id, let preferences): openChecklist(id, preferences: preferences)
-        case .searchPlace(let request): openPlaceSearch(request)
-        case .importBooking(let request): openBookingImport(request)
-        default: openWorkspace(destination)
+        case .detail(let identity): openDetail(identity)
+        case .section(let id, let section):
+            guard openSavedTrip(id, resetDestination: false) else { return }
+            trips.openSection(section, tripID: id)
+        case .linkedDetail(let id, let item): openLinkedDetail(item, tripID: id)
+        case .restoration(let state): applyRestoration(state)
         }
     }
 
-    private func createNewTrip() {
-        navigation.tab = .trips
-        trips.beginCreate()
+    func openWorkflow(_ request: AppWorkflowRequest) {
+        switch request {
+        case .newTrip:
+            navigation.tab = .trips
+            trips.beginCreate()
+        case .draftTrip(let id, let preferences, let days, let processing):
+            guard openSavedTrip(id) else { return }
+            trips.openHostDraft(id, preferences: preferences, days: days, processing: processing)
+        case .findTrip(let id, let question):
+            guard openSavedTrip(id) else { return }
+            trips.openLookup(id, question: question)
+        case .checklist(let id, let preferences): openChecklist(id, preferences: preferences)
+        case .searchPlace(let request): openPlaceSearch(request)
+        case .importBooking(let request): openBookingImport(request)
+        case .workspaceTool(let id, let tool): openReview(tool, tripID: id)
+        case .dayTool(let id, let dayID, let tool): openDayTool(tool, tripID: id, dayID: dayID)
+        case .editDetail(let identity): openDetail(identity, editing: true)
+        case .newEvent(let request): openNewEvent(request)
+        }
     }
 
-    private func findTrip(_ id: UUID, question: String) {
-        guard openSavedTrip(id) else { return }
-        trips.openLookup(id, question: question)
-    }
-
-    func openDetail(_ identity: TripDetailIdentity) {
+    func openDetail(_ identity: TripDetailIdentity, editing: Bool = false) {
         guard validateDetail(identity), openSavedTrip(identity.tripID, resetDestination: false) else { return }
-        trips.openLookup(identity.tripID)
-        trips.lookup.chooseDetail(identity.itemID)
-    }
-
-    private func draftTrip(_ id: UUID, preferences: String, days: Int, processing: TripAIProcessing) {
-        guard openSavedTrip(id) else { return }
-        trips.openAssistant(id)
-        trips.assistant.setProcessing(processing)
-        trips.assistant.setPreferences(preferences)
-        trips.assistant.setDayCount(days)
-        trips.generatePlan(id)
+        trips.openHostDetail(identity, editing: editing)
     }
 
     @discardableResult func openSavedTrip(_ id: UUID, resetDestination: Bool = true) -> Bool {
-        guard allowNavigation() else { return false }
-        guard navigationPlan(id) != nil else { return false }
+        guard allowNavigation(), navigationPlan(id) != nil else { return false }
+        guard trips.openHostTrip(id, resetDestination: resetDestination) else { return false }
         navigation.tab = .trips
-        trips.dismissAssistant()
-        trips.selectTrip(id)
-        if resetDestination { trips.presentation.detailRoute = nil }
         return true
     }
 }

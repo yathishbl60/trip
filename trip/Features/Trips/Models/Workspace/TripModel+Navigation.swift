@@ -23,9 +23,8 @@ extension TripModel {
         dismissAssistant()
         presentation.detailRoute = nil
         presentation.dayToDelete = nil
-        presentation.collectionToDelete = nil
-        presentation.collectionDraft = nil
-        presentation.checklistDraft = nil
+        collections.resetPresentation()
+        checklist.resetPresentation()
         presentation.savedPlacePicker = nil
         presentation.stopOrder = nil
         presentation.daySchedule = nil
@@ -40,7 +39,6 @@ extension TripModel {
 
     private func clearJourneyPresentation() {
         if let draft = presentation.planning { closePlanning(draft.id) }
-        dismissPacking()
         lookup.cancel()
         presentation.eventDraft = nil
         presentation.notice = nil

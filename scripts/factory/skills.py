@@ -53,8 +53,12 @@ def check_routes(root, owners):
                     for skill in item.get(scope, []):
                         if not re.fullmatch(r"[a-z][a-z0-9-]*", skill):
                             errors.append(f"{name}: invalid skill name {skill!r}")
-                        if scope == "project" and not (root / f".agents/skills/{skill}/SKILL.md").is_file():
-                            errors.append(f"{name}: missing project skill {skill}")
+                        if scope == "project":
+                            entry = root / f".agents/skills/{skill}/SKILL.md"
+                            if not entry.is_file():
+                                errors.append(f"{name}: missing project skill {skill}")
+                            elif not entry.resolve().is_relative_to(root.resolve()) or entry.is_symlink() or entry.parent.is_symlink():
+                                errors.append(f"{name}: project skill must be an owned repository file: {skill}")
                         if (scope == "project") != skill.startswith("trip-"):
                             errors.append(f"{name}: {skill} has incorrect {scope} scope")
                         if scope == "global" and skill != "app-development":

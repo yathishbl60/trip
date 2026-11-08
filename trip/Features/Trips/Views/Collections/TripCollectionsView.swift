@@ -4,19 +4,18 @@ import TripDomain
 
 struct TripCollectionsView: View {
     let tripID: UUID
-    let controller: TripController
+    let controller: TripCollectionsController
 
     var body: some View {
         List {
-            if let notice = controller.model.presentation.notice { Text(notice).foregroundStyle(.secondary) }
-            if let trip = controller.model.library.trip(tripID) {
+            if let notice = controller.model.notice { Text(notice).foregroundStyle(.secondary) }
+            if let trip = controller.model.trip(tripID) {
                 TripCollectionSection(trip: trip, controller: controller)
             } else {
                 ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling")
             }
         }
         .navigationTitle(TripText.collections.resource)
-        .tripWayfinding(.collections, tripID: tripID, controller: controller)
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
@@ -26,9 +25,9 @@ struct TripCollectionsView: View {
 
 #if DEBUG
 #Preview("Saved collections") {
-    let model = PreviewFixtures.tripPlanner()
+    let model = PreviewFixtures.collections()
     NavigationStack {
-        TripCollectionsView(tripID: model.library.trips[0].id, controller: TripController(model: model))
+        TripCollectionsView(tripID: model.library.trips[0].id, controller: TripCollectionsController(model: model))
     }
 }
 #endif

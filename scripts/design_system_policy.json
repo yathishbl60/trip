@@ -1,33 +1,201 @@
 {
-  "roots": ["trip", "TripWidgets", "Packages/TripKit/Sources/TripRouting"],
+  "roots": [
+    "trip",
+    "TripWidgets",
+    "Packages/TripKit/Sources/TripRouting"
+  ],
   "geometry_notes": {
-    "trip/Features/Explore/Views/Map/MapToolPresentation.swift": "A 400-point ideal width gives the native contextual sheet room for its place actions while preserving the map. SwiftUI fits it to the available window. visionOS uses native split-column sizing.",
-    "trip/Features/Explore/Models/Explore/PlacePresentationModel.swift": "The 100-point native compact detent keeps the place title and toolbar reachable. Taller native detents provide scrolling details, and accessibility text excludes the compact detent.",
-    "Packages/TripKit/Sources/TripRouting/Feature/Views/DirectionsOptionsView.swift": "A 350-point ideal width and text-scaled 360-point ideal height keep the native options popover proportionate to its short form. SwiftUI fits the presentation to available space and the form scrolls when needed."
+    "trip/Features/Explore/Views/Map/MapToolPresentation.swift": {
+      "reason": "A 400-point ideal width gives the native contextual sheet room for its place actions while preserving the map. SwiftUI fits it to the available window. visionOS uses native split-column sizing.",
+      "anchors": [
+        ".frame(idealWidth: 400)"
+      ]
+    },
+    "trip/Features/Explore/Models/Explore/PlacePresentationModel.swift": {
+      "reason": "The 100-point native compact detent keeps the place title and toolbar reachable. Taller native detents provide scrolling details, and accessibility text excludes the compact detent.",
+      "anchors": [
+        "PresentationDetent.height(100)"
+      ]
+    },
+    "Packages/TripKit/Sources/TripRouting/Feature/Views/DirectionsOptionsView.swift": {
+      "reason": "A 350-point ideal width and text-scaled 360-point ideal height keep the native options popover proportionate to its short form. SwiftUI fits the presentation to available space and the form scrolls when needed.",
+      "anchors": [
+        ".frame(idealWidth: 350, idealHeight: preferredHeight)",
+        "preferredHeight = 360"
+      ]
+    }
   },
   "exceptions": {
     "fixed_font": {
-      "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": "Bounded map annotation metadata; the complete place label is exposed to accessibility.",
-      "trip/Features/Explore/Views/Markers/MarkerCaptionView.swift": "MapEngine owns the measured annotation footprint and zoom scaling.",
-      "trip/Features/Explore/Views/Markers/MarkerArtworkView.swift": "Decorative SF Symbol geometry inside a measured annotation.",
-      "trip/Features/Explore/Views/Markers/CategoryBadge.swift": "Decorative SF Symbol scales with its supplied badge diameter."
+      "trip/Features/Explore/Views/Markers/AnnotationRatingView.swift": {
+        "reason": "Bounded map annotation metadata; the complete place label is exposed to accessibility.",
+        "occurrences": [
+          {
+            "code": ".font(.system(size: 9, weight: .bold))",
+            "count": 1
+          },
+          {
+            "code": ".font(.system(size: 11, weight: .medium))",
+            "count": 1
+          },
+          {
+            "code": "Text(place.reviewText).font(.system(size: 10)).foregroundStyle(.secondary)",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Explore/Views/Markers/MarkerCaptionView.swift": {
+        "reason": "MapEngine owns the measured annotation footprint and zoom scaling.",
+        "occurrences": [
+          {
+            "code": ".font(.system(size: style.titleSize, weight: .semibold))",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Explore/Views/Markers/MarkerArtworkView.swift": {
+        "reason": "Decorative SF Symbol geometry inside a measured annotation.",
+        "occurrences": [
+          {
+            "code": ".font(.system(size: symbolSize, weight: .semibold))",
+            "count": 1
+          },
+          {
+            "code": ".font(.system(size: 9, weight: .bold))",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Explore/Views/Markers/CategoryBadge.swift": {
+        "reason": "Decorative SF Symbol scales with its supplied badge diameter.",
+        "occurrences": [
+          {
+            "code": ".font(.system(size: diameter * 0.48, weight: .bold))",
+            "count": 1
+          }
+        ]
+      }
     },
     "raw_spacing": {
-      "trip/Features/Explore/Views/Markers/RatingView.swift": "Optical spacing between the rating glyph and its value."
+      "trip/Features/Explore/Views/Markers/RatingView.swift": {
+        "reason": "Optical spacing between the rating glyph and its value.",
+        "occurrences": [
+          {
+            "code": "HStack(spacing: 3) {",
+            "count": 1
+          }
+        ]
+      }
     },
     "raw_inset": {
-      "trip/Features/Explore/Views/Map/MapCanvasView.swift": "Map attribution and native bottom-control clearance, not content padding."
+      "trip/Features/Explore/Views/Map/MapCanvasView.swift": {
+        "reason": "Map attribution and native bottom-control clearance, not content padding.",
+        "occurrences": [
+          {
+            "code": ".padding(.bottom, 32)",
+            "count": 1
+          }
+        ]
+      }
     },
     "literal_motion": {
-      "trip/DesignSystem/AppTheme+Motion.swift": "Owns the shared ordinary-control animation recipes.",
-      "trip/Features/Explore/Controllers/Gallery/GalleryPhotoZoomController.swift": "Direct image manipulation and gesture settling; Reduce Motion is supplied by the host.",
-      "trip/Features/Explore/Controllers/Gallery/PlaceGalleryController.swift": "Interruptible gallery paging and dismissal with explicit Reduce Motion input.",
-      "trip/Features/Trips/Models/Map/TripMapModel.swift": "Map fitting has its own camera duration and caller-provided animation policy.",
-      "trip/Features/Trips/Models/Map/TripMapModel+Camera.swift": "Map camera updates use the caller-provided animation policy.",
-      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsPresentationModel.swift": "Independent package owns its presentation animation and observes Reduce Motion."
+      "trip/DesignSystem/AppTheme+Motion.swift": {
+        "reason": "Owns the shared ordinary-control animation recipes.",
+        "occurrences": [
+          {
+            "code": "reduceMotion ? nil : .smooth(duration: 0.2)",
+            "count": 1
+          },
+          {
+            "code": "reduceMotion ? nil : .smooth(duration: 0.25)",
+            "count": 1
+          },
+          {
+            "code": "reduceMotion ? nil : .easeOut(duration: 0.16)",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Explore/Controllers/Gallery/GalleryPhotoZoomController.swift": {
+        "reason": "Direct image manipulation and gesture settling; Reduce Motion is supplied by the host.",
+        "occurrences": [
+          {
+            "code": "withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {",
+            "count": 1
+          },
+          {
+            "code": "withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) {",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Explore/Controllers/Gallery/PlaceGalleryController.swift": {
+        "reason": "Interruptible gallery paging and dismissal with explicit Reduce Motion input.",
+        "occurrences": [
+          {
+            "code": "withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) { model.toggleControls() }",
+            "count": 1
+          },
+          {
+            "code": "withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {",
+            "count": 1
+          },
+          {
+            "code": "withAnimation(reduceMotion ? nil : .smooth(duration: 0.22)) { model.select(photo.id) }",
+            "count": 1
+          },
+          {
+            "code": "withAnimation(reduceMotion ? nil : .snappy(duration: 0.28), completionCriteria: .removed) {",
+            "count": 1
+          },
+          {
+            "code": "withAnimation(reduceMotion ? nil : .snappy(duration: 0.24), completionCriteria: .removed) {",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Trips/Models/Map/TripMapModel.swift": {
+        "reason": "Map fitting has its own camera duration and caller-provided animation policy.",
+        "occurrences": [
+          {
+            "code": "withAnimation(animated ? .smooth(duration: 0.35) : nil) { position = fitted }",
+            "count": 1
+          }
+        ]
+      },
+      "trip/Features/Trips/Models/Map/TripMapModel+Camera.swift": {
+        "reason": "Map camera updates use the caller-provided animation policy.",
+        "occurrences": [
+          {
+            "code": "withAnimation(animated ? .smooth(duration: 0.35) : nil) { position = .camera(camera) }",
+            "count": 1
+          }
+        ]
+      },
+      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsPresentationModel.swift": {
+        "reason": "Independent package owns its presentation animation and observes Reduce Motion.",
+        "occurrences": [
+          {
+            "code": "var animation: Animation? { reduceMotion ? nil : .smooth(duration: 0.25) }",
+            "count": 1
+          }
+        ]
+      }
     },
     "literal_color": {
-      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsAppearance.swift": "Host-injectable route callout fill paired with white text; package cannot access app assets."
+      "Packages/TripKit/Sources/TripRouting/Feature/Models/DirectionsAppearance.swift": {
+        "reason": "Host-injectable route callout fill paired with white text; package cannot access app assets.",
+        "occurrences": [
+          {
+            "code": "public init(route: Color = .blue, calloutFill: Color = Color(red: 0, green: 0.32, blue: 0.65),",
+            "count": 1
+          },
+          {
+            "code": "calloutText: Color = .white, actionTint: Color = Color(red: 0, green: 0.32, blue: 0.65)) {",
+            "count": 1
+          }
+        ]
+      }
     }
   }
 }

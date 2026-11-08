@@ -4,17 +4,16 @@ import TripDomain
 
 struct TripChecklistView: View {
     let tripID: UUID
-    let controller: TripController
+    let controller: TripChecklistController
     @State private var confirmsReset = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Group {
-            if let trip = controller.model.library.trip(tripID) { content(trip) }
+            if let trip = controller.model.trip(tripID) { content(trip) }
             else { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
         }
         .navigationTitle(TripText.checklist.resource)
-        .tripWayfinding(.checklist, tripID: tripID, controller: controller)
         #if os(iOS)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
@@ -69,18 +68,18 @@ struct TripChecklistView: View {
 
 #if DEBUG
 #Preview("Travel checklist") {
-    let model = PreviewFixtures.tripPlanner()
-    NavigationStack { TripChecklistView(tripID: model.library.trips[0].id, controller: TripController(model: model)) }
+    let model = PreviewFixtures.checklist()
+    NavigationStack { TripChecklistView(tripID: model.library.trips[0].id, controller: TripChecklistController(model: model)) }
 }
 #Preview("Checklist · empty and large text") {
-    let model = PreviewFixtures.tripPlanner(includeChecklist: false)
+    let model = PreviewFixtures.checklist(includeChecklist: false)
     let id = model.library.trips[0].id
-    NavigationStack { TripChecklistView(tripID: id, controller: TripController(model: model)) }
+    NavigationStack { TripChecklistView(tripID: id, controller: TripChecklistController(model: model)) }
         .dynamicTypeSize(.accessibility2).preferredColorScheme(.dark)
 }
 #Preview("Checklist completion · interactive, narrow") {
-    let model = PreviewFixtures.tripPlanner()
-    NavigationStack { TripChecklistView(tripID: model.library.trips[0].id, controller: TripController(model: model)) }
+    let model = PreviewFixtures.checklist()
+    NavigationStack { TripChecklistView(tripID: model.library.trips[0].id, controller: TripChecklistController(model: model)) }
         .frame(width: 320).dynamicTypeSize(.accessibility2).preferredColorScheme(.dark)
 }
 #endif

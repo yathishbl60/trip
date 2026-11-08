@@ -1,5 +1,6 @@
 import TripDomain
 import TripIntelligence
+import TripPlaces
 import TripStorage
 
 /// Production composition. Feature models never choose their own live services.
@@ -12,7 +13,7 @@ import TripStorage
         TripModel(library: library, assistant: makeAssistant(), lookup: makeLookup(),
                   packing: makePacking(), stopOrdering: TripStopOrderService(),
                   bookingImport: makeBookingImport(), systemActions: makeSystemActions(library: library),
-                  weather: TripWeatherModel(service: weather), tracking: tracking)
+                  weather: TripWeatherModel(service: weather), makePlaceSearch: { PlaceTextSearch() }, tracking: tracking)
     }
 
     static func makeAssistant() -> TripAssistantModel {

@@ -4,11 +4,11 @@ import SwiftUI
 @MainActor struct TripController {
     let model: TripModel
 
-    var pendingPlace: Binding<Place?> {
-        let id = model.presentation.pendingPlace?.id
-        return Binding(get: { model.presentation.pendingPlace }, set: { place in
-            if let place { model.chooseDestination(for: place) }
-            else if model.presentation.pendingPlace?.id == id { model.dismissDestination() }
+    var placeSaveDestination: Binding<TripPlaceSaveSession?> {
+        let id = model.presentation.placeSave?.id
+        return Binding(get: { model.presentation.placeSave }, set: { destination in
+            guard case nil = destination, let id else { return }
+            model.dismissDestination(matching: id)
         })
     }
 

@@ -24,12 +24,7 @@ extension AppRuntime {
         guard let identity = TripChecklistIdentity(rawValue) else { throw TripChecklistIntentError.missingItem }
         let library = try await editableChecklistLibrary()
         guard let plan = library.trip(identity.tripID), identity.resolve(in: plan) != nil else { throw TripChecklistIntentError.missingItem }
-        library.update(identity.tripID) { plan in
-            guard let index = plan.checklist.firstIndex(where: { $0.id == identity.itemID }),
-                  plan.checklist[index].isComplete != complete else { return false }
-            plan.checklist[index].isComplete = complete
-            return true
-        }
+        library.update(identity.tripID) { TripChecklistEditing.setComplete(identity.itemID, complete: complete, in: &$0) }
         try await saveChecklist(library)
         return try checklistEntity(identity.itemID, tripID: identity.tripID, library: library)
     }

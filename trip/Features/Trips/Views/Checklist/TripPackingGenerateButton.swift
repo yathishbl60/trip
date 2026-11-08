@@ -4,7 +4,7 @@ import TripDomain
 
 struct TripPackingGenerateButton: View {
     let tripID: UUID
-    let controller: TripController
+    let controller: TripChecklistController
 
     var body: some View {
         if controller.model.packing.isGenerating {
@@ -24,6 +24,6 @@ struct TripPackingGenerateButton: View {
 #Preview("Generate packing · loading") {
     let model = TripPackingPreview.planner()
     model.packing.isGenerating = true
-    return Form { TripPackingGenerateButton(tripID: model.library.trips[0].id, controller: TripController(model: model)) }
+    return Form { TripPackingGenerateButton(tripID: model.library.trips[0].id, controller: TripChecklistController(model: model)) }
 }
 #endif

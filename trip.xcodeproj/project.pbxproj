@@ -13,6 +13,7 @@
 		100000000000000000000004 /* TripIntelligence in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000014 /* TripIntelligence */; };
 		100000000000000000000005 /* TripRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000015 /* TripRouting */; };
 		100000000000000000000006 /* TripIntegrations in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000016 /* TripIntegrations */; };
+		100000000000000000000007 /* TripPlaces in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000017 /* TripPlaces */; };
 		110000000000000000000001 /* TripLocalization in Frameworks */ = {isa = PBXBuildFile; productRef = 110000000000000000000011 /* TripLocalization */; };
 		110000000000000000000002 /* TripLocalization in Frameworks */ = {isa = PBXBuildFile; productRef = 110000000000000000000011 /* TripLocalization */; };
 		130000000000000000000001 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 120000000000000000000001 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings */; };
@@ -52,6 +53,13 @@
 			remoteGlobalIDString = 000000000000000100000000;
 			remoteInfo = trip;
 		};
+		420000000000000000000009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = trip;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,6 +93,7 @@
 		230000000000000000000001 /* TripWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TripWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		310000000000000000000002 /* trip/DesignSystem/Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = trip/DesignSystem/Colors.xcassets; sourceTree = SOURCE_ROOT; };
 		410000000000000000000002 /* TripSiriEvaluations.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSiriEvaluations.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		420000000000000000000002 /* TripAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -136,6 +145,11 @@
 			path = Performance/SiriEvaluations;
 			sourceTree = SOURCE_ROOT;
 		};
+		420000000000000000000003 /* TripAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TripAppTests;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +163,7 @@
 				100000000000000000000004 /* TripIntelligence in Frameworks */,
 				100000000000000000000005 /* TripRouting in Frameworks */,
 				100000000000000000000006 /* TripIntegrations in Frameworks */,
+				100000000000000000000007 /* TripPlaces in Frameworks */,
 			);
 		};
 		270000000000000000000001 /* Frameworks */ = {
@@ -165,6 +180,11 @@
 			files = (
 			);
 		};
+		420000000000000000000006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -174,6 +194,7 @@
 				120000000000000000000003 /* Packages/TripKit/Sources/TripLocalization/HostResources/InfoPlist.xcstrings */,
 				120000000000000000000002 /* Packages/TripKit/Sources/TripLocalization/HostResources/AppShortcuts.xcstrings */,
 				120000000000000000000001 /* Packages/TripKit/Sources/TripLocalization/HostResources/Localizable.xcstrings */,
+				420000000000000000000003 /* TripAppTests */,
 				410000000000000000000003 /* Performance/SiriEvaluations */,
 				000000000000000000000010 /* trip */,
 				260000000000000000000003 /* TripWidgets */,
@@ -188,6 +209,7 @@
 			children = (
 				000000000000000000000120 /* trip.app */,
 				230000000000000000000001 /* TripWidgets.appex */,
+				420000000000000000000002 /* TripAppTests.xctest */,
 				410000000000000000000002 /* TripSiriEvaluations.xctest */,
 			);
 			name = Products;
@@ -247,6 +269,7 @@
 				100000000000000000000013 /* TripStorage */,
 				100000000000000000000014 /* TripIntelligence */,
 				100000000000000000000016 /* TripIntegrations */,
+				100000000000000000000017 /* TripPlaces */,
 				100000000000000000000015 /* TripRouting */,
 			);
 			productName = MyApp;
@@ -292,10 +315,32 @@
 			);
 			fileSystemSynchronizedGroups = (
 				410000000000000000000003 /* Performance/SiriEvaluations */,
+				420000000000000000000003 /* TripAppTests */,
 			);
 			name = TripSiriEvaluations;
 			productName = TripSiriEvaluations;
 			productReference = 410000000000000000000002 /* TripSiriEvaluations.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		420000000000000000000001 /* TripAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 420000000000000000000010 /* Build configuration list for PBXNativeTarget "TripAppTests" */;
+			buildPhases = (
+				420000000000000000000005 /* Sources */,
+				420000000000000000000006 /* Frameworks */,
+				420000000000000000000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				420000000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				420000000000000000000003 /* TripAppTests */,
+			);
+			name = TripAppTests;
+			productName = TripAppTests;
+			productReference = 420000000000000000000002 /* TripAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -320,6 +365,10 @@
 						CreatedOnToolsVersion = 27.3;
 						TestTargetID = 000000000000000100000000;
 					};
+					420000000000000000000001 = {
+						CreatedOnToolsVersion = 27.3;
+						TestTargetID = 000000000000000100000000;
+					};
 				};
 			};
 			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "trip" */;
@@ -341,6 +390,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				420000000000000000000001 /* TripAppTests */,
 				410000000000000000000001 /* TripSiriEvaluations */,
 				000000000000000100000000 /* trip */,
 				250000000000000000000001 /* TripWidgets */,
@@ -365,6 +415,11 @@
 			);
 		};
 		410000000000000000000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		420000000000000000000007 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -398,6 +453,11 @@
 			files = (
 			);
 		};
+		420000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -410,6 +470,11 @@
 			isa = PBXTargetDependency;
 			target = 000000000000000100000000 /* trip */;
 			targetProxy = 410000000000000000000009 /* PBXContainerItemProxy */;
+		};
+		420000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* trip */;
+			targetProxy = 420000000000000000000009 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -764,6 +829,66 @@
 			};
 			name = Release;
 		};
+		420000000000000000000011 /* Debug configuration for PBXNativeTarget "TripAppTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.native.trip.model-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/trip";
+			};
+			name = Debug;
+		};
+		420000000000000000000012 /* Release configuration for PBXNativeTarget "TripAppTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.native.trip.model-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/trip";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -796,6 +921,14 @@
 			buildConfigurations = (
 				410000000000000000000011 /* Debug configuration for PBXNativeTarget "TripSiriEvaluations" */,
 				410000000000000000000012 /* Release configuration for PBXNativeTarget "TripSiriEvaluations" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		420000000000000000000010 /* Build configuration list for PBXNativeTarget "TripAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				420000000000000000000011 /* Debug configuration for PBXNativeTarget "TripAppTests" */,
+				420000000000000000000012 /* Release configuration for PBXNativeTarget "TripAppTests" */,
 			);
 			defaultConfigurationName = Release;
 		};
@@ -832,6 +965,10 @@
 		100000000000000000000016 /* TripIntegrations */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TripIntegrations;
+		};
+		100000000000000000000017 /* TripPlaces */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TripPlaces;
 		};
 		110000000000000000000011 /* TripLocalization */ = {
 			isa = XCSwiftPackageProductDependency;

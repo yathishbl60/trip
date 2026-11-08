@@ -1,5 +1,5 @@
-# Opt in only after provisioning a dedicated macOS runner with the required Xcode.
-# Assign that runner the custom label trip-xcode. Never run untrusted fork code.
+# Optional manual example; .github/workflows/quality.yml is Trip's integration lane.
+# Use a hosted image with the required Xcode. The readiness gate reports missing SDKs.
 name: Source checks
 on:
   workflow_dispatch:
@@ -7,10 +7,14 @@ permissions:
   contents: read
 jobs:
   source:
-    runs-on: [self-hosted, macOS, trip-xcode]
+    runs-on: macos-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/workspace.py doctor --require-ready --json
       - run: bash scripts/check.sh

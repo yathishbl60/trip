@@ -1,11 +1,6 @@
 extension AppModel {
-    func cancelPendingLink() {
-        navigation.linkTask?.cancel()
-        navigation.linkTask = nil
-    }
-
     func selectTab(_ tab: AppTab) {
-        cancelPendingLink()
+        navigation.beginRequest()
         navigation.tab = tab
     }
 

@@ -13,7 +13,7 @@ struct TripSaveDestinationsView: View {
             else { ContentUnavailableView(TripText.tripUnavailable.resource, systemImage: "suitcase.rolling") }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .collectionNamingAlert(controller, tripID: tripID)
+        .collectionNamingAlert(controller.collections, tripID: tripID)
     }
 
     private func destinations(in trip: TripPlan) -> some View {
@@ -37,7 +37,7 @@ struct TripSaveDestinationsView: View {
     private func collections(in trip: TripPlan) -> some View {
         Section(TripText.saveForLater.resource) {
             ForEach(trip.collections) { collectionRow($0) }
-            Button(TripText.newCollection.resource, systemImage: "plus") { controller.beginCollection(in: tripID) }
+            Button(TripText.newCollection.resource, systemImage: "plus") { controller.collections.beginCollection(in: tripID) }
                 .disabled(trip.collections.count >= TripLimits.collections)
         }
     }

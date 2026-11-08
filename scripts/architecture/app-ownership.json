@@ -15,7 +15,8 @@
       "TripLocalization",
       "TripStorage",
       "TripIntelligence",
-      "TripIntegrations"
+      "TripIntegrations",
+      "TripPlaces"
     ],
     "guide": "docs/App.md",
     "purpose": "Application composition, scene lifetime, navigation, and intents",
@@ -35,7 +36,8 @@
       "TripDomain",
       "TripRouting",
       "MapEngine",
-      "TripLocalization"
+      "TripLocalization",
+      "TripPlaces"
     ],
     "guide": "docs/Explore.md",
     "purpose": "Map browsing, place search, selection, and camera behavior",
@@ -55,7 +57,8 @@
     "packages": [
       "TripDomain",
       "TripRouting",
-      "TripLocalization"
+      "TripLocalization",
+      "TripPlaces"
     ],
     "forbiddenImports": [
       "SwiftData",
@@ -66,7 +69,9 @@
     "entryPoints": [
       "trip/Features/Trips/Models/Workspace/TripModel.swift",
       "trip/Features/Trips/Models/Library/TripLibraryModel.swift",
-      "trip/Features/Trips/Controllers/TripController.swift"
+      "trip/Features/Trips/Controllers/TripController.swift",
+      "trip/Features/Trips/Models/Checklist/TripChecklistModel.swift",
+      "trip/Features/Trips/Models/Collections/TripCollectionsModel.swift"
     ]
   },
   "DesignSystem": {
@@ -103,12 +108,13 @@
     "dependencies": [],
     "packages": [
       "TripDomain",
-      "TripLocalization"
+      "TripLocalization",
+      "TripPlaces"
     ],
     "guide": "docs/Search.md",
-    "purpose": "App-specific place conversion, autocomplete, and text search",
+    "purpose": "App autocomplete state and place appearance adapters",
     "entryPoints": [
-      "trip/Shared/Places/PlaceTextSearch.swift"
+      "trip/Shared/Places/PlaceAutocompleteModel.swift"
     ]
   },
   "System": {

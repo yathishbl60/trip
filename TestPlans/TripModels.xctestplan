@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "id": "07DBBF91-DAA6-438D-BAE2-0F9BB93396A5",
+      "name": "Deterministic models",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "environmentVariableEntries": [
+      {
+        "key": "TRIP_MODEL_TEST_HOST",
+        "value": "1"
+      }
+    ],
+    "targetForVariableExpansion": {
+      "containerPath": "container:trip.xcodeproj",
+      "identifier": "000000000000000100000000",
+      "name": "trip"
+    }
+  },
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:trip.xcodeproj",
+        "identifier": "420000000000000000000001",
+        "name": "TripAppTests"
+      },
+      "parallelizable": false
+    }
+  ],
+  "version": 1
+}

@@ -38,7 +38,8 @@ extension TripModel {
     func beginSavedPlaces(dayID: UUID, tripID: UUID) {
         guard let trip = library.trip(tripID), trip.days.contains(where: { $0.id == dayID }) else { return }
         presentation.savedPlacePicker?.cancelSearch()
-        presentation.savedPlacePicker = TripSavedPlacePickerModel(tripID: tripID, dayID: dayID)
+        presentation.savedPlacePicker = TripSavedPlacePickerModel(tripID: tripID, dayID: dayID,
+            search: TripPlaceSearchModel(makeOperation: makePlaceSearch))
         presentation.savedPlacePicker?.prepareSearch(in: trip)
     }
 

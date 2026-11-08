@@ -4,6 +4,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from source_text import production_mask
 
 ROOT = Path(__file__).resolve().parent.parent
 POLICY = json.loads((ROOT / "scripts/design_system_policy.json").read_text())
@@ -28,30 +29,94 @@ GUIDANCE = {
 VARIANTS = {(False, False), (True, False), (False, True), (True, True)}
 
 
-def source_errors():
-    errors, seen = [], set()
-    for rule, entries in POLICY["exceptions"].items():
+def policy_paths(root, policy):
+    errors, files = [], set()
+    roots = policy.get('roots', [])
+    if not isinstance(roots, list) or not roots:
+        return ['Design policy roots must be a nonempty list.'], []
+    for name in roots:
+        if not isinstance(name, str):
+            errors.append(f'Invalid design policy root: {name}')
+            continue
+        path = (root / name).resolve()
+        if not path.is_relative_to(root.resolve()) or not path.is_dir():
+            errors.append(f'Invalid design policy root: {name}')
+        else:
+            files.update(path.rglob('*.swift'))
+    return errors, sorted(files)
+
+
+def scoped_exceptions(root, policy, files):
+    errors, scopes = [], {}
+    names = {path.relative_to(root).as_posix() for path in files}
+    exceptions = policy.get('exceptions', {})
+    if not isinstance(exceptions, dict):
+        return ['Design exceptions must be a rule map.'], {}
+    for rule, entries in exceptions.items():
         if rule not in PATTERNS:
-            errors.append(f"Unknown design exception rule: {rule}")
-        for name, reason in entries.items():
-            if not (ROOT / name).is_file() or not reason.strip():
-                errors.append(f"Invalid design exception: {rule}: {name}")
-    files = sorted({p for root in POLICY["roots"] for p in (ROOT / root).rglob("*.swift")})
-    for path in files:
-        name = path.relative_to(ROOT).as_posix()
-        # Preview geometry is intentionally independent of production layout tokens.
-        source = path.read_text().split("#Preview", 1)[0]
-        source = re.sub(r"//[^\n]*", "", source)
-        for rule, pattern in PATTERNS.items():
-            matches = list(re.finditer(pattern, source))
-            if matches and name in POLICY["exceptions"].get(rule, {}):
-                seen.add((rule, name))
+            errors.append(f'Unknown design exception rule: {rule}')
+        if not isinstance(entries, dict):
+            errors.append(f'Design exceptions must map paths to scopes: {rule}')
+            continue
+        for name, entry in entries.items():
+            if name not in names or not isinstance(entry, dict) or not isinstance(entry.get('reason'), str) or not entry['reason'].strip():
+                errors.append(f'Invalid scoped design exception: {rule}: {name}')
                 continue
-            for match in matches:
+            occurrences = entry.get('occurrences', [])
+            if not isinstance(occurrences, list) or not occurrences:
+                errors.append(f'Design exception needs exact code occurrences: {rule}: {name}')
+                continue
+            for occurrence in occurrences:
+                if not isinstance(occurrence, dict):
+                    errors.append(f'Invalid design occurrence: {rule}: {name}')
+                    continue
+                code, count = occurrence.get('code'), occurrence.get('count')
+                if not isinstance(code, str) or not code.strip() or '\n' in code or type(count) is not int or count < 1:
+                    errors.append(f'Invalid design occurrence: {rule}: {name}')
+                elif (rule, name, code) in scopes:
+                    errors.append(f'Duplicate design occurrence: {rule}: {name}: {code}')
+                else:
+                    scopes[(rule, name, code)] = count
+    return errors, scopes
+
+
+def geometry_errors(root, policy, files):
+    errors = []
+    names = {path.relative_to(root).as_posix() for path in files}
+    notes = policy.get('geometry_notes', {})
+    if not isinstance(notes, dict):
+        return ['Geometry notes must map paths to reasons and anchors.']
+    for name, entry in notes.items():
+        if name not in names or not isinstance(entry, dict) or not isinstance(entry.get('reason'), str) or not entry['reason'].strip():
+            errors.append(f'Invalid geometry note: {name}')
+            continue
+        source = production_mask((root / name).read_text())
+        anchors = entry.get('anchors', [])
+        if not isinstance(anchors, list) or not anchors or any(not isinstance(anchor, str) or not anchor.strip() or anchor not in source for anchor in anchors):
+            errors.append(f'Geometry note needs current production code anchors: {name}')
+    return errors
+
+
+def source_errors(root=None, policy=None):
+    root, policy = (root or ROOT).resolve(), POLICY if policy is None else policy
+    errors, files = policy_paths(root, policy)
+    invalid, remaining = scoped_exceptions(root, policy, files)
+    errors += invalid + geometry_errors(root, policy, files)
+    for path in files:
+        name = path.relative_to(root).as_posix()
+        original = path.read_text()
+        lines = original.splitlines()
+        source = production_mask(original)
+        for rule, pattern in PATTERNS.items():
+            for match in re.finditer(pattern, source):
                 line = source.count("\n", 0, match.start()) + 1
+                key = (rule, name, lines[line - 1].strip())
+                if remaining.get(key, 0):
+                    remaining[key] -= 1
+                    continue
                 errors.append(f"{name}:{line}: {GUIDANCE[rule]}")
-    for rule, entries in POLICY["exceptions"].items():
-        errors.extend(f"Remove unused design exception: {rule}: {name}" for name in entries if (rule, name) not in seen)
+    errors += [f'Remove unused design occurrence: {rule}: {name}: {code} ({count} remaining)'
+               for (rule, name, code), count in remaining.items() if count]
     return errors, len(files)
 
 

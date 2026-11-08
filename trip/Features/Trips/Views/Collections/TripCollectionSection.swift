@@ -4,15 +4,16 @@ import SwiftUI
 
 struct TripCollectionSection: View {
     let trip: TripPlan
-    let controller: TripController
+    let controller: TripCollectionsController
 
     var body: some View {
         content
         .collectionNamingAlert(controller, tripID: trip.id)
         .confirmationDialog(TripText.deleteThisCollectionAndItsSavedPlaces.resource,
-                            isPresented: controller.deletingCollection) {
+                            isPresented: controller.deletingCollection(in: trip.id),
+                            presenting: controller.model.deletion) { session in
             Button(TripText.deleteCollection.resource, role: .destructive) {
-                controller.confirmCollectionDeletion(from: trip.id)
+                controller.confirmCollectionDeletion(session)
             }
         }
     }
@@ -37,7 +38,7 @@ struct TripCollectionSection: View {
 
     @ViewBuilder private func actions(for item: TripCollection) -> some View {
         Button(TripText.delete.resource, systemImage: "trash", role: .destructive) {
-            controller.requestCollectionDeletion(item.id)
+            controller.requestCollectionDeletion(item.id, tripID: trip.id)
         }
         Button(TripText.rename.resource, systemImage: "pencil") { controller.renameCollection(item, in: trip.id) }
             .tint(AppTheme.accentFill)
@@ -46,14 +47,14 @@ struct TripCollectionSection: View {
 
 #if DEBUG
 #Preview("Trip collections") {
-    let model = PreviewFixtures.tripPlanner()
+    let model = PreviewFixtures.collections()
     NavigationStack { List { TripCollectionSection(trip: model.library.trips[0],
-                                                    controller: TripController(model: model)) } }
+                                                    controller: TripCollectionsController(model: model)) } }
 }
 #Preview("No collections · dark") {
-    let model = PreviewFixtures.emptyTripPlanner()
     let trip = TripPlan(title: "Japan")
-    NavigationStack { List { TripCollectionSection(trip: trip, controller: TripController(model: model)) } }
+    let model = PreviewTripServices.makeCollections([trip])
+    NavigationStack { List { TripCollectionSection(trip: trip, controller: TripCollectionsController(model: model)) } }
         .preferredColorScheme(.dark)
 }
 #endif
