@@ -4,6 +4,10 @@ import Foundation
 public nonisolated struct TripSavedPlaceIndex: Sendable {
     private var references: [String: [TripSavedPlaceReference]] = [:]
     private var tripKeys: [UUID: Set<String>] = [:]
+    private var tripGroups: [UUID: TripSavedPlaceGroup] = [:]
+    public var groups: [TripSavedPlaceGroup] {
+        tripGroups.values.sorted { ($0.title, $0.id.uuidString) < ($1.title, $1.id.uuidString) }
+    }
 
     public init(_ plans: [TripPlan] = []) {
         for plan in plans { replace(plan) }
@@ -13,6 +17,7 @@ public nonisolated struct TripSavedPlaceIndex: Sendable {
 
     public mutating func replace(_ plan: TripPlan) {
         remove(plan.id)
+        tripGroups[plan.id] = TripSavedPlaceGroup(plan)
         let entries = Self.entries(plan)
         tripKeys[plan.id] = Set(entries.map(\.placeID))
         for entry in entries { references[entry.placeID, default: []].append(entry) }
@@ -22,6 +27,7 @@ public nonisolated struct TripSavedPlaceIndex: Sendable {
     }
 
     public mutating func remove(_ tripID: UUID) {
+        tripGroups[tripID] = nil
         for key in tripKeys.removeValue(forKey: tripID) ?? [] {
             references[key]?.removeAll { $0.tripID == tripID }
             if references[key]?.isEmpty == true { references[key] = nil }

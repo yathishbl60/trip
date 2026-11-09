@@ -5,6 +5,7 @@ import Foundation
 
 extension ExploreModel {
     func selectNearbyPlace(_ place: Place) {
+        history.record(.place(place))
         catalog.merge([place])
         navigatePlaceDetails(to: selection.detailPath + [.detail(place)])
     }
@@ -19,7 +20,7 @@ extension ExploreModel {
         let center = MKMapPoint(marker.place.coordinate.location)
         let radius = 20 * MKMapPointsPerMeterAtLatitude(marker.place.coordinate.latitude)
         let bounds = MKMapRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
-        let neighbors = catalog.visibleIndex.query(bounds, categories: filters.effectiveCategories)
+        let neighbors = discoveryIndex.query(bounds, categories: filters.effectiveCategories)
             .map(\.place).filter { $0.coordinate.distance(to: marker.place.coordinate) <= 20 }
         let places = [marker.place] + layout.choices(for: marker) + neighbors
         let unique = Dictionary(places.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })

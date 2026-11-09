@@ -6,7 +6,7 @@ import MapKit
 
 extension ExploreModel {
     func refreshAutocomplete() {
-        guard catalog.isSearchPresented, catalog.isTextSearch, !catalog.isSubmittedSearch else {
+        guard !savedMap.isActive, catalog.isSearchPresented, catalog.isTextSearch, !catalog.isSubmittedSearch else {
             catalog.autocomplete.cancel()
             return
         }
@@ -14,6 +14,7 @@ extension ExploreModel {
     }
 
     func submitSearch() {
+        history.record(.search(catalog.searchText))
         catalog.isSubmittedSearch = true
         catalog.autocomplete.cancel()
         scheduleSearch(force: true)

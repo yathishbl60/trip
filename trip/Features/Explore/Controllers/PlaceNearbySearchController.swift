@@ -7,6 +7,10 @@ import SwiftUI
         Binding(get: { model.category }, set: { model.choose($0) })
     }
 
+    var radius: Binding<NearbySearchRadius> {
+        Binding(get: { model.radius }, set: { model.choose($0) })
+    }
+
     func load() async { await model.load() }
     func retry() { model.retry() }
 }

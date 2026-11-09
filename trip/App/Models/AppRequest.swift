@@ -14,6 +14,7 @@ nonisolated struct AppRequest: Hashable {
 
     static func savedTrip(_ id: UUID) -> Self { Self(operation: .destination(.savedTrip(id))) }
     static func savedDetail(_ identity: TripDetailIdentity) -> Self { Self(operation: .destination(.detail(identity))) }
+    static func savedCollection(_ identity: TripCollectionIdentity) -> Self { Self(operation: .destination(.collection(identity))) }
     static func section(_ id: UUID, _ section: TripSection) -> Self {
         Self(operation: .destination(.section(id, section)))
     }
@@ -22,7 +23,7 @@ nonisolated struct AppRequest: Hashable {
         switch operation {
         case .destination(.explore), .destination(.trips): false
         case .destination(.savedTrip), .destination(.detail), .destination(.section),
-             .destination(.linkedDetail), .destination(.restoration), .workflow: true
+             .destination(.collection), .destination(.linkedDetail), .destination(.restoration), .workflow: true
         }
     }
 }
@@ -30,6 +31,7 @@ nonisolated struct AppRequest: Hashable {
 nonisolated enum AppDestination: Hashable {
     case explore, trips, savedTrip(UUID), detail(TripDetailIdentity), section(UUID, TripSection)
     case linkedDetail(UUID, UUID?), restoration(AppRestoration)
+    case collection(TripCollectionIdentity)
 }
 
 nonisolated struct AppRestoration: Hashable {

@@ -7,4 +7,5 @@ import TripDomain
     var isSavingPlace: () -> Bool = { false }
     var savedPlaces: (String) -> [TripSavedPlaceReference] = { _ in [] }
     var openSavedPlace: (TripSavedPlaceReference) -> Void = { _ in }
+    var savedCatalog: () -> [TripSavedPlaceGroup] = { [] }
 }

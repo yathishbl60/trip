@@ -128,6 +128,7 @@ Packages/TripKit/Sources/TripLocalization/TripText+Intents5.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents6.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents7.swift
 Packages/TripKit/Sources/TripLocalization/TripText+MapDiscovery.swift
+Packages/TripKit/Sources/TripLocalization/TripText+MapRefinements.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Motion.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel2.swift

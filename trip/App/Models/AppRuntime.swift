@@ -6,11 +6,12 @@ import Foundation
 @MainActor enum AppRuntime {
     static let savedTrips = makeLibrary()
     static let system = AppTripServices.makeSystem()
+    static let placeHistory = AppExploreServices.makeHistory()
     static weak var activeScene: AppModel?
 
     static func makeScene() -> AppModel {
         let trips = AppTripServices.makeTrips(library: savedTrips, tracking: TripTrackingModel(runtime: .shared))
-        return AppModel(trips: trips, system: system)
+        return AppModel(explore: ExploreModel(history: placeHistory), trips: trips, system: system)
     }
 
     private static func makeLibrary() -> TripLibraryModel {

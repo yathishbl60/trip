@@ -14,13 +14,15 @@ import Observation
     let selection = PlaceSelectionModel()
     let appearance = MapAppearanceModel()
     let browse = MapBrowseModel()
+    let savedMap = SavedMapModel()
+    let history: PlaceHistoryModel
     var selectedPlace: Place? { selection.place }
     var isActive = false
     @ObservationIgnored var isSuspended = false
     @ObservationIgnored var activationRevision = 0
 
     init(configuration: MapConfiguration = .init(), provider: any PlaceProviding = ApplePlaceProvider(),
-         environment: ExploreEnvironment = .init()) {
+         environment: ExploreEnvironment = .init(), history: PlaceHistoryModel = .init()) {
         self.configuration = configuration
         camera = CameraModel(configuration: configuration)
         catalog = CatalogModel(provider: provider, policy: configuration.data)
@@ -29,6 +31,7 @@ import Observation
         location = LocationModel(coordinate: configuration.validCenter, label: configuration.startingPointLabel)
         directions = DirectionsModel()
         self.environment = environment
+        self.history = history
         configureDirections()
     }
 
@@ -49,7 +52,7 @@ import Observation
 
     func filterPlaces() {
         browse.invalidate()
-        filters.updateCounts(catalog.visibleCounts)
+        filters.updateCounts(discoveryCounts)
         requestProjection()
     }
 

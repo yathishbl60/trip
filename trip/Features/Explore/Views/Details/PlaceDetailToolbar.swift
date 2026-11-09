@@ -7,13 +7,6 @@ struct PlaceDetailToolbar: ToolbarContent {
     let controller: PlaceController
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            if controller.model.browse.isPresented, controller.model.selection.detailPath.isEmpty {
-                Button(TripText.backToMapResults.resource, systemImage: "chevron.backward") {
-                    MapBrowseController(model: controller.model).back()
-                }
-            }
-        }
         ToolbarItemGroup(placement: .topBarTrailing) {
             if let url = place.mapsURL {
                 ShareLink(item: url, preview: SharePreview(place.name)) {

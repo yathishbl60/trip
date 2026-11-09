@@ -20,7 +20,8 @@ struct MapCanvasView: View {
 
     private var searchStatus: some View {
         MapSearchStatusView(model: controller.model.catalog,
-                            showsProgress: controller.model.mapSheet == nil && !controller.model.catalog.isSearchPresented,
+                            showsProgress: controller.model.mapSheet == nil && !controller.model.catalog.isSearchPresented
+                                && !controller.model.savedMap.isActive,
                             motion: controller.model.configuration.motion,
                             retry: CatalogController(model: controller.model).search,
                             areaChanged: controller.noticeAreaChanged)

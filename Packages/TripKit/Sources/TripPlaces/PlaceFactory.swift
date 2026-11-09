@@ -12,6 +12,6 @@ import CoreLocation
         return Place(id: id, name: name, coordinate: coordinate,
                      category: .resolve(item.pointOfInterestCategory), importance: 0.55,
                      rating: nil, reviews: nil, address: item.address?.fullAddress,
-                     website: item.url, phoneNumber: item.phoneNumber, isLive: true)
+                     website: item.url, phoneNumber: item.phoneNumber, isLive: true, mapItemIdentifier: item.identifier?.rawValue)
     }
 }

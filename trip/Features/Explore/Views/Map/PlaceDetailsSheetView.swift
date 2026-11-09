@@ -17,10 +17,10 @@ struct PlaceDetailsSheetView<Detail: View>: View {
     }
 
     @ViewBuilder private var panel: some View {
-        if let root = model.selection.rootPlace, let selectedID = model.selectedPlace?.id {
+        if model.browse.isPresented {
+            MapBrowseNavigation(controller: MapBrowseController(model: model), detail: detail)
+        } else if let root = model.selection.rootPlace, let selectedID = model.selectedPlace?.id {
             measuredDetails(root, selectedID: selectedID, revision: model.selection.revision)
-        } else if model.browse.isPresented {
-            MapBrowseView(controller: MapBrowseController(model: model))
         }
     }
 

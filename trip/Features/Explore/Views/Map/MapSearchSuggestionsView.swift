@@ -8,12 +8,13 @@ struct MapSearchSuggestionsView: View {
 
     var body: some View {
         if controller.model.catalog.isTextSearch {
-            if controller.model.catalog.isSubmittedSearch {
+            if controller.model.catalog.isSubmittedSearch || controller.model.savedMap.isActive {
                 results
                 browseButton
                 MapSearchResultStatus(controller: controller)
             } else { MapAutocompleteSuggestionsView(controller: controller) }
         } else {
+            MapRecentSearchesView(controller: PlaceHistoryController(model: controller.model))
             browseButton
             Section(TripText.searchThisArea.resource) {
                 Label(TripText.restaurants.resource, systemImage: "fork.knife").searchCompletion(TripText.restaurants.text)
@@ -32,7 +33,7 @@ struct MapSearchSuggestionsView: View {
     }
 
     private var results: some View {
-        ForEach(controller.model.catalog.matchingPlaces.prefix(20)) { place in
+        ForEach(controller.model.searchMatches.prefix(20)) { place in
             HStack(spacing: AppTheme.Spacing.small) {
                 Button { choose(place) } label: {
                     TripPlaceLabel(title: place.name, subtitle: place.address ?? place.category.annotationTitle,

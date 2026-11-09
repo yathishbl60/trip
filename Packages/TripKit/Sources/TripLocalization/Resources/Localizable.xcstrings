@@ -29405,6 +29405,510 @@
           }
         }
       }
+    },
+    "All places": {
+      "comment": "@symbol allPlaces\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सभी जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಎಲ್ಲ ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "Saved places": {
+      "comment": "@symbol savedPlaces\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सेव की गई जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "Search distance": {
+      "comment": "@symbol nearbyDistance\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search distance"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "खोज की दूरी"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಹುಡುಕಾಟದ ದೂರ"
+          }
+        }
+      }
+    },
+    "Apple Maps details": {
+      "comment": "@symbol appleMapsDetails\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Maps details"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apple Maps में जानकारी"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apple Maps ವಿವರಗಳು"
+          }
+        }
+      }
+    },
+    "Couldn’t load Apple Maps details": {
+      "comment": "@symbol couldNotLoadAppleDetails\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t load Apple Maps details"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apple Maps की जानकारी लोड नहीं हो सकी"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apple Maps ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
+          }
+        }
+      }
+    },
+    "Check your connection and try again.": {
+      "comment": "@symbol checkConnectionAndTryAgain\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your connection and try again."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "अपना कनेक्शन जाँचें और फिर कोशिश करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+          }
+        }
+      }
+    },
+    "Loading": {
+      "comment": "@symbol loading\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "लोड हो रहा है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಲೋಡ್ ಆಗುತ್ತಿದೆ"
+          }
+        }
+      }
+    },
+    "Compare travel times": {
+      "comment": "@symbol compareTravelTimes\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare travel times"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा के समय की तुलना करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರಯಾಣ ಸಮಯಗಳನ್ನು ಹೋಲಿಸಿ"
+          }
+        }
+      }
+    },
+    "Choose up to 3 places": {
+      "comment": "@symbol chooseComparisonPlaces\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose up to 3 places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "अधिकतम 3 जगहें चुनें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಗರಿಷ್ಠ 3 ಸ್ಥಳಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+          }
+        }
+      }
+    },
+    "Estimates use current conditions. Switch walking or driving to compare; actual travel times may vary.": {
+      "comment": "@symbol travelComparisonExplanation\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimates use current conditions. Switch walking or driving to compare; actual travel times may vary."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "अनुमान मौजूदा स्थितियों पर आधारित हैं। तुलना के लिए पैदल या ड्राइविंग चुनें; वास्तविक यात्रा का समय अलग हो सकता है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಅಂದಾಜುಗಳು ಪ್ರಸ್ತುತ ಪರಿಸ್ಥಿತಿಗಳನ್ನು ಆಧರಿಸಿವೆ. ಹೋಲಿಸಲು ನಡಿಗೆ ಅಥವಾ ಚಾಲನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ; ನಿಜವಾದ ಪ್ರಯಾಣ ಸಮಯ ಬದಲಾಗಬಹುದು."
+          }
+        }
+      }
+    },
+    "Travel from": {
+      "comment": "@symbol travelFrom\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Travel from"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यहाँ से यात्रा करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಇಲ್ಲಿಂದ ಪ್ರಯಾಣಿಸಿ"
+          }
+        }
+      }
+    },
+    "Previous stop: %@": {
+      "comment": "@symbol previousStopValue\n@group MapRefinements\n@parameters String\nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous stop: %@"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "पिछला पड़ाव: %@"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಹಿಂದಿನ ನಿಲ್ದಾಣ: %@"
+          }
+        }
+      }
+    },
+    "Estimating travel times": {
+      "comment": "@symbol loadingTravelTimes\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimating travel times"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा के समय का अनुमान लगाया जा रहा है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರಯಾಣ ಸಮಯಗಳನ್ನು ಅಂದಾಜಿಸಲಾಗುತ್ತಿದೆ"
+          }
+        }
+      }
+    },
+    "Retry unavailable estimates": {
+      "comment": "@symbol retryUnavailableEstimates\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry unavailable estimates"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "अनुपलब्ध अनुमानों के लिए फिर कोशिश करें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಲಭ್ಯವಿಲ್ಲದ ಅಂದಾಜುಗಳಿಗಾಗಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+          }
+        }
+      }
+    },
+    "Travel time unavailable": {
+      "comment": "@symbol estimateUnavailable\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Travel time unavailable"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "यात्रा का समय उपलब्ध नहीं है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಪ್ರಯಾಣ ಸಮಯ ಲಭ್ಯವಿಲ್ಲ"
+          }
+        }
+      }
+    },
+    "Choose a saved starting place, or allow location access in Settings and try again.": {
+      "comment": "@symbol chooseSavedOriginOrEnableLocation\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a saved starting place, or allow location access in Settings and try again."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सेव की गई शुरुआती जगह चुनें, या सेटिंग्स में लोकेशन की अनुमति देकर फिर कोशिश करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಪ್ರಾರಂಭದ ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ, ಅಥವಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಸ್ಥಳ ಪ್ರವೇಶಕ್ಕೆ ಅನುಮತಿ ನೀಡಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+          }
+        }
+      }
+    },
+    "Recent searches and places": {
+      "comment": "@symbol recentSearchesAndPlaces\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent searches and places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "हाल की खोजें और जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಇತ್ತೀಚಿನ ಹುಡುಕಾಟಗಳು ಮತ್ತು ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "Clear recent history": {
+      "comment": "@symbol clearRecentHistory\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear recent history"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "हाल का इतिहास मिटाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಇತ್ತೀಚಿನ ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ"
+          }
+        }
+      }
+    },
+    "Couldn’t update saved recent history. Try again.": {
+      "comment": "@symbol couldNotUpdateRecentHistory\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update saved recent history. Try again."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सेव किया गया हाल का इतिहास अपडेट नहीं हो सका। फिर कोशिश करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಉಳಿಸಿದ ಇತ್ತೀಚಿನ ಇತಿಹಾಸವನ್ನು ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+          }
+        }
+      }
+    },
+    "No saved places in this area": {
+      "comment": "@symbol noSavedPlacesInArea\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No saved places in this area"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस क्षेत्र में कोई सेव की गई जगह नहीं है"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರದೇಶದಲ್ಲಿ ಉಳಿಸಿದ ಸ್ಥಳಗಳಿಲ್ಲ"
+          }
+        }
+      }
+    },
+    "No saved places match this search.": {
+      "comment": "@symbol noSavedMatches\n@group MapRefinements\n@parameters \nMap discovery, local history, and travel-time comparison.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No saved places match this search."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस खोज से मेल खाने वाली कोई सेव की गई जगह नहीं है।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಹುಡುಕಾಟಕ್ಕೆ ಹೊಂದಿಕೆಯಾಗುವ ಉಳಿಸಿದ ಸ್ಥಳಗಳಿಲ್ಲ."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

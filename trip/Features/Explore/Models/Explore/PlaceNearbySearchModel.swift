@@ -11,69 +11,70 @@ import TripDomain
     private(set) var error: String?
     private(set) var retryRevision = 0
     private(set) var category = NearbyPlaceCategory.all
-    private var hasLoaded: Bool
+    private(set) var radius = NearbySearchRadius.neighborhood
+    @ObservationIgnored private var cache = NearbySearchCache()
     @ObservationIgnored private var generation = 0
 
     init(origin: Place, results: [Place]? = nil) {
         self.origin = origin
         places = results ?? []
-        hasLoaded = results != nil
+        if let results { cache.store(results, for: scope) }
     }
 
+    var scope: NearbySearchScope { NearbySearchScope(category: category, radius: radius) }
+
     func load() async {
-        guard !hasLoaded else { return }
+        if let cached = cache.places(for: scope) { places = cached; isLoading = false; return }
         generation += 1
         let token = generation
         isLoading = true
         error = nil
         defer { if token == generation { isLoading = false } }
         do {
-            let results = try await fetch()
+            let scope = scope
+            let results = try await fetch(scope)
             guard !Task.isCancelled, token == generation else { return }
-            accept(results)
-            hasLoaded = true
+            accept(results, radius: scope.radius.rawValue)
+            cache.store(places, for: scope)
         } catch {
             guard !Task.isCancelled, token == generation else { return }
             self.error = TripText.couldnTFindNearbyPlacesTryAgain.text
         }
     }
 
-    private func fetch() async throws -> [Place] {
-        guard origin.coordinate.isValid else { return [] }
-        let region = MKCoordinateRegion(center: origin.coordinate.location,
-                                        latitudinalMeters: 2_400, longitudinalMeters: 2_400)
-        let category = category
-        return try await withThrowingTaskGroup(of: [Place].self) { group in
-            group.addTask { try await MapSearchService.nearby(region: region, category: category) }
-            group.addTask {
-                try await Task.sleep(for: .seconds(15))
-                throw URLError(.timedOut)
-            }
-            defer { group.cancelAll() }
-            return try await group.next() ?? []
-        }
-    }
-
-    private func accept(_ results: [Place]) {
+    private func accept(_ results: [Place], radius: Double) {
         var seen: Set<String> = [origin.id]
         places = results.filter {
             $0.coordinate.isValid && seen.insert($0.id).inserted
-                && $0.coordinate.distance(to: origin.coordinate) <= 2_000
+                && $0.coordinate.distance(to: origin.coordinate) <= radius
         }.sorted {
             $0.coordinate.distance(to: origin.coordinate) < $1.coordinate.distance(to: origin.coordinate)
         }
     }
 
-    func retry() { retryRevision += 1 }
+    func retry() {
+        cache.remove(scope)
+        retryRevision += 1
+    }
 
     func choose(_ category: NearbyPlaceCategory) {
         guard self.category != category else { return }
-        generation += 1
         self.category = category
-        places = []
+        scopeChanged()
+    }
+
+    func choose(_ radius: NearbySearchRadius) {
+        guard self.radius != radius else { return }
+        self.radius = radius
+        scopeChanged()
+    }
+
+    private func scopeChanged() {
+        generation += 1
+        let cached = cache.places(for: scope)
+        places = cached ?? []
         error = nil
-        hasLoaded = false
-        isLoading = true
+        isLoading = cached == nil
         retryRevision += 1
     }
 }

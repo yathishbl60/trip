@@ -15,10 +15,11 @@ public nonisolated struct Place: Codable, Identifiable, Hashable, Sendable {
     public var website: URL?
     public var phoneNumber: String?
     public var isLive = false
+    public var mapItemIdentifier: String?
 
     public init(id: String, name: String, coordinate: Coordinate, category: PlaceCategory,
                 importance: Double, rating: Double?, reviews: Int?, address: String? = nil,
-                website: URL? = nil, phoneNumber: String? = nil, isLive: Bool = false) {
+                website: URL? = nil, phoneNumber: String? = nil, isLive: Bool = false, mapItemIdentifier: String? = nil) {
         self.id = id
         self.name = name
         self.coordinate = coordinate
@@ -30,6 +31,7 @@ public nonisolated struct Place: Codable, Identifiable, Hashable, Sendable {
         self.website = website
         self.phoneNumber = phoneNumber
         self.isLive = isLive
+        self.mapItemIdentifier = mapItemIdentifier
     }
 
     public var matchingName: String {
@@ -40,7 +42,8 @@ public nonisolated struct Place: Codable, Identifiable, Hashable, Sendable {
     public func updating(with other: Self) -> Self {
         Self(id: id, name: other.name, coordinate: other.coordinate, category: other.category,
              importance: max(importance, other.importance), rating: rating, reviews: reviews,
-             address: other.address, website: other.website, phoneNumber: other.phoneNumber, isLive: other.isLive)
+             address: other.address, website: other.website, phoneNumber: other.phoneNumber, isLive: other.isLive,
+             mapItemIdentifier: other.mapItemIdentifier ?? mapItemIdentifier)
     }
 
     public var ratingText: String {

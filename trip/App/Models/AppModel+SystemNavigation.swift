@@ -8,6 +8,7 @@ extension AppModel {
         case .trips: openTripLibrary()
         case .savedTrip(let id): openSavedTrip(id)
         case .detail(let identity): openDetail(identity)
+        case .collection(let identity): openCollection(identity)
         case .section(let id, let section):
             guard openSavedTrip(id, resetDestination: false) else { return }
             trips.openSection(section, tripID: id)
@@ -39,6 +40,12 @@ extension AppModel {
     func openDetail(_ identity: TripDetailIdentity, editing: Bool = false) {
         guard validateDetail(identity), openSavedTrip(identity.tripID, resetDestination: false) else { return }
         trips.openHostDetail(identity, editing: editing)
+    }
+
+    private func openCollection(_ identity: TripCollectionIdentity) {
+        guard let plan = navigationPlan(identity.tripID), identity.resolve(in: plan) != nil,
+              openSavedTrip(identity.tripID, resetDestination: false) else { return }
+        trips.openHostCollection(identity)
     }
 
     @discardableResult func openSavedTrip(_ id: UUID, resetDestination: Bool = true) -> Bool {

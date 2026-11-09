@@ -38,6 +38,8 @@ struct TripEditorView: View {
         case .collections:
             TripCollectionsView(tripID: route.tripID, controller: controller.collections)
                 .tripWayfinding(.collections, tripID: route.tripID, controller: controller)
+        case .collection(let id):
+            TripCollectionView(tripID: route.tripID, collectionID: id, controller: controller.collections)
         case .lookup: TripLookupView(tripID: route.tripID, controller: controller)
         case .today:
             TripTodayView(tripID: route.tripID, controller: controller).modifier(TripHingeObservation())

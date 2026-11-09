@@ -15,6 +15,7 @@ import TripDomain
         plan.days[0].stops = [TripStop(place: PreviewFixtures.hotel)]
         let index = TripSavedPlaceIndex([plan])
         model.environment.savedPlaces = { index.places($0) }
+        model.environment.savedCatalog = { index.groups }
         return model
     }
 

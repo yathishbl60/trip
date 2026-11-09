@@ -11,6 +11,7 @@ struct PlaceDetailContactSection: View {
             address
             phone
             website
+            if PlaceCardController.supports(place) { PlaceNativeCardView(place: place) }
             if let url = place.mapsURL {
                 Link(destination: url) { Label(TripText.openInAppleMaps.resource, systemImage: "map") }
             }

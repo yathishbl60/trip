@@ -25,6 +25,7 @@ struct FilterPanelView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: AppTheme.spacing) {
+                    SavedMapPicker(controller: SavedMapController(model: controller.model))
                     CategoryChipsView(controller: controller)
                     footer.font(.footnote).foregroundStyle(.secondary)
                 }.padding()
@@ -34,6 +35,7 @@ struct FilterPanelView: View {
 
     private var categoryList: some View {
         List {
+            SavedMapPicker(controller: SavedMapController(model: controller.model))
             Section {
                 allPlaces
                 ForEach(controller.model.filters.rows) { row in

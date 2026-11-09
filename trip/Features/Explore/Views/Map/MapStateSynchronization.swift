@@ -10,6 +10,8 @@ struct MapStateSynchronization: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .modifier(SavedMapSynchronization(controller: SavedMapController(model: controller.model)))
+            .task { await PlaceHistoryController(model: controller.model).load() }
             .sensoryFeedback(.selection, trigger: controller.model.selectedPlace?.id) { _, selected in selected != nil }
             .onChange(of: markerScale, initial: true) { updateAccessibility() }
             .onChange(of: reduceMotion) { updateAccessibility() }

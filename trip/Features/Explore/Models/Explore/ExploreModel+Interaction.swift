@@ -10,6 +10,7 @@ extension ExploreModel {
     }
 
     private func userMovedMap() {
+        browse.context.reset()
         catalog.setSearchPresented(false)
         selection.userMoved()
         directions.stopFollowingRoute()

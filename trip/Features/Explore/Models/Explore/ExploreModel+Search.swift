@@ -45,7 +45,7 @@ extension ExploreModel {
     }
 
     func scheduleSearch(force: Bool = false) {
-        guard isActive, catalog.canSearch, force || !camera.isMoving else { return }
+        guard !savedMap.isActive, isActive, catalog.canSearch, force || !camera.isMoving else { return }
         guard !catalog.isTextSearch || catalog.isSubmittedSearch else { return }
         let request = PlaceSearchRequest(area: SearchArea(camera.region),
             query: catalog.searchText,
@@ -86,7 +86,8 @@ extension ExploreModel {
     }
 
     func chooseSearchResult(_ choice: Place, saving: Bool) {
-        guard let place = catalog.matchingPlaces.first(where: { $0.id == choice.id }) else { return }
+        guard let place = searchMatches.first(where: { $0.id == choice.id }) else { return }
+        history.record(.place(place))
         catalog.cancelSearch()
         catalog.setSearchPresented(false)
         catalog.merge([place])

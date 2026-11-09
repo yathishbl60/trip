@@ -25,6 +25,7 @@ struct MapMenuOptions: View {
 
     private var discovery: some View {
         Section {
+            SavedMapPicker(controller: SavedMapController(model: controller.model))
             Button(TripText.browseThisArea.resource, systemImage: "list.bullet") {
                 MapBrowseController(model: controller.model).open()
             }

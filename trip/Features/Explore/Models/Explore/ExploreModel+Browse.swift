@@ -15,6 +15,7 @@ extension ExploreModel {
         guard browse.isPresented else { return }
         select(nil)
         camera.sheetFrame = .null
+        if let restored = browse.context.returnCamera() { camera.transition(to: restored) }
         requestProjection()
     }
 
@@ -29,9 +30,9 @@ extension ExploreModel {
     }
 
     func refreshBrowse(_ projection: MapProjection) {
-        guard !camera.isMoving, selectedPlace == nil else { return }
+        guard !camera.isMoving, selectedPlace == nil, browse.context.accepts(camera.sampledCamera) else { return }
         guard let region = projection.browseRegion, let center = projection.center else { browse.unavailableArea(); return }
-        browse.refresh(index: catalog.visibleIndex, categories: filters.effectiveCategories, region: region,
+        browse.refresh(index: discoveryIndex, categories: filters.effectiveCategories, region: region,
                        center: center, sample: camera.sample, size: camera.size)
     }
 

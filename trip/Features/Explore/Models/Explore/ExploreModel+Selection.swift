@@ -38,6 +38,8 @@ extension ExploreModel {
     }
 
     func selectPlace(_ place: Place) {
+        history.record(.place(place))
+        if browse.isPresented, selectedPlace == nil { browse.context.inspect(from: camera.sampledCamera) }
         let isDot = layout.markers.first(where: { $0.id == place.id })?.style == .dot
         select(place)
         guard isDot else { return }

@@ -4,7 +4,7 @@ import TripLocalization
 import Foundation
 import MapKit
 
-public nonisolated struct DirectionsEstimate {
+public nonisolated struct DirectionsEstimate: Sendable {
     public let travelTime: TimeInterval
     public let distance: Double
     public let arrival: Date

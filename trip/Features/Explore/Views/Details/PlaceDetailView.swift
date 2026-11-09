@@ -6,9 +6,13 @@ struct PlaceDetailView: View {
     let controller: PlaceController
 
     var body: some View {
-        NavigationStack(path: controller.detailPath) {
+        if controller.model.browse.isPresented {
             PlaceDetailContentView(place: place, controller: controller)
-                .navigationDestination(for: PlaceDetailDestination.self, destination: destination)
+        } else {
+            NavigationStack(path: controller.detailPath) {
+                PlaceDetailContentView(place: place, controller: controller)
+                    .navigationDestination(for: PlaceDetailDestination.self, destination: destination)
+            }
         }
     }
 

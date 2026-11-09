@@ -26,4 +26,11 @@ extension TripModel {
     func supportsHostReview(_ tool: TripWorkspaceTool) -> Bool {
         tool == .tripDetails || systemActions.service.supportsCalendarReminders
     }
+
+    func openHostCollection(_ identity: TripCollectionIdentity) {
+        guard !hasEditingSession, let plan = library.trip(identity.tripID), identity.resolve(in: plan) != nil else { return }
+        let route = TripDetailRoute(tripID: plan.id, destination: .collection(identity.collectionID))
+        guard !TripDetailRoute.sameDestination(presentation.detailRoute, route) else { return }
+        presentation.detailRoute = route
+    }
 }
