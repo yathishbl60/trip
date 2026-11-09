@@ -22,6 +22,14 @@ public nonisolated extension TripText {
         TripText("collection_needs_saved_visit")
     }
 
+    static var collectionPlaceMissing: TripText {
+        TripText("collection_place_missing")
+    }
+
+    static func collectionPlaceScheduled(_ value1: String, _ value2: String) -> TripText {
+        TripText("collection_place_scheduled", value: "\(value1)\(value2)")
+    }
+
     static var collectionPlacesFull: TripText {
         TripText("collection_places_full")
     }

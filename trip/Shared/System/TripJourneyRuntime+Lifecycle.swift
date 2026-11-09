@@ -62,7 +62,7 @@ extension TripJourneyRuntime {
     private func request(plan: TripSurfacePlan, day: TripSurfaceDay, journey: TripJourney) throws
         -> Activity<TripActivityAttributes> {
         let attributes = TripActivityAttributes(tripID: plan.id, dayID: day.id,
-                                                tripTitle: plan.title, dayNumber: day.number)
+                                                tripTitle: TripActivityAttributes.boundedText(plan.title), dayNumber: day.number)
         let state = TripActivityAttributes.ContentState(journey: journey, day: day, title: plan.title)
         return try Activity.request(attributes: attributes,
             content: ActivityContent(state: state, staleDate: journey.expiresAt), pushType: nil)

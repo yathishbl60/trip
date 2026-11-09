@@ -2,6 +2,10 @@
 import Foundation
 
 public nonisolated extension TripText {
+    static var openTrip2: TripText {
+        TripText("open_trip2")
+    }
+
     static var openTripToContinue: TripText {
         TripText("open_trip_to_continue")
     }

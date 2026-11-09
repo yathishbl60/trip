@@ -12,7 +12,7 @@ Follow [Siri integration](docs/SiriPreview.md) for tool metadata and runtime ski
 | Read itinerary, a day, or the next item | Shortcuts, Siri, snippets, widgets | Saved facts and exact-detail links; no invented booking information |
 | Find saved information | Ask my trip and saved-detail actions | Manual filters or an on-device interpretation of the question |
 | Prepare for departure | Checklist, packing review, departure widget | Explicit completion; generated suggestions require selection and saving |
-| Organize a shortlist | Collection tools | Create, rename, read, or copy a saved itinerary place into a collection |
+| Organize a shortlist | Collection tools | Create, rename, read, save a place, or schedule a collection place onto a day |
 | Adjust a visit | Timing and Move Saved Place to Day tools | Validates the canonical visit, day, limits, and saved timing rules |
 | Open directions or suggest an order | Existing day tool | Existing route validation or a stop-order proposal requiring Apply |
 | Import or export travel data | Trip/day menus and Shortcuts | Existing document, Calendar, Reminders, and booking-alarm reviews |
@@ -35,8 +35,12 @@ Trip, detail, checklist, and collection identities remain stable. Collection IDs
 include their trip ID. Create Collection reuses one normalized-name match, rejects
 ambiguous matches, and respects capacity. Saving a place to a collection copies the
 canonical place without its visit timing or notes; retrying keeps one copy. Rename
-preserves the collection and its places. Unscheduled collection places are readable
-but do not yet have individual entities for direct scheduling.
+preserves the collection and its places. Individual collection places have identities
+qualified by trip, collection, and stop, and authenticated enumerable queries.
+Schedule Collection Place on Day copies the canonical place to an existing day in
+the same trip without copying notes or timing. It retains the collection, returns
+an existing destination visit on retry, validates capacity and active edits, and
+flushes the save before returning a typed saved-detail result.
 
 Move Saved Place to Day preserves the original visit identity, notes, and timing;
 it rejects bookings, duplicates, stale targets, and full destinations. Set Visit
@@ -88,6 +92,9 @@ existing checklist text. Suggestions require review and Add selected. Cancellati
 backgrounding, changed inputs, and a cooperative deadline reject stale work.
 
 The Departure checklist widget shows a departure countdown and completion counts.
+Automatic selection follows the next departure in each trip's local calendar,
+including the whole departure day, independently of active visit tracking. An
+explicitly configured trip remains selected after departure.
 Checklist text stays out of App Group snapshots and Spotlight; authenticated
 checklist actions can still return it. Completion describes the checklist, not an
 assessment that the traveler is ready or safe to depart.
@@ -99,6 +106,9 @@ Active tracking retains its day, including overnight travel. Completed, expired,
 ended tracking returns widgets to the saved agenda; a later booking remains useful.
 Visit buttons act only on the displayed tracked place. Upcoming confirmed start/end
 boundaries, midnight, and tracking expiry inform timelines; WidgetKit controls delivery.
+Providers cache projections during a timeline request and precompute up to 32
+entries over the next 24 hours, spacing changes at least five minutes apart. Shared
+data failures retain useful entries and request a retry instead of waiting a day.
 
 On iPhone/iPad, timeline relevance uses the displayed confirmed item within an hour,
 active tracking, or an unfinished checklist with departure today/tomorrow. It uses
@@ -108,8 +118,10 @@ system-controlled; never promise rotation or immediate refresh.
 The iOS Open saved trip control offers Itinerary, Checklist, and Next item. Its
 foreground host action validates the saved trip and protects edits. Live Activities
 are iOS-only and show explicit visit progress on supported system surfaces, including
-compact/minimal/expanded Island and supplemental small/medium families. Tracking
-expires after 7.5 hours; stale or ended content hides active visit controls. Maps links
+compact/minimal/expanded Island and supplemental small/medium families. Dynamic
+Island labels are privacy sensitive and progress has a spoken accessibility label.
+Activity text is bounded by encoded size, including Unicode and JSON escapes.
+Tracking expires after 7.5 hours; stale or ended content hides active visit controls. Maps links
 use saved coordinates. These surfaces do not provide live ETA or background navigation.
 
 ## Ownership and signing
@@ -208,4 +220,6 @@ and signing on the affected platforms.
 - [Custom actions and content](https://developer.apple.com/documentation/appintents/bringing-custom-actions-and-content-to-siri)
 - [App skills](https://developer.apple.com/documentation/appintents/orchestrating-complex-actions-with-app-skills)
 - [Interactive widgets and Live Activities](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities)
+- [Predictable widget timelines](https://developer.apple.com/documentation/widgetkit/keeping-a-widget-up-to-date)
+- [Activity lifecycle and payload limits](https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities)
 - [Share-sheet Shortcuts](https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/ios)

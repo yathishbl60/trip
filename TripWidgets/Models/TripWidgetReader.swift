@@ -3,30 +3,44 @@ import TripDomain
 import TripStorage
 import Foundation
 
-nonisolated enum TripWidgetReader {
-    static func entry(tripID: UUID?, at date: Date) async -> TripWidgetEntry {
+nonisolated struct TripWidgetReader {
+    let index: TripSurfaceIndex?
+    let journey: TripJourney?
+    private(set) var needsRetry = false
+    private var plans: [UUID: TripSurfacePlan] = [:]
+
+    init() async throws {
+        index = try await TripSystemData.store.index()
+        journey = try await TripSystemData.store.journey()
+    }
+
+    static func entry(tripID: UUID?, at date: Date, purpose: TripSurfacePurpose = .itinerary) async -> TripWidgetEntry {
         do {
-            let index = try await TripSystemData.store.index()
-            let journey = try await TripSystemData.store.journey()
-            let id = tripID ?? selectedID(index: index, journey: journey, at: date)
-            guard let id, let plan = try await TripSystemData.store.plan(id) else {
+            var reader = try await Self()
+            return await reader.entry(tripID: tripID, at: date, purpose: purpose)
+        } catch { return TripWidgetEntry(date: date, notice: TripText.openTripToRefreshYourItinerary.text) }
+    }
+
+    mutating func entry(tripID: UUID?, at date: Date, purpose: TripSurfacePurpose) async -> TripWidgetEntry {
+        do {
+            let id = tripID ?? index?.selectedTripID(for: purpose, journey: journey, at: date)
+            guard let id, let plan = try await plan(id) else {
+                let notice = purpose == .departure ? TripText.noUpcomingDeparture.text : TripText.saveATripToSeeYourItineraryHere.text
                 return TripWidgetEntry(date: date, notice: tripID == nil
-                    ? TripText.saveATripToSeeYourItineraryHere.text : TripText.thisTripIsNoLongerAvailable.text)
+                    ? notice : TripText.thisTripIsNoLongerAvailable.text)
             }
-            return entry(plan: plan, journey: journey, at: date)
+            let selection = TripSurfaceSelection(plan: plan, journey: journey, at: date)
+            return TripWidgetEntry(date: date, plan: plan, day: selection.day, journey: selection.journey)
         } catch {
+            needsRetry = true
             return TripWidgetEntry(date: date, notice: TripText.openTripToRefreshYourItinerary.text)
         }
     }
 
-    private static func selectedID(index: TripSurfaceIndex?, journey: TripJourney?, at date: Date) -> UUID? {
-        if let journey, journey.isActive, journey.expiresAt > date,
-           index?.trips.contains(where: { $0.id == journey.tripID }) == true { return journey.tripID }
-        return index?.trips.first { $0.endDate >= $0.calendar.startOfDay(for: date) }?.id
-    }
-
-    private static func entry(plan: TripSurfacePlan, journey: TripJourney?, at date: Date) -> TripWidgetEntry {
-        let selection = TripSurfaceSelection(plan: plan, journey: journey, at: date)
-        return TripWidgetEntry(date: date, plan: plan, day: selection.day, journey: selection.journey)
+    private mutating func plan(_ id: UUID) async throws -> TripSurfacePlan? {
+        if let cached = plans[id] { return cached }
+        let plan = try await TripSystemData.store.plan(id)
+        plans[id] = plan
+        return plan
     }
 }

@@ -66,7 +66,7 @@ nonisolated struct SavedTripQuery: EntityStringQuery {
 
     func suggestedEntities() async throws -> [SavedTripEntity] {
         let trips = try await TripSystemData.store.index()?.trips ?? []
-        let today = Calendar.current.startOfDay(for: .now)
-        return trips.filter { $0.endDate >= today }.prefix(20).map(SavedTripEntity.init)
+        let now = Date.now
+        return trips.filter { $0.endDate >= $0.calendar.startOfDay(for: now) }.prefix(20).map(SavedTripEntity.init)
     }
 }

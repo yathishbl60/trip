@@ -16,17 +16,20 @@ struct TripDayActivityWidget: Widget {
     private func island(_ context: ActivityViewContext<TripActivityAttributes>) -> DynamicIsland {
         let presentation = TripActivityPresentation(attributes: context.attributes, state: context.state, isStale: context.isStale)
         return DynamicIsland {
-            DynamicIslandExpandedRegion(.leading) { Image(systemName: presentation.symbol).foregroundStyle(WidgetTheme.accent) }
-            DynamicIslandExpandedRegion(.trailing) { Text(presentation.compactText).monospacedDigit() }
+            DynamicIslandExpandedRegion(.leading) { Image(systemName: presentation.symbol).foregroundStyle(WidgetTheme.accent).privacySensitive() }
+            DynamicIslandExpandedRegion(.trailing) {
+                Text(presentation.compactText).monospacedDigit().privacySensitive().accessibilityLabel(presentation.subtitle)
+            }
             DynamicIslandExpandedRegion(.bottom) {
                 TripActivityIslandView(attributes: context.attributes, state: context.state, presentation: presentation)
             }
         } compactLeading: {
-            Image(systemName: presentation.symbol).foregroundStyle(WidgetTheme.accent).accessibilityLabel(presentation.title)
+            Image(systemName: presentation.symbol).foregroundStyle(WidgetTheme.accent)
+                .privacySensitive().accessibilityLabel(presentation.title)
         } compactTrailing: {
-            Text(presentation.compactText).font(.caption2).monospacedDigit().accessibilityLabel(presentation.subtitle)
+            Text(presentation.compactText).font(.caption2).monospacedDigit().privacySensitive().accessibilityLabel(presentation.subtitle)
         }
-          minimal: { Image(systemName: presentation.symbol).accessibilityLabel(presentation.title) }
+          minimal: { Image(systemName: presentation.symbol).privacySensitive().accessibilityLabel(presentation.title) }
         .keylineTint(WidgetTheme.accent)
         .widgetURL(presentation.destinationURL)
     }

@@ -6,7 +6,11 @@ nonisolated enum ItineraryDraftAssembly {
         let capacity = (places.count + count - 1) / count
         var days = (1...count).map { TripDay(number: $0) }
         for (index, item) in draft.days.prefix(count).enumerated() {
-            days[index].notes = String(item.theme.prefix(200))
+            let proposed = item.placeIndices
+            let isUnchanged = !proposed.isEmpty && proposed.count <= capacity
+                && Set(proposed).count == proposed.count
+                && proposed.allSatisfy { places.indices.contains($0) && !used.contains($0) }
+            days[index].notes = isUnchanged ? String(item.theme.prefix(200)) : ""
             for placeIndex in item.placeIndices where days[index].stops.count < capacity {
                 guard places.indices.contains(placeIndex), used.insert(placeIndex).inserted else { continue }
                 days[index].stops.append(TripStop(place: places[placeIndex]))

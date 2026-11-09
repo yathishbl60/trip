@@ -10,6 +10,19 @@ nonisolated struct TripActivityAttributes: ActivityAttributes {
     let tripTitle: String
     let dayNumber: Int
 
+    /// Bound encoded text, including emoji sequences and JSON escapes, within ActivityKit's payload budget.
+    nonisolated static func boundedText(_ value: String) -> String {
+        var result = ""
+        let encoder = JSONEncoder()
+        for character in value.prefix(96) {
+            guard String(character).utf8.count <= 384 else { break }
+            let next = result + String(character)
+            guard let data = try? encoder.encode(next), data.count <= 384 else { break }
+            result = next
+        }
+        return result.isEmpty && !value.isEmpty ? "…" : result
+    }
+
     nonisolated struct ContentState: Codable, Hashable, Sendable {
         let nextStopID: UUID?
         let nextStopName: String
@@ -30,18 +43,19 @@ extension TripActivityAttributes.ContentState {
     nonisolated init(journey: TripJourney, day: TripSurfaceDay, title: String? = nil) {
         let next = journey.nextStop(in: day)
         nextStopID = next?.id
-        nextStopName = next?.name ?? TripText.dayComplete.text
+        nextStopName = TripActivityAttributes.boundedText(next?.name ?? TripText.dayComplete.text)
         visited = journey.visited.count
         total = day.stops.count
         isActive = journey.isActive
         nextSymbol = next?.category.symbol
         let item = day.agenda.first { $0.id == next?.id }
         plannedTime = item?.requiresTimeReview == true ? nil : item?.startsAt
-        followingStopName = day.stops.filter { !journey.visited.contains($0.id) }.dropFirst().first?.name
-        currentTripTitle = title
+        let following = day.stops.lazy.filter { !journey.visited.contains($0.id) }.dropFirst().first?.name
+        followingStopName = following.map(TripActivityAttributes.boundedText)
+        currentTripTitle = title.map(TripActivityAttributes.boundedText)
         currentDayNumber = day.number
-        timeZoneID = day.zoneID
-        nextCoordinate = next?.coordinate
+        timeZoneID = day.calendar.timeZone.identifier
+        nextCoordinate = next.flatMap { $0.coordinate.isValid ? $0.coordinate : nil }
     }
 }
 #endif

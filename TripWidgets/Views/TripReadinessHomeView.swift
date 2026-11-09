@@ -1,6 +1,7 @@
 import SwiftUI
 import WidgetKit
 import TripDomain
+import TripLocalization
 
 struct TripReadinessHomeView: View {
     let presentation: TripReadinessPresentation
@@ -31,5 +32,9 @@ struct TripReadinessHomeView: View {
 #Preview("Packing · empty library · dark") {
     TripReadinessHomeView(presentation: TripReadinessPresentation(entry: TripWidgetEntry(date: .distantPast)))
         .padding().preferredColorScheme(.dark)
+}
+#Preview("Packing · no upcoming departure") {
+    TripReadinessHomeView(presentation: TripReadinessPresentation(entry:
+        TripWidgetEntry(date: .distantPast, notice: TripText.noUpcomingDeparture.text))).padding()
 }
 #endif

@@ -30,12 +30,13 @@ struct OpenTripControlIntent: AppIntent {
     static var open: (@MainActor (UUID, String) async throws -> Void)?
 }
 
-nonisolated enum TripControlError: LocalizedError {
+nonisolated enum TripControlError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case unavailable, unconfigured
-    var errorDescription: String? {
+    var errorDescription: String? { String(localized: localizedStringResource) }
+    var localizedStringResource: LocalizedStringResource {
         switch self {
-        case .unavailable: TripText.openTripOnceThenTryThisControlAgain.text
-        case .unconfigured: TripText.editThisControlAndChooseASavedTripFirst.text
+        case .unavailable: TripText.openTripOnceThenTryThisControlAgain.resource
+        case .unconfigured: TripText.editThisControlAndChooseASavedTripFirst.resource
         }
     }
 }

@@ -74,6 +74,10 @@ public nonisolated extension TripText {
         TripText("no_upcoming_days_planned")
     }
 
+    static var noUpcomingDeparture: TripText {
+        TripText("no_upcoming_departure")
+    }
+
     static var nothingElsePlanned: TripText {
         TripText("nothing_else_planned")
     }
@@ -84,10 +88,6 @@ public nonisolated extension TripText {
 
     static var openSavedTrip2: TripText {
         TripText("open_saved_trip2")
-    }
-
-    static var openTrip2: TripText {
-        TripText("open_trip2")
     }
 
 }

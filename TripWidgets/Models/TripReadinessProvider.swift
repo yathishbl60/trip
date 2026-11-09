@@ -11,18 +11,10 @@ nonisolated struct TripReadinessProvider: AppIntentTimelineProvider {
 
     func snapshot(for configuration: TripWidgetConfiguration, in context: Context) async -> TripWidgetEntry {
         if context.isPreview { return placeholder(in: context) }
-        return await TripWidgetReader.entry(tripID: configuration.trip?.id, at: .now)
+        return await TripWidgetReader.entry(tripID: configuration.trip?.id, at: .now, purpose: .departure)
     }
 
     func timeline(for configuration: TripWidgetConfiguration, in context: Context) async -> Timeline<TripWidgetEntry> {
-        let now = Date.now
-        var current = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: now)
-        let calendar = current.plan?.days.first?.calendar ?? .current
-        let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))
-            ?? now.addingTimeInterval(24 * 60 * 60)
-        var next = await TripWidgetReader.entry(tripID: configuration.trip?.id, at: midnight)
-        current.relevance = TripWidgetRelevance.preparation(current)
-        next.relevance = TripWidgetRelevance.preparation(next)
-        return Timeline(entries: [current, next], policy: .after(midnight))
+        await TripWidgetTimeline.make(tripID: configuration.trip?.id, purpose: .departure)
     }
 }
