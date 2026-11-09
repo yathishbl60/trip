@@ -14,6 +14,7 @@ enum GeographicCandidateChecks {
         try require(candidates.map { $0.place.id } == repeated.map { $0.place.id }, "Candidate cap is not deterministic")
         try externalSelection(index, selected: selected)
         try GeographicRankingChecks.run()
+        try GeographicCoverageChecks.run()
         print("PASS: bounded projection candidates retain selection, continuity, and external places")
     }
 

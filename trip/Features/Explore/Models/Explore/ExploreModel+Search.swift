@@ -34,6 +34,7 @@ extension ExploreModel {
 
     func searchPresentationChanged(_ presented: Bool) {
         if presented {
+            browse.close()
             select(nil)
             filters.isPresented = false
             environment.dismissSave()

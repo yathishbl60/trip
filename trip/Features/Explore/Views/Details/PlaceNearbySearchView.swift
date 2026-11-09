@@ -13,8 +13,13 @@ struct PlaceNearbySearchView: View {
     }
 
     var body: some View {
-        List { content }
-            .navigationTitle(TripText.nearbyValue(model.origin.category.title.lowercased()).resource)
+        List {
+            Picker(TripText.nearbyCategory.resource, selection: PlaceNearbySearchController(model: model).category) {
+                ForEach(NearbyPlaceCategory.allCases) { Text($0.title.resource).tag($0) }
+            }
+            content
+        }
+            .navigationTitle(TripText.nearbyPlaces.resource)
             .navigationBarTitleDisplayMode(.inline).scrollContentBackground(.hidden)
             .modifier(PlacePanelContentVisibility(isCompact: controller.model.selection.presentation.isCompact))
             #if os(iOS)
@@ -32,7 +37,7 @@ struct PlaceNearbySearchView: View {
             Button(TripText.tryAgain.resource, systemImage: "arrow.clockwise") { PlaceNearbySearchController(model: model).retry() }
         } else if model.places.isEmpty {
             ContentUnavailableView(TripText.noNearbyPlaces.resource, systemImage: "mappin.slash",
-                                   description: Text(TripText.noOtherValueWereFoundHere(model.origin.category.title.lowercased()).resource))
+                                   description: Text(TripText.noOtherValueWereFoundHere(model.category.title.text.lowercased()).resource))
         } else {
             Section {
                 ForEach(model.places) { place in

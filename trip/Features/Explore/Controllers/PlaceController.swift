@@ -12,9 +12,10 @@ import SwiftUI
 
     var mapSheet: Binding<ExploreSheet?> {
         let revision = model.selection.revision
+        let browseRevision = model.browse.revision
         let id = model.mapSheet?.id
         return Binding(get: { model.mapSheet }, set: {
-            if $0 == nil, model.selection.revision == revision, model.mapSheet?.id == id {
+            if $0 == nil, model.selection.revision == revision, model.browse.revision == browseRevision, model.mapSheet?.id == id {
                 model.dismissMapSheet()
             }
         })
@@ -45,9 +46,9 @@ import SwiftUI
         model.selectPlace(place)
     }
 
-    func save(_ place: Place) { model.environment.savePlace?(place) }
+    func save(_ place: Place) { model.savePlace(place) }
 
-    func dismiss() { model.select(nil) }
+    func dismiss() { model.dismissMapSheet() }
 
     func dismiss(_ place: Place) {
         guard model.selectedPlace?.id == place.id, !model.directions.isPresented else { return }

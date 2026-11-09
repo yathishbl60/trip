@@ -30,11 +30,7 @@ import AppIntents
     }
 
     private func connectFeatures() {
-        explore.environment = ExploreEnvironment(
-            savePlace: { [weak trips] in trips?.chooseDestination(for: $0) },
-            dismissSave: { [weak trips] in trips?.dismissDestination() },
-            isSavingPlace: { [weak trips] in trips?.hasPendingPlaceSave == true }
-        )
+        connectExplore()
         trips.environment = TripEnvironment(
             showExplore: { [weak self] in self?.showExplore() },
             showPlace: { [weak self] in self?.showPlace($0) },

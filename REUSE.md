@@ -41,7 +41,9 @@ permission flow; hiding a discovery control does not provide location permission
 
 ## Connect saving without coupling features
 
-`ExploreEnvironment` offers `savePlace`, `dismissSave`, and `isSavingPlace`.
+`ExploreEnvironment` offers `savePlace`, `dismissSave`, `isSavingPlace`,
+`savedPlaces`, and `openSavedPlace`. Membership links use TripDomain's lightweight
+`TripSavedPlaceReference`; the host owns indexing, canonical validation, and navigation.
 A save-enabled host supplies these callbacks and enables `showsTrips`; a map-only
 host can omit them without creating trip storage. The host owns its save sheet
 and pending destination. Explore requests an action or dismissal when its

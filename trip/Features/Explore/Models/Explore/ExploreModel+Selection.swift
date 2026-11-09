@@ -7,11 +7,13 @@ import CoreGraphics
 
 extension ExploreModel {
     func focus(_ place: Place) {
+        browse.close()
         select(nil)
         camera.focus(place.coordinate)
     }
 
     func exploreIn3D(_ place: Place) {
+        browse.close()
         select(nil)
         camera.exploreIn3D(at: place.coordinate)
     }
@@ -46,6 +48,7 @@ extension ExploreModel {
         if directions.isPresented { dismissDirections() }
         guard selection.select(place) else { return }
         if place != nil {
+            browse.invalidate()
             catalog.setSearchPresented(false)
             filters.isPresented = false
             environment.dismissSave()

@@ -13,20 +13,22 @@ extension ExploreModel {
     private func makeProjection(using proxy: MapProxy) -> MapProjection? {
         guard let center = proxy.convert(CGPoint(x: camera.size.width / 2, y: camera.size.height / 2), from: .local),
               Coordinate(center).isValid else { return nil }
-        let candidates = projectCandidates(proxy, center: Coordinate(center))
+        let geometry = MapViewportGeometry(proxy: proxy, size: camera.size, center: Coordinate(center))
+        let candidates = projectCandidates(proxy, center: Coordinate(center), coverage: geometry.cells)
         let points = projectMarkerPoints(candidates, using: proxy)
         let locationPoint = configuration.showsLocation
             ? location.currentCoordinate.flatMap { proxy.convert($0.location, to: .local) } : nil
         return MapProjection(candidates: candidates, points: points, locationPoint: locationPoint,
                              viewport: CGRect(origin: .zero, size: camera.size),
                              zoom: camera.zoomLevel(using: proxy), scale: camera.markerScale,
-                             routeExclusions: routeExclusions(using: proxy))
+                             routeExclusions: routeExclusions(using: proxy),
+                             browseRegion: geometry.region, center: Coordinate(center))
     }
 
-    private func projectCandidates(_ proxy: MapProxy, center: Coordinate) -> [ProjectedPlace] {
+    private func projectCandidates(_ proxy: MapProxy, center: Coordinate, coverage: [MapCandidateRegion]) -> [ProjectedPlace] {
         let viewport = CameraProjectionPolicy.candidateViewport(size: camera.size)
         let bounds = camera.projectionBounds ?? camera.initialProjectionBounds(using: proxy, center: center)
-        let candidates = projectionCandidates(in: bounds, center: center)
+        let candidates = projectionCandidates(in: bounds, center: center, coverage: coverage)
         let excluded = directions.placeIDs
         return candidates.compactMap { candidate -> ProjectedPlace? in
             guard !excluded.contains(candidate.place.id) else { return nil }

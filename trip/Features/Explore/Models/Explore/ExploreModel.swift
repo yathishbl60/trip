@@ -13,6 +13,7 @@ import Observation
     var environment: ExploreEnvironment
     let selection = PlaceSelectionModel()
     let appearance = MapAppearanceModel()
+    let browse = MapBrowseModel()
     var selectedPlace: Place? { selection.place }
     var isActive = false
     @ObservationIgnored var isSuspended = false
@@ -47,6 +48,7 @@ import Observation
     }
 
     func filterPlaces() {
+        browse.invalidate()
         filters.updateCounts(catalog.visibleCounts)
         requestProjection()
     }
@@ -58,6 +60,7 @@ import Observation
         catalog.cancelSearch()
         catalog.autocomplete.cancel()
         layout.stop()
+        browse.invalidate()
         location.stop()
         directions.suspend()
         directions.cancelRouteFit()

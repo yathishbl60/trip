@@ -10,15 +10,24 @@ struct MapSearchSuggestionsView: View {
         if controller.model.catalog.isTextSearch {
             if controller.model.catalog.isSubmittedSearch {
                 results
-                status
+                browseButton
+                MapSearchResultStatus(controller: controller)
             } else { MapAutocompleteSuggestionsView(controller: controller) }
         } else {
+            browseButton
             Section(TripText.searchThisArea.resource) {
                 Label(TripText.restaurants.resource, systemImage: "fork.knife").searchCompletion(TripText.restaurants.text)
                 Label(TripText.cafS.resource, systemImage: "cup.and.saucer").searchCompletion(TripText.cafS.text)
                 Label(TripText.thingsToDo.resource, systemImage: "sparkles").searchCompletion(TripText.attractions.text)
                 Label(TripText.hotels.resource, systemImage: "bed.double").searchCompletion(TripText.hotels.text)
             }
+        }
+    }
+
+    private var browseButton: some View {
+        Button(TripText.browseThisArea.resource, systemImage: "list.bullet") {
+            dismissSearch()
+            MapBrowseController(model: controller.model).open()
         }
     }
 
@@ -40,37 +49,11 @@ struct MapSearchSuggestionsView: View {
 
     private func saveButton(_ place: Place) -> some View {
         Button { choose(place, saving: true) } label: {
-            Image(systemName: "bookmark")
+            Image(systemName: PlaceController(model: controller.model).isSaved(place) ? "bookmark.fill" : "bookmark")
                 .frame(minWidth: AppTheme.controlTarget, minHeight: AppTheme.controlTarget).contentShape(.rect)
         }
         .buttonStyle(.borderless).tint(AppTheme.accent)
         .accessibilityLabel(TripText.saveValueToATrip(place.name).resource).fixedSize()
-    }
-
-    @ViewBuilder private var status: some View {
-        if controller.model.catalog.isSearching {
-            HStack(spacing: AppTheme.Spacing.small) {
-                ProgressView().accessibilityHidden(true)
-                Text(TripText.searching.resource).foregroundStyle(.secondary)
-            }.accessibilityElement(children: .combine)
-        } else if !controller.model.catalog.status.isEmpty {
-            Text(controller.model.catalog.status).foregroundStyle(.secondary)
-            if controller.model.catalog.canRetrySearch {
-                Button(TripText.tryAgain.resource, systemImage: "arrow.clockwise", action: controller.search)
-            } else {
-                Text(TripText.tryAnotherNameOrMoveTheMap.resource).font(.caption).foregroundStyle(.secondary)
-            }
-        } else if controller.model.catalog.matchingPlaces.isEmpty {
-            pendingSearch
-        }
-    }
-
-    @ViewBuilder private var pendingSearch: some View {
-        if controller.model.catalog.pendingSearch != nil {
-            Text(TripText.searching.resource).foregroundStyle(.secondary)
-        } else {
-            Button(TripText.searchThisArea.resource, systemImage: "magnifyingglass", action: controller.search)
-        }
     }
 
     private func choose(_ place: Place, saving: Bool = false) {

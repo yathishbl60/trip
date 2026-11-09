@@ -49,6 +49,7 @@ struct MapExperienceView<Detail: View>: View {
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
             .toolbar { ExploreToolbar(controller: MapController(model: model)) }
             .modifier(MapAppearanceRestoration(controller: MapAppearanceController(model: model.appearance)))
+            .modifier(MapCameraRestoration(controller: MapNavigationController(model: model)))
     }
 }
 

@@ -11,6 +11,7 @@ struct PlaceMarkerView: View {
     let style: MarkerStyle
     var scale: CGFloat = 1
     var isSelected = false
+    var isSaved = false
     var includesPhoto = true
     var includesLabel = true
     var animatesChanges = true
@@ -19,7 +20,7 @@ struct PlaceMarkerView: View {
 
     var body: some View {
         let size = style.hitSize(scale: scale)
-        PhotoMarkerView(place: place, style: style, isSelected: isSelected,
+        PhotoMarkerView(place: place, style: style, isSelected: isSelected, isSaved: isSaved,
                         includesPhoto: includesPhoto && place.hasAnnotationPhoto, includesLabel: includesLabel)
             .equatable()
             .scaleEffect(scale)
@@ -28,7 +29,7 @@ struct PlaceMarkerView: View {
             .animation(reduceMotion || !animatesChanges ? nil : .easeInOut(duration: motion.morph), value: style)
             .animation(reduceMotion || !animatesChanges ? nil : .easeInOut(duration: motion.selection), value: isSelected)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(place.accessibilityLabel)
+            .accessibilityLabel(isSaved ? TripText.savedMapPlaceLabel(place.accessibilityLabel).text : place.accessibilityLabel)
             .accessibilityHint(TripText.showPlaceDetails.resource)
             .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }

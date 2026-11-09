@@ -60,7 +60,7 @@ called check groups to locate the actual assertions before changing coverage.
 | Spatial lookup | SpatialChecks, IndexChecks, geographic benchmarks |
 | Place search and cache | DataChecks, PlaceSearchChecks, PlaceCollectionChecks, SearchCacheChecks, SearchCoverageChecks |
 | Map layout and identity | LayoutChecks, LayoutVisualBoundsChecks, LayoutObstructionChecks, AnnotationChoiceChecks |
-| Camera, projection, and lifecycle | CameraFeedbackChecks, CameraNavigationChecks, ProjectionLifecycleChecks, MarkerTransitionChecks, SchedulerChecks |
+| Camera, projection, and lifecycle | CameraFeedbackChecks, CameraNavigationChecks, CameraRestorationChecks, GeographicCoverageChecks, ProjectionLifecycleChecks, MarkerTransitionChecks, SchedulerChecks |
 | Adaptive map geometry | TripPaneDivisionChecks, MapOcclusionChecks |
 | Schedules and insertion | TripScheduleChecks, TripPlanningChecks, TripBookingConflictChecks |
 | Journey edits and movement | TripJourneyChecks, TripStopTransferChecks, TripVisitTimingChecks |

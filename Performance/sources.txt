@@ -10,6 +10,8 @@ Packages/TripKit/Sources/MapEngine/Layout/MarkerStyle.swift
 Packages/TripKit/Sources/MapEngine/Layout/MarkerStyle+Appearance.swift
 Packages/TripKit/Sources/TripDomain/Places/Coordinate.swift
 trip/Features/Explore/Models/Camera/CameraModel.swift
+trip/Features/Explore/Models/Camera/MapCameraRestorationModel.swift
+trip/Features/Explore/Models/Camera/MapCameraSnapshot.swift
 trip/Features/Explore/Models/Camera/CameraModel+Motion.swift
 trip/Features/Explore/Models/Camera/CameraModel+Navigation.swift
 trip/Features/Explore/Models/Camera/CameraModel+Selection.swift
@@ -24,6 +26,8 @@ trip/Features/Trips/Models/Map/TripMapLayoutMetrics.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicIndex.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicIndex+Ranking.swift
 Packages/TripKit/Sources/MapEngine/Index/GeographicCandidateBuffer.swift
+Packages/TripKit/Sources/MapEngine/Index/GeographicCandidateSelection.swift
+Packages/TripKit/Sources/MapEngine/Index/MapCandidateRegion.swift
 Packages/TripKit/Sources/MapEngine/Index/RankedMapCandidate.swift
 trip/Features/Explore/Models/Annotations/LayoutScheduler.swift
 trip/Features/Explore/Models/Annotations/LayoutModel.swift
@@ -123,6 +127,7 @@ Packages/TripKit/Sources/TripLocalization/TripText+Intents4.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents5.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents6.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Intents7.swift
+Packages/TripKit/Sources/TripLocalization/TripText+MapDiscovery.swift
 Packages/TripKit/Sources/TripLocalization/TripText+Motion.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel.swift
 Packages/TripKit/Sources/TripLocalization/TripText+NativeTravel2.swift

@@ -1,5 +1,6 @@
 import MapEngine
 import CoreGraphics
+import TripDomain
 
 /// Plain values may outlive a map callback; MapProxy and its view graph may not.
 nonisolated struct MapProjection: Sendable {
@@ -10,4 +11,6 @@ nonisolated struct MapProjection: Sendable {
     let zoom: ZoomLevel
     let scale: CGFloat
     var routeExclusions: [CGRect] = []
+    var browseRegion: MapCandidateRegion?
+    var center: Coordinate?
 }

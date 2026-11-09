@@ -7,6 +7,7 @@ nonisolated struct GeographicCandidateBuffer {
     init(limit: Int) { self.limit = max(0, limit) }
 
     var candidates: [MapCandidate] { values.sorted(by: RankedMapCandidate.precedes).map(\.candidate) }
+    var ranked: [RankedMapCandidate] { values.sorted(by: RankedMapCandidate.precedes) }
 
     mutating func insert(_ value: RankedMapCandidate) {
         guard limit > 0 else { return }

@@ -22,7 +22,7 @@ struct NativePlaceAnnotationView: View {
 
     private var artwork: some View {
         PlaceMarkerView(place: marker.place, style: marker.style, scale: marker.scale,
-                        isSelected: marker.isSelected, includesPhoto: marker.hasPhotoContent,
+                        isSelected: marker.isSelected, isSaved: controller.isSaved(marker.place), includesPhoto: marker.hasPhotoContent,
                         includesLabel: marker.hasLabelContent, animatesChanges: marker.hasAppeared,
                         motion: marker.motion)
             .animation(reduceMotion ? nil : .easeOut(duration: marker.motion.fade)) { content in

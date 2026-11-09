@@ -20,6 +20,7 @@ import SwiftUI
         try contextualControls()
         try dotSelection()
         try measuredDotSelection()
+        try CameraRestorationChecks.run()
         print("PASS: camera return, dot selection zoom, perspective, no-op commands, and accumulated pan gating")
     }
 

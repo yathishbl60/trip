@@ -3,6 +3,14 @@ import TripDomain
 import MapKit
 
 @MainActor enum MapSearchService {
+    static func nearby(region: MKCoordinateRegion, category: NearbyPlaceCategory) async throws -> [Place] {
+        let request = MKLocalPointsOfInterestRequest(coordinateRegion: region)
+        if let categories = category.categories {
+            request.pointOfInterestFilter = MKPointOfInterestFilter(including: categories)
+        }
+        return try await results(MKLocalSearch(request: request))
+    }
+
     static func fetch(area: SearchArea, query: String, categories: Set<PlaceCategory>) async throws -> [Place] {
         let places = try await results(makeSearch(area: area, query: query, categories: categories))
         guard query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,

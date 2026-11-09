@@ -6,10 +6,11 @@ import SwiftUI
 extension ExploreModel {
     var mapSheet: ExploreSheet? {
         if directions.isPresented { return .directions }
-        return selectedPlace == nil ? nil : .details
+        return selectedPlace == nil && !browse.isPresented ? nil : .details
     }
 
     func showDirections(to place: Place) {
+        browse.close()
         filters.isPresented = false
         environment.dismissSave()
         catalog.setSearchPresented(false)
@@ -20,6 +21,7 @@ extension ExploreModel {
 
     func showDirections(for places: [Place]) {
         guard let destination = places.last else { return }
+        browse.close()
         filters.isPresented = false
         environment.dismissSave()
         catalog.setSearchPresented(false)
@@ -38,6 +40,7 @@ extension ExploreModel {
     }
 
     func dismissMapSheet() {
+        browse.close()
         catalog.setSearchPresented(false)
         dismissDirections()
         select(nil)

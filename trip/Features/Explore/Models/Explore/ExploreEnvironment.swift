@@ -5,4 +5,6 @@ import TripDomain
     var savePlace: ((Place) -> Void)?
     var dismissSave: () -> Void = {}
     var isSavingPlace: () -> Bool = { false }
+    var savedPlaces: (String) -> [TripSavedPlaceReference] = { _ in [] }
+    var openSavedPlace: (TripSavedPlaceReference) -> Void = { _ in }
 }

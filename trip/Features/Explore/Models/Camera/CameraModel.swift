@@ -16,11 +16,13 @@ import CoreGraphics
             return storedPosition
         }
         set {
+            restoration.hasNavigation = true
             storedPosition = newValue
             positionRevision += 1
         }
     }
     var zoom: ZoomLevel = .district
+    let restoration = MapCameraRestorationModel()
     var previousCamera: MapCamera?
     var isTilted = false
     var isRotated = false
@@ -68,6 +70,7 @@ import CoreGraphics
 
     /// MapKit already moved its camera; recording feedback must not rebuild its content.
     func receivePosition(_ position: MapCameraPosition) {
+        if position.positionedByUser || position.followsUserLocation { restoration.hasNavigation = true }
         storedPosition = position
     }
 

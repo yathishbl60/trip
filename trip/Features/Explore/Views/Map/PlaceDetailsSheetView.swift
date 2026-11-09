@@ -6,7 +6,6 @@ import SwiftUI
 struct PlaceDetailsSheetView<Detail: View>: View {
     let model: ExploreModel
     private let detail: (Place, PlaceController) -> Detail
-    @Environment(\.dynamicTypeSize) private var typeSize
 
     init(model: ExploreModel, @ViewBuilder detail: @escaping (Place, PlaceController) -> Detail) {
         self.model = model
@@ -14,17 +13,14 @@ struct PlaceDetailsSheetView<Detail: View>: View {
     }
 
     var body: some View {
+        panel.modifier(PlacePanelPresentation(controller: PlaceController(model: model)))
+    }
+
+    @ViewBuilder private var panel: some View {
         if let root = model.selection.rootPlace, let selectedID = model.selectedPlace?.id {
             measuredDetails(root, selectedID: selectedID, revision: model.selection.revision)
-                #if os(iOS)
-                .presentationPlacement(.leading)
-                .presentationCompactAdaptation(horizontal: .automatic, vertical: .none)
-                .presentationDetents(model.selection.presentation.detents, selection: PlaceController(model: model).detailDetent)
-                .presentationContentInteraction(.resizes)
-                .presentationDragIndicator(.visible)
-                .presentationBackgroundInteraction(.enabled(upThrough: .large))
-                .onChange(of: typeSize, initial: true) { PlaceController(model: model).detailAccessibilityChanged(typeSize) }
-                #endif
+        } else if model.browse.isPresented {
+            MapBrowseView(controller: MapBrowseController(model: model))
         }
     }
 

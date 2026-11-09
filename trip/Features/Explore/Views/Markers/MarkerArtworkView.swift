@@ -9,6 +9,7 @@ struct MarkerArtworkView: View {
     let place: Place
     let style: MarkerStyle
     var includesPhoto = true
+    var isSaved = false
     private var showsPhoto: Bool { includesPhoto && place.hasAnnotationPhoto }
     private var symbolSize: CGFloat { style.hasLabel ? 22 : 16 }
 
@@ -17,7 +18,7 @@ struct MarkerArtworkView: View {
             .frame(width: style.photoSize.width, height: style.photoSize.height)
             .clipShape(.rect(cornerRadius: style.photoRadius))
             .overlay(alignment: .bottomTrailing) {
-                if showsPhoto { badge.transition(.opacity) }
+                if showsPhoto || isSaved { badge.transition(.opacity) }
             }
             .accessibilityHidden(true)
     }
@@ -41,7 +42,7 @@ struct MarkerArtworkView: View {
     }
 
     private var badge: some View {
-        Image(systemName: place.category.symbol)
+        Image(systemName: isSaved ? "bookmark.fill" : place.category.symbol)
             .symbolVariant(.fill)
             .symbolRenderingMode(.monochrome)
             .font(.system(size: 9, weight: .bold))

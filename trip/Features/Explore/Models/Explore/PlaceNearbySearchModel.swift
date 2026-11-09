@@ -10,6 +10,7 @@ import TripDomain
     private(set) var isLoading = false
     private(set) var error: String?
     private(set) var retryRevision = 0
+    private(set) var category = NearbyPlaceCategory.all
     private var hasLoaded: Bool
     @ObservationIgnored private var generation = 0
 
@@ -41,10 +42,9 @@ import TripDomain
         guard origin.coordinate.isValid else { return [] }
         let region = MKCoordinateRegion(center: origin.coordinate.location,
                                         latitudinalMeters: 2_400, longitudinalMeters: 2_400)
-        let area = SearchArea(region)
-        let categories: Set<PlaceCategory> = origin.category == .place ? [] : [origin.category]
+        let category = category
         return try await withThrowingTaskGroup(of: [Place].self) { group in
-            group.addTask { try await MapSearchService.fetch(area: area, query: "", categories: categories) }
+            group.addTask { try await MapSearchService.nearby(region: region, category: category) }
             group.addTask {
                 try await Task.sleep(for: .seconds(15))
                 throw URLError(.timedOut)
@@ -65,6 +65,17 @@ import TripDomain
     }
 
     func retry() { retryRevision += 1 }
+
+    func choose(_ category: NearbyPlaceCategory) {
+        guard self.category != category else { return }
+        generation += 1
+        self.category = category
+        places = []
+        error = nil
+        hasLoaded = false
+        isLoading = true
+        retryRevision += 1
+    }
 }
 
 nonisolated struct PlaceNearbyRequestID: Hashable {

@@ -1,6 +1,270 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "nearby_groceries": {
+      "comment": "Map discovery and saved-place context.\n@symbol nearbyGroceries\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Groceries"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "किराने की दुकानें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ದಿನಸಿ ಅಂಗಡಿಗಳು"
+          }
+        }
+      }
+    },
+    "nearby_category": {
+      "comment": "Map discovery and saved-place context.\n@symbol nearbyCategory\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Category"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "श्रेणी"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ವರ್ಗ"
+          }
+        }
+      }
+    },
+    "nearby_places": {
+      "comment": "Map discovery and saved-place context.\n@symbol nearbyPlaces\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearby places"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "आस-पास की जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಹತ್ತಿರದ ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "saved_to_trip_location": {
+      "comment": "Map discovery and saved-place context.\n@symbol savedToTripLocation\n@group MapDiscovery\n@parameters String,String",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to %1$@ · %2$@"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ · %2$@ में सहेजा गया"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ · %2$@ ಗೆ ಉಳಿಸಲಾಗಿದೆ"
+          }
+        }
+      }
+    },
+    "add_to_another_trip": {
+      "comment": "Map discovery and saved-place context.\n@symbol addToAnotherTrip\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to another trip"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "दूसरी यात्रा में जोड़ें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಇನ್ನೊಂದು ಪ್ರವಾಸಕ್ಕೆ ಸೇರಿಸಿ"
+          }
+        }
+      }
+    },
+    "saved_map_place_label": {
+      "comment": "Map discovery and saved-place context.\n@symbol savedMapPlaceLabel\n@group MapDiscovery\n@parameters String",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, saved to a trip"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@, यात्रा में सहेजा गया"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@, ಪ್ರವಾಸಕ್ಕೆ ಉಳಿಸಲಾಗಿದೆ"
+          }
+        }
+      }
+    },
+    "browse_this_area": {
+      "comment": "Map discovery and saved-place context.\n@symbol browseThisArea\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse this area"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस क्षेत्र की जगहें देखें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರದೇಶದ ಸ್ಥಳಗಳನ್ನು ನೋಡಿ"
+          }
+        }
+      }
+    },
+    "distance_from_map_center": {
+      "comment": "Map discovery and saved-place context.\n@symbol distanceFromMapCenter\n@group MapDiscovery\n@parameters String",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ from map center"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "मानचित्र के केंद्र से %@"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ನಕ್ಷೆಯ ಕೇಂದ್ರದಿಂದ %@"
+          }
+        }
+      }
+    },
+    "places_in_this_area": {
+      "comment": "Map discovery and saved-place context.\n@symbol placesInThisArea\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Places in this area"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस क्षेत्र की जगहें"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರದೇಶದಲ್ಲಿನ ಸ್ಥಳಗಳು"
+          }
+        }
+      }
+    },
+    "back_to_map_results": {
+      "comment": "Map discovery and saved-place context.\n@symbol backToMapResults\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to results"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "नतीजों पर वापस जाएँ"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಫಲಿತಾಂಶಗಳಿಗೆ ಹಿಂತಿರುಗಿ"
+          }
+        }
+      }
+    },
+    "zoom_in_for_area_list": {
+      "comment": "Map discovery and saved-place context.\n@symbol zoomInForAreaList\n@group MapDiscovery\n@parameters ",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom in to browse places in this area."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इस क्षेत्र की जगहें देखने के लिए ज़ूम इन करें।"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ಈ ಪ್ರದೇಶದ ಸ್ಥಳಗಳನ್ನು ನೋಡಲು ಜೂಮ್ ಇನ್ ಮಾಡಿ।"
+          }
+        }
+      }
+    },
     "no_upcoming_departure": {
       "comment": "@symbol noUpcomingDeparture\n@group Widgets\n@parameters ",
       "extractionState": "manual",

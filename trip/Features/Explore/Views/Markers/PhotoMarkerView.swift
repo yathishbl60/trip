@@ -9,12 +9,13 @@ struct PhotoMarkerView: View, Equatable {
     let place: Place
     let style: MarkerStyle
     var isSelected = false
+    var isSaved = false
     var includesPhoto = true
     var includesLabel = true
 
     var body: some View {
         HStack(spacing: style.contentSpacing) {
-            MarkerArtworkView(place: place, style: style, includesPhoto: includesPhoto)
+            MarkerArtworkView(place: place, style: style, includesPhoto: includesPhoto, isSaved: isSaved)
             caption
                 .frame(width: style.captionWidth, height: style.contentHeight, alignment: .leading)
                 .opacity(style.labelOpacity)
@@ -51,6 +52,13 @@ struct PhotoMarkerView: View, Equatable {
 #Preview("Saved sample · missing photo uses category artwork") {
     PhotoMarkerView(place: PreviewFixtures.hotel, style: .card)
         .padding().preferredColorScheme(.dark)
+}
+#Preview("Saved marker · same three footprints") {
+    VStack(spacing: 24) {
+        ForEach(MarkerStyle.allCases, id: \.self) { style in
+            PhotoMarkerView(place: PreviewFixtures.hotel, style: style, isSaved: true)
+        }
+    }.padding().preferredColorScheme(.dark)
 }
 #Preview("Long name · full card footprint, accessibility scale") {
     PlaceMarkerView(place: PreviewFixtures.longName, style: .card, scale: 1.5)

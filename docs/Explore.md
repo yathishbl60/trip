@@ -13,18 +13,21 @@ Paths below are relative to `trip/Features/Explore` unless a package is named.
 | Change | Entry points |
 | --- | --- |
 | Search/catalog | `CatalogController`, `Models/Catalog`, `ExploreModel+Search` |
+| Area results | `MapBrowseController`, `MapBrowseModel`, `MapBrowseItem`, `Views/Map/MapBrowseView` |
 | Filters | `FilterController`, `FilterModel`, `Views/Filters` |
 | Camera/projection | `MapController`, `Models/Camera`, `ExploreModel+Projection` |
 | Annotation placement | `Models/Annotations`, `ExploreModel+Layout`, package `MapEngine` |
 | Selection/details | `PlaceController`, `PlaceSelectionModel`, `ExploreModel+Selection` |
 | Map style/traffic | `MapAppearanceController`, `MapAppearanceModel`, `MapAppearanceRestoration` |
+| Camera restoration | `MapNavigationController`, `MapCameraRestorationModel`, `MapCameraSnapshot`, `MapCameraRestoration` |
+| Nearby categories | `PlaceNearbySearchModel`, `NearbyPlaceCategory`, `PlaceNearbySearchView` |
 | Look Around | `PlaceLookAroundController`, `PlaceLookAroundModel`, `PlaceLookAroundView` |
 | Directions host | `ExploreDirectionsController`, `ExploreModel+DirectionsEnvironment`, `+RouteFraming` |
 | Discovery provider | `Services/ApplePlaceProvider`, `MapSearchService`, `MapDiscoverySearch` |
 | Native search/conversion | Package `TripPlaces`: `PlaceTextSearch`, `PlaceFactory`, category mapping |
 
-`ExploreEnvironment` is the save boundary: optional `savePlace`, `dismissSave`,
-and `isSavingPlace` callbacks, together with `MapConfiguration.showsTrips`.
+`ExploreEnvironment` is the saved-place boundary: optional `savePlace`, `dismissSave`,
+`isSavingPlace`, `savedPlaces`, and `openSavedPlace` callbacks, together with `MapConfiguration.showsTrips`.
 Explore does not depend on Trips, storage, or app navigation. Directions sheet,
 overlays, and geometry belong to `TripRouting`; Explore supplies its environment
 and applies camera changes. See [map composition](../REUSE.md) and
@@ -75,6 +78,16 @@ category grid, a vertical list at accessibility sizes, an All categories reset,
 and loaded counts. The map menu shows active filter state without a persistent
 category strip over the canvas.
 
+Browse this area opens the existing contextual panel from search or Map options.
+`MapBrowseModel` keeps a cancellable snapshot of loaded catalog matches within the
+captured ground footprint, using the map's categories and submitted search. It
+refreshes after settling; immutable index queries and distance sorting run away
+from the main actor. Distances are straight-line distances from the map center.
+Selecting a row opens details in the same panel, with Back to results. Row saving
+first selects its place so the host's existing detail save sheet owns presentation.
+Unprojectable world views ask for closer zoom; late results/dismissals cannot
+replace a newer session. A results list does not imply exhaustive MapKit coverage.
+
 Keep `ExploreMapView`'s native location button, compass, and scale in `mapControls`
 inside the existing MapReader structure. Do not relocate them to a separate toolbar
 host or introduce a duplicate tracking control. Safe areas, attribution, selection,
@@ -92,9 +105,11 @@ and camera state must survive resize/fold transitions.
   Gestures immediately cancel settled refinement; projection remains coalesced
   by movement thresholds and cadence. Zoom updates even with an empty catalog.
 - Geographic candidates pass a bounded, deterministic priority buffer before
-  projection. Selection, continuity, category filtering, and stable ID ties remain.
-  Dense rotated/pitched views can still spend this budget on offscreen candidates;
-  the algorithm does not guarantee every visible place is considered.
+  projection. A live inverse-projected 3×3 viewport grid reserves half the existing
+  budget across geographic cells, then fills by priority. In-view candidates rank
+  ahead of overscan candidates. Selection, continuity, filters, and stable ID ties
+  remain. Invalid ground geometry falls back to bounded priority ranking; forward
+  MapProxy conversion remains authoritative. Not every visible place is guaranteed.
 - Test visible artwork separately from collision/touch bounds. Zero-area tangency
   cannot consume a visible slot; partially visible artwork can. Selected labels
   need readable clearance and may fall back to compact artwork at an edge.
@@ -144,11 +159,27 @@ sidebar on visionOS. The exposed map remains interactive. Measured panel bounds
 inform framing, including same-size selection changes; the spatial map uses its
 column's viewport. Compact detents keep identity/toolbars and the detail path.
 
+`MapCameraRestoration` stores a small validated camera snapshot in per-window
+`SceneStorage` at settled camera boundaries. Restoration runs once and yields to
+explicit navigation or user camera movement. It does not restore location tracking,
+selection, or a route. Persistence timing is owned by the system.
+
 Directions and Save are primary actions; Share and secondary actions stay in the
 toolbar. MapKit supplies address, validated website, telephone, and real metadata.
 Older saved records can lack telephone values. New live results have no synthetic
 ratings; retained sample ratings remain labeled. 3D focus and nearby category
 search remain contextual actions.
+
+The host injects saved membership from `TripLibraryModel.savedPlaceIndex`, rebuilt
+only for changed trips. Day links open canonical visit details; collection links
+open that trip's Collections. Save offers existing memberships and adding elsewhere.
+Compact/card artwork carries a bookmark within its existing footprint; dots keep
+their size. Saved status is also spoken. Explore never reads storage or Trips types.
+
+Nearby search offers all places, restaurants, cafés, groceries, and attractions
+around the selected place using native POI filters. Category changes invalidate
+previous results; cancellation, deadlines, distance limits, and retry stay with
+`PlaceNearbySearchModel` and the existing search service.
 
 Look Around starts only on request. It owns a native scene request/preview,
 distinguishes no coverage from failure, and offers retry/cancel with a 20-second

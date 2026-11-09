@@ -5,6 +5,7 @@ import Foundation
 /// Owns durable snapshots and the lifecycle of one revisioned store session.
 @MainActor @Observable final class TripLibraryModel {
     private(set) var trips: [TripPlan]
+    private(set) var savedPlaceIndex: TripSavedPlaceIndex
     private(set) var isReady: Bool
     var loadError: String?
     var saveError: String?
@@ -20,11 +21,15 @@ import Foundation
     init(store: any TripStoring, loadedTrips: [TripPlan]? = nil) {
         self.store = store
         trips = loadedTrips ?? []
+        savedPlaceIndex = TripSavedPlaceIndex(loadedTrips ?? [])
         isReady = loadedTrips != nil
     }
 
     func acceptLoaded(_ plans: [TripPlan], startingRevision: Int) {
-        if revision == startingRevision { trips = plans }
+        if revision == startingRevision {
+            trips = plans
+            savedPlaceIndex = TripSavedPlaceIndex(plans)
+        }
         loadError = nil
         isReady = true
     }
@@ -32,6 +37,7 @@ import Foundation
     @discardableResult func insert(_ plan: TripPlan) -> Bool {
         guard isReady, canCreate, trip(plan.id) == nil else { return false }
         trips.insert(plan, at: 0)
+        savedPlaceIndex.replace(plan)
         persist(changed: plan.id)
         return true
     }
@@ -41,6 +47,7 @@ import Foundation
         var plan = trips[index]
         guard edit(&plan), plan.id == id else { return false }
         trips[index] = plan
+        savedPlaceIndex.replace(plan)
         persist(changed: id)
         return true
     }
@@ -48,6 +55,7 @@ import Foundation
     func remove(_ id: UUID) {
         guard isReady, trips.contains(where: { $0.id == id }) else { return }
         trips.removeAll { $0.id == id }
+        savedPlaceIndex.remove(id)
         persist()
     }
 

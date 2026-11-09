@@ -13,6 +13,7 @@ extension ExploreModel {
             return
         }
         if !camera.isMoving {
+            browse.invalidate()
             catalog.cancelScheduledSearch()
             layout.cancelPending()
         }
@@ -27,6 +28,7 @@ extension ExploreModel {
         camera.updateNavigationState(context.camera)
         camera.isMoving = false
         if revealSelection(using: proxy) { return }
+        camera.restoration.record(context.camera)
         refreshLayout(using: proxy, force: true)
         scheduleSearch()
     }
@@ -50,6 +52,7 @@ extension ExploreModel {
         }
         layout.projectionReady()
         if camera.zoom != projection.zoom { camera.zoom = projection.zoom }
+        refreshBrowse(projection)
         guard !catalog.places.isEmpty || !layout.markers.isEmpty || selectedPlace != nil else { return }
         submitLayout(projection)
     }

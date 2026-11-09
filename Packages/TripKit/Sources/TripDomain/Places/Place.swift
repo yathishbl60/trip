@@ -67,5 +67,5 @@ public nonisolated struct Place: Codable, Identifiable, Hashable, Sendable {
         return parts?.url
     }
 
-    public var nearbyTitle: String { TripText.exploreValueNearby(category.title.lowercased()).text }
+    public var nearbyTitle: String { TripText.nearbyPlaces.text }
 }

@@ -14,6 +14,7 @@ a screen has been visually verified.
 | Collections | `PreviewFixtures.collections()`, `PreviewTripServices.makeCollections(plans)` |
 | Cross-feature save/navigation | `PreviewFixtures.app()` in `PreviewFixtures+App.swift` |
 | Explore places and density | `PreviewFixtures.swift`, `PreviewFixtures+Density.swift`, `LocalPlaceProvider.swift` |
+| Map results and saved status | `MapBrowsePreviewFixtures.loaded()`, `PlaceDetailPreviewFixtures.saved()` |
 | Journey and time editing | `TripJourneyPreview`, `TripClockPreview`, `TripSchedulePreview`, `TripTodayPreview` |
 | Map, ordering and day review | `TripMapPreview`, `TripStopOrderPreview`, `TripPlanningPreview` |
 | Search and autocomplete | `TripPlaceSearchPreview`, `PlaceAutocompletePreview` |

@@ -7,10 +7,12 @@ nonisolated struct RankedMapCandidate {
     let candidate: MapCandidate
     let selected: Bool
     let score: Double
+    let isInViewport: Bool
     var id: String { candidate.place.id }
 
-    init(candidate: MapCandidate, center: CLLocation, selectedID: String?, visibleIDs: Set<String>) {
+    init(candidate: MapCandidate, center: CLLocation, selectedID: String?, visibleIDs: Set<String>, isInViewport: Bool = false) {
         self.candidate = candidate
+        self.isInViewport = isInViewport
         selected = candidate.place.id == selectedID
         let continuity = visibleIDs.contains(candidate.place.id) ? 0.35 : 0
         let importance = candidate.place.importance.isFinite ? candidate.place.importance : 0
@@ -19,6 +21,7 @@ nonisolated struct RankedMapCandidate {
 
     static func precedes(_ lhs: Self, _ rhs: Self) -> Bool {
         if lhs.selected != rhs.selected { return lhs.selected }
+        if lhs.isInViewport != rhs.isInViewport { return lhs.isInViewport }
         return lhs.score == rhs.score ? lhs.id < rhs.id : lhs.score > rhs.score
     }
 }

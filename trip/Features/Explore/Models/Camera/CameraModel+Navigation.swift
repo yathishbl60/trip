@@ -24,6 +24,7 @@ extension CameraModel {
     }
 
     func navigate(to camera: MapCamera) {
+        restoration.hasNavigation = true
         guard camera != currentCamera else { return }
         previousCamera = currentCamera
         updateNavigationState(camera)
