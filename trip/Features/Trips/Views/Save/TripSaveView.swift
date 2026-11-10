@@ -23,6 +23,7 @@ struct TripSaveView: View {
         .presentationSizing(.form)
         .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
         .presentationDragIndicator(.visible)
+        .presentationContentInteraction(.scrolls)
     }
 
     @ViewBuilder private var content: some View {
@@ -36,8 +37,8 @@ struct TripSaveView: View {
     }
 
     @ToolbarContentBuilder private var navigationTools: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button(TripText.cancel.resource, action: controller.dismissDestination)
+        ToolbarItem(placement: .cancellationAction) {
+            Button(TripText.cancel.resource, role: .cancel, action: controller.dismissDestination)
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button(TripText.newTrip2.resource, systemImage: "plus") { controller.beginCreate(saving: place) }

@@ -11,6 +11,8 @@ struct PlaceDetailContentView: View {
     var body: some View {
         content
         .listStyle(.insetGrouped).scrollContentBackground(.hidden)
+        .contentMargins(.top, AppTheme.Spacing.small, for: .scrollContent)
+        .listSectionSpacing(.compact)
         .modifier(PlacePanelContentVisibility(isCompact: controller.model.selection.presentation.isCompact))
         .navigationTitle(controller.model.selection.presentation.isCompact ? place.name : "")
         .navigationBarTitleDisplayMode(.inline)

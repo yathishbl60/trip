@@ -35,7 +35,7 @@ struct AppShellView: View {
         TabView(selection: controller.tab) {
             Tab(TripText.trips.resource, systemImage: "suitcase.rolling", value: AppTab.trips) {
                 TripManagerView(controller: TripController(model: controller.model.trips))
-                    .overlay(alignment: .bottom) { tripFeedback }
+                    .safeAreaInset(edge: .bottom, spacing: 0) { tripFeedback }
             }
             Tab(TripText.explore.resource, systemImage: "map", value: AppTab.explore) { explore }
         }
@@ -45,15 +45,14 @@ struct AppShellView: View {
         TripPersistenceStatusView(controller: TripController(model: controller.model.trips))
     }
 
-    @ViewBuilder private var tripFeedback: some View {
-        if controller.model.trips.feedback.message != nil {
-            TripFeedbackView(model: controller.model.trips.feedback).padding(.bottom, AppTheme.Spacing.small)
-        }
+    private var tripFeedback: some View {
+        TripFeedbackView(model: controller.model.trips.feedback)
+            .padding(.bottom, controller.model.trips.feedback.message == nil ? 0 : AppTheme.Spacing.small)
     }
 
     private var explore: some View {
         AppExploreView(controller: controller)
-            .overlay(alignment: .bottom) {
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 if controller.model.explore.selectedPlace == nil { tripFeedback }
             }
     }

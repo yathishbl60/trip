@@ -39,9 +39,9 @@ struct TripPlanningView: View {
             Section {
                 TripPlanningMapView(draft: draft).frame(height: 240).listRowInsets(EdgeInsets())
             } header: { Text("\(draft.trip.title) · \(draft.day.title)") }
-            TripPlanningRouteSummary(draft: draft, controller: controller)
-            TripPlanningScheduleSection(draft: draft)
             TripPlanningVisitsSection(draft: draft, controller: controller)
+            if draft.showsRouteSummary { TripPlanningRouteSummary(draft: draft, controller: controller) }
+            if draft.showsScheduleSummary { TripPlanningScheduleSection(draft: draft) }
             TripPlanningBookingsSection(draft: draft)
             if let issue = controller.model.planningIssue(draft) ?? draft.notice {
                 Section { Label(issue, systemImage: "exclamationmark.triangle") }

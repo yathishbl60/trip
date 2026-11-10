@@ -7,15 +7,10 @@ struct PlaceDetailToolbar: ToolbarContent {
     let controller: PlaceController
 
     var body: some ToolbarContent {
-        ToolbarItemGroup(placement: .topBarTrailing) {
-            if let url = place.mapsURL {
-                ShareLink(item: url, preview: SharePreview(place.name)) {
-                    Label(TripText.sharePlace.resource, systemImage: "square.and.arrow.up")
-                }
-            }
+        ToolbarItem(placement: .topBarTrailing) {
             Menu(TripText.moreActions.resource, systemImage: "ellipsis") { actions }
         }
-        ToolbarItem(placement: .cancellationAction) {
+        ToolbarItem(placement: .topBarTrailing) {
             Button(role: .close) { controller.dismiss(place) }
         }
     }
@@ -27,6 +22,11 @@ struct PlaceDetailToolbar: ToolbarContent {
             }
             Button(place.nearbyTitle, systemImage: "sparkle.magnifyingglass") { controller.discoverNearby(place) }
             Button(TripText.focusOnMap.resource, systemImage: "viewfinder") { controller.focus(place) }
+            if let url = place.mapsURL {
+                ShareLink(item: url, preview: SharePreview(place.name)) {
+                    Label(TripText.sharePlace.resource, systemImage: "square.and.arrow.up")
+                }
+            }
         }
     }
 }

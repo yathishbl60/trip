@@ -5,6 +5,16 @@ import SwiftUI
 @MainActor struct MapBrowseController {
     let model: ExploreModel
 
+    var comparison: Binding<Bool> {
+        Binding(get: { model.browse.isComparing }, set: { model.browse.isComparing = $0 })
+    }
+
+    func compare() { model.browse.isComparing = true }
+
+    func comparisonModel() -> MapTravelComparisonModel {
+        MapTravelComparisonModel(places: model.browse.items.map(\.place), groups: model.environment.savedCatalog())
+    }
+
     var path: Binding<[PlaceDetailDestination]> {
         let rootID = model.selection.rootPlace?.id
         let revision = model.browse.revision

@@ -26,6 +26,7 @@ struct TripEditView: View {
         }
         .navigationTitle(draft.navigationTitle)
         #if os(iOS)
+        .scrollDismissesKeyboard(.interactively)
         .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
         .navigationBarTitleDisplayMode(.inline)

@@ -4,8 +4,11 @@ import TripRouting
 import TripLocalization
 
 extension TripPlanningDraft {
-    var title: String { isInsertion ? TripText.planningPlacement.text : TripText.planningPreview.text }
+    var title: String { isInsertion ? TripText.saveToTrip.text : TripText.planningPreview.text }
     var confirmationTitle: String { isInsertion ? TripText.addToDay.text : TripText.planningApply.text }
+    var showsRouteSummary: Bool { day.stops.count > 1 || missingLocations }
+    var showsScheduleSummary: Bool { !isInsertion || day.schedule != nil || trip.needsTimeZoneReview }
+    var canChoosePlacement: Bool { isInsertion && !original.stops.isEmpty }
     var routeRequest: String { "\(revision)-\(routes.mode.rawValue)" }
     var mapPins: [TripPlanningMapPin] {
         day.stops.enumerated().compactMap { index, stop -> TripPlanningMapPin? in

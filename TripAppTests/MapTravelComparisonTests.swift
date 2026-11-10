@@ -32,6 +32,33 @@ import TripRouting
         #expect(model.selected.contains(places[4].id) && model.selected.count == 3)
     }
 
+    @Test func changedSelectionRejectsAResultBeforeTheNextLoadStarts() async {
+        let service = ControlledTravelTimes()
+        let model = comparison(service)
+        let pending = Task { await model.load() }
+        await service.waitForRequest(0)
+        model.mode = .driving
+        service.finish(0, seconds: 900)
+        await pending.value
+        #expect(model.estimates.isEmpty)
+    }
+
+    @Test func compatibleRefreshKeepsThePreviousEstimateUntilReplacementArrives() async {
+        let service = ControlledTravelTimes()
+        let model = comparison(service)
+        let initial = Task { await model.load() }
+        await service.waitForRequest(0)
+        service.finish(0, seconds: 120)
+        await initial.value
+        model.cache = MapTravelCache()
+        let refresh = Task { await model.load() }
+        await service.waitForRequest(1)
+        #expect(model.isLoading && model.estimates["Museum"]?.travelTime == 120)
+        service.finish(1, seconds: 150)
+        await refresh.value
+        #expect(!model.isLoading && model.estimates["Museum"]?.travelTime == 150)
+    }
+
     private func comparison(_ provider: ControlledTravelTimes) -> MapTravelComparisonModel {
         let plan = MapRefinementFixtures.plan()
         let model = MapTravelComparisonModel(places: plan.savedPlaces, groups: [TripSavedPlaceGroup(plan)], provider: provider)

@@ -21,11 +21,9 @@ struct AppExploreView: View {
         }
     }
 
-    @ViewBuilder private var placeFeedback: some View {
-        if controller.model.trips.feedback.message != nil {
-            TripFeedbackView(model: controller.model.trips.feedback)
-                .padding(.bottom, AppTheme.Spacing.small)
-        }
+    private var placeFeedback: some View {
+        TripFeedbackView(model: controller.model.trips.feedback)
+            .padding(.bottom, controller.model.trips.feedback.message == nil ? 0 : AppTheme.Spacing.small)
     }
 
 }

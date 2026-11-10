@@ -6,6 +6,7 @@ import TripDomain
 @MainActor @Observable final class MapBrowseModel {
     let context = MapBrowseContext()
     private(set) var isPresented = false
+    var isComparing = false
     private(set) var revision = 0
     private(set) var items: [MapBrowseItem] = []
     private(set) var isRefreshing = false
@@ -26,6 +27,7 @@ import TripDomain
 
     func close() {
         context.reset()
+        isComparing = false
         revision += 1
         isPresented = false
         invalidate()

@@ -19,9 +19,21 @@ struct MapTravelComparisonView: View {
         }
         .navigationTitle(TripText.compareTravelTimes.resource).navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
+        .contentMargins(.top, AppTheme.Spacing.small, for: .scrollContent)
+        .toolbar { progress }
         .task(id: MapTravelTaskID(selection: model.request, isActive: scenePhase == .active)) {
             if scenePhase == .active { await controller.load() }
         }
+    }
+
+    private var progress: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            ProgressView().controlSize(.small).opacity(model.isLoading ? 1 : 0)
+                .accessibilityLabel(TripText.loadingTravelTimes.resource).accessibilityHidden(!model.isLoading)
+        }
+        #if os(iOS)
+        .sharedBackgroundVisibility(.hidden)
+        #endif
     }
 
     private var options: some View {
@@ -31,7 +43,7 @@ struct MapTravelComparisonView: View {
                 ForEach(model.origins) { origin in
                     Text("\(origin.title) · \(origin.subtitle)").tag(origin.id)
                 }
-            }
+            }.pickerStyle(.navigationLink)
             Picker(TripText.travelMode.resource, selection: controller.mode) {
                 ForEach([TravelMode.walking, .driving], id: \.self) { mode in
                     Label(mode.title, systemImage: mode.symbol).tag(mode)
@@ -45,7 +57,6 @@ struct MapTravelComparisonView: View {
             Text(error).foregroundStyle(.secondary)
             Button(TripText.tryAgain.resource, action: controller.retry)
         }
-        if model.isLoading { ProgressView(TripText.loadingTravelTimes.resource) }
         if !model.failures.isEmpty {
             Button(TripText.retryUnavailableEstimates.resource, systemImage: "arrow.clockwise", action: controller.retry)
         }

@@ -1,6 +1,13 @@
 import Foundation
 import TripRouting
 
+nonisolated struct MapTravelSelection: Hashable {
+    let ids: Set<String>
+    let originID: String
+    let mode: TravelMode
+    let revision: Int
+}
+
 nonisolated struct MapTravelTaskID: Hashable {
     let selection: MapTravelSelection
     let isActive: Bool

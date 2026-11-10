@@ -12,24 +12,28 @@ struct TripStopPlanningRow: View {
     var timing: TripTimelineEntry? = nil
     var continuesSequence = false
     @Environment(\.editMode) private var editMode
-    @ScaledMetric(relativeTo: .subheadline) private var railWidth = 32.0
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.tight) {
-            HStack(alignment: .top, spacing: AppTheme.Spacing.tight) {
-                place
-                TripStopActionsMenu(stop: stop, dayID: dayID, tripID: tripID, controller: controller)
-            }
+            identityAndActions
             if let timing { visitTime(timing) }
             notes
         }
-        .padding(.leading, railWidth + AppTheme.Spacing.medium)
-        .overlay(alignment: .leading) {
-            TripItineraryRail(number: number, color: stop.place.category.color, continuesSequence: continuesSequence,
-                              isComplete: controller.model.hasVisited(stop.id, dayID: dayID, tripID: tripID))
-        }
+        .modifier(TripItineraryRowLayout(number: number, color: stop.place.category.color, continuesSequence: continuesSequence,
+                                         isComplete: controller.model.hasVisited(stop.id, dayID: dayID, tripID: tripID)))
         .padding(.vertical, AppTheme.Spacing.tight)
         .appEntityIdentifier(controller.detailEntityIdentifier(tripID: tripID, itemID: stop.id))
+    }
+
+    private var identityAndActions: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: AppTheme.Spacing.tight))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: AppTheme.Spacing.tight))
+        return layout {
+            place
+            TripStopActionsMenu(stop: stop, dayID: dayID, tripID: tripID, controller: controller)
+        }
     }
 
     private func visitTime(_ timing: TripTimelineEntry) -> some View {
@@ -78,5 +82,13 @@ struct TripStopPlanningRow: View {
                         tripID: model.library.trips[0].id,
                         controller: TripController(model: model))
         .padding().preferredColorScheme(.dark)
+}
+#Preview("Stop actions · large text in a narrow list") {
+    let model = PreviewFixtures.tripPlanner()
+    let trip = model.library.trips[0]
+    List {
+        TripStopPlanningRow(stop: trip.days[0].stops[0], dayID: trip.days[0].id, tripID: trip.id,
+                            controller: TripController(model: model))
+    }.frame(width: 320).dynamicTypeSize(.accessibility3).environment(\.editMode, .constant(.active))
 }
 #endif

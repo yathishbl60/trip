@@ -6,14 +6,20 @@ import SwiftUI
     static let standard = PresentationDetent.fraction(0.5)
     private var preferredDetent = PlacePresentationModel.standard
     var usesLargeText = false
+    var usesCompactHeight = false
+    var allowsCompact = true
 
     var detents: Set<PresentationDetent> {
-        usesLargeText ? [.fraction(0.75), .large] : [Self.compact, Self.standard, .large]
+        if usesCompactHeight { return [.large] }
+        if usesLargeText { return [.fraction(0.75), .large] }
+        return allowsCompact ? [Self.compact, Self.standard, .large] : [Self.standard, .large]
     }
 
     var detent: PresentationDetent {
         get {
+            if usesCompactHeight { return .large }
             if usesLargeText, preferredDetent != .large { return .fraction(0.75) }
+            if !allowsCompact, preferredDetent == Self.compact { return Self.standard }
             return preferredDetent
         }
         set {
@@ -35,4 +41,10 @@ import SwiftUI
     }
 
     func reset() { preferredDetent = Self.standard }
+}
+
+nonisolated struct PlacePanelLayout: Equatable {
+    let largeText: Bool
+    let compactHeight: Bool
+    let allowsCompact: Bool
 }

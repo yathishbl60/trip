@@ -1,4 +1,5 @@
 import SwiftUI
+import TripDomain
 
 extension PlaceController {
     var detailDetent: Binding<PresentationDetent> {
@@ -9,7 +10,13 @@ extension PlaceController {
         })
     }
 
-    func detailAccessibilityChanged(_ typeSize: DynamicTypeSize) {
-        model.selection.presentation.usesLargeText = typeSize.isAccessibilitySize
+    var allowsCollapsedDetails: Bool {
+        model.selectedPlace != nil && !model.browse.isPresented && model.selection.detailPath.isEmpty
+    }
+
+    func updatePanelLayout(_ layout: PlacePanelLayout) {
+        model.selection.presentation.usesLargeText = layout.largeText
+        model.selection.presentation.usesCompactHeight = layout.compactHeight
+        model.selection.presentation.allowsCompact = layout.allowsCompact
     }
 }

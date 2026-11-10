@@ -5,6 +5,7 @@ import TripLocalization
 struct MapBrowseRow: View {
     let item: MapBrowseItem
     let controller: MapBrowseController
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         HStack(alignment: .top, spacing: AppTheme.Spacing.medium) {
@@ -21,7 +22,10 @@ struct MapBrowseRow: View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.small) {
             TripPlaceLabel(title: item.place.name, subtitle: item.place.category.annotationTitle,
                            symbol: item.place.category.symbol, color: item.place.category.color)
-            if let address = item.place.address { Text(address).font(.subheadline).foregroundStyle(.secondary) }
+            if let address = item.place.address {
+                Text(address).font(.subheadline).foregroundStyle(.secondary)
+                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+            }
             Text(TripText.distanceFromMapCenter(item.distanceText).resource).font(.caption).foregroundStyle(.secondary)
             if let saved = controller.model.environment.savedPlaces(item.id).first {
                 Label(saved.title, systemImage: "bookmark.fill").font(.caption).foregroundStyle(.secondary)

@@ -2,12 +2,14 @@ import SwiftUI
 
 struct PlacePanelContentVisibility: ViewModifier {
     let isCompact: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func body(content: Content) -> some View {
         content
             .opacity(isCompact ? 0 : 1)
             .allowsHitTesting(!isCompact)
             .accessibilityHidden(isCompact)
+            .animation(AppTheme.Motion.feedback(reduceMotion: reduceMotion), value: isCompact)
     }
 }
 

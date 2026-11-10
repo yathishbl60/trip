@@ -7,7 +7,7 @@ struct TripPlanningVisitsSection: View {
 
     var body: some View {
         Section {
-            if draft.isInsertion { placementPicker }
+            if draft.canChoosePlacement { placementPicker }
             ForEach(draft.visits) { visit in
                 TripPlanningVisitRow(visit: visit).moveDisabled(visit.isFixed || draft.isInsertion)
             }
@@ -37,5 +37,9 @@ struct TripPlanningVisitsSection: View {
     let (model, draft) = TripPlanningPreview.fixture(inserting: true)
     List { TripPlanningVisitsSection(draft: draft, controller: TripController(model: model)) }
         .dynamicTypeSize(.accessibility2)
+}
+#Preview("First stop · focused confirmation") {
+    let (model, draft) = TripPlanningPreview.firstStop()
+    TripPlanningView(draft: draft, controller: TripController(model: model))
 }
 #endif

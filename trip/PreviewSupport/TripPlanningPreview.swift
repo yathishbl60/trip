@@ -27,6 +27,15 @@ import TripRouting
         plan.events = [booking]
         return plan
     }
+
+    static func firstStop() -> (TripModel, TripPlanningDraft) {
+        let plan = TripPlan(title: "Weekend in Bangkok")
+        let model = PreviewTripServices.makeTrips([plan])
+        let routes = TripPlanningRoutes(provider: UnavailablePlanningRoutes())
+        let draft = TripPlanningDraft(trip: plan, day: plan.days[0], place: PreviewFixtures.hotel, routes: routes)
+        model.presentation.planning = draft
+        return (model, draft)
+    }
 }
 
 @MainActor private final class UnavailablePlanningRoutes: DirectionsProviding {

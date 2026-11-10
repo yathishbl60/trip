@@ -19,6 +19,7 @@ import TripLocalization
     @ObservationIgnored let provider: any TravelTimeEstimating
     @ObservationIgnored var cache = MapTravelCache()
     @ObservationIgnored var generation = 0
+    @ObservationIgnored private var displayedSelection: MapTravelSelection?
 
     init(places: [Place], groups: [TripSavedPlaceGroup], provider: any TravelTimeEstimating = TravelTimeService()) {
         self.places = places
@@ -39,53 +40,59 @@ import TripLocalization
     func load() async {
         generation += 1
         let token = generation
-        location.stop()
-        estimates = [:]
-        failures = []
-        locationFailure = nil
+        let selection = request
+        prepareDisplay()
         guard !selected.isEmpty else { isLoading = false; return }
         isLoading = true
         defer { if token == generation { isLoading = false } }
-        guard let origin = await resolveOrigin(token: token), !Task.isCancelled, token == generation else { return }
+        guard let origin = await resolveOrigin(token: token, selection: selection), accepts(token, selection: selection) else { return }
         for place in chosenPlaces {
-            guard !Task.isCancelled, token == generation else { return }
+            guard accepts(token, selection: selection) else { return }
             let key = MapTravelKey(origin: origin, destination: place.coordinate, mode: mode)
             if let cached = cache.estimate(for: key) { estimates[place.id] = cached; continue }
-            await estimate(place, key: key, token: token)
+            await estimate(place, key: key, token: token, selection: selection)
         }
     }
 
-    private func estimate(_ place: Place, key: MapTravelKey, token: Int) async {
+    private func estimate(_ place: Place, key: MapTravelKey, token: Int, selection: MapTravelSelection) async {
         do {
             let result = try await fetch(key)
-            guard !Task.isCancelled, token == generation else { return }
+            guard accepts(token, selection: selection) else { return }
             cache.store(result, for: key)
             estimates[place.id] = result
         } catch {
-            guard !Task.isCancelled, token == generation else { return }
+            guard accepts(token, selection: selection) else { return }
+            estimates[place.id] = nil
             failures.insert(place.id)
         }
     }
 
-    private func resolveOrigin(token: Int) async -> Coordinate? {
+    private func prepareDisplay() {
+        location.stop()
+        let compatible = displayedSelection?.originID == originID && displayedSelection?.mode == mode
+        let hasOrigin = originID != "current" || location.currentCoordinate != nil
+        estimates = compatible && hasOrigin ? estimates.filter { selected.contains($0.key) } : [:]
+        displayedSelection = request
+        failures = []
+        locationFailure = nil
+    }
+
+    private func accepts(_ token: Int, selection: MapTravelSelection) -> Bool {
+        !Task.isCancelled && token == generation && request == selection
+    }
+
+    private func resolveOrigin(token: Int, selection: MapTravelSelection) async -> Coordinate? {
         if originID != "current" { return origins.first { $0.id == originID }?.coordinate }
         if let coordinate = location.currentCoordinate { return coordinate }
         location.start()
         defer { if token == generation { location.stop() } }
         for _ in 0..<60 {
-            guard !Task.isCancelled, token == generation else { return nil }
+            guard accepts(token, selection: selection) else { return nil }
             if let coordinate = location.currentCoordinate { return coordinate }
             if !location.isFollowing { break }
             try? await Task.sleep(for: .milliseconds(250))
         }
-        if !Task.isCancelled { locationFailure = TripText.chooseSavedOriginOrEnableLocation.text }
+        if accepts(token, selection: selection) { locationFailure = TripText.chooseSavedOriginOrEnableLocation.text }
         return nil
     }
-}
-
-nonisolated struct MapTravelSelection: Hashable {
-    let ids: Set<String>
-    let originID: String
-    let mode: TravelMode
-    let revision: Int
 }

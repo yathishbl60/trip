@@ -1,6 +1,7 @@
 import CoreGraphics
 import MapKit
 import MapEngine
+import SwiftUI
 import Testing
 import TripDomain
 @testable import trip

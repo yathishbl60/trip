@@ -9,6 +9,9 @@ struct MapBrowseView: View {
         results
             .navigationTitle(TripText.placesInThisArea.resource).navigationBarTitleDisplayMode(.inline)
             .toolbar { MapBrowseToolbar(controller: controller) }
+            .navigationDestination(isPresented: controller.comparison) {
+                MapTravelComparisonView(model: controller.comparisonModel())
+            }
     }
 
     private var results: some View {
@@ -17,7 +20,7 @@ struct MapBrowseView: View {
             Section {
                 ForEach(controller.model.browse.items) { MapBrowseRow(item: $0, controller: controller) }
             } header: {
-                Text(TripText.placeCount(controller.model.browse.items.count).resource)
+                count
                 if controller.model.savedMap.isActive { Text(SavedMapController(model: controller.model).title) }
                 if !controller.model.catalog.query.isEmpty { Text(controller.model.catalog.query) }
             }
@@ -29,8 +32,7 @@ struct MapBrowseView: View {
     }
 
     @ViewBuilder private var status: some View {
-        if controller.model.browse.isRefreshing || controller.model.discoveryIsSearching
-            || (!controller.model.browse.hasLoaded && controller.model.browse.canResolveArea) {
+        if controller.model.browse.items.isEmpty, isLoading {
             ProgressView(TripText.searching.resource)
         }
         if !controller.model.discoveryStatus.isEmpty {
@@ -42,6 +44,20 @@ struct MapBrowseView: View {
         if controller.model.browse.items.isEmpty, !controller.model.browse.isRefreshing,
            !controller.model.discoveryIsSearching, controller.model.browse.hasLoaded || !controller.model.browse.canResolveArea {
             empty
+        }
+    }
+
+    private var isLoading: Bool {
+        controller.model.browse.isRefreshing || controller.model.discoveryIsSearching
+            || (!controller.model.browse.hasLoaded && controller.model.browse.canResolveArea)
+    }
+
+    private var count: some View {
+        HStack {
+            Text(TripText.placeCount(controller.model.browse.items.count).resource)
+            Spacer()
+            ProgressView().controlSize(.small).opacity(isLoading && !controller.model.browse.items.isEmpty ? 1 : 0)
+                .accessibilityHidden(true)
         }
     }
 
