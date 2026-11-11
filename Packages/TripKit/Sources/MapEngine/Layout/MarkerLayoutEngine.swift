@@ -12,6 +12,7 @@ public actor MarkerLayoutEngine {
         try Task.checkCancellation()
         guard request.isValid else { return [] }
         var grid = try collisionGrid(for: request)
+        let reservations = try reservationGrid(for: request)
         var result: [MarkerPlacement] = []
         var photoCount = 0
         let zoomStyles = request.policy.styles(at: request.zoom)
@@ -19,7 +20,7 @@ public actor MarkerLayoutEngine {
         for candidate in try rank(request) {
             try Task.checkCancellation()
             guard result.count < request.policy.markerLimit else { break }
-            guard let style = chooseStyle(for: candidate, in: request, avoiding: grid,
+            guard let style = chooseStyle(for: candidate, in: request, avoiding: grid, reservations: reservations,
                                          from: zoomStyles, allowsPhoto: photoCount < photoLimit) else { continue }
             grid.insert(collisionBounds(for: candidate, style: style, in: request), id: candidate.place.id)
             result.append(MarkerPlacement(place: candidate.place, style: style))
@@ -36,6 +37,11 @@ public actor MarkerLayoutEngine {
             let clipped = rect.intersection(request.viewport)
             if clipped.isFinite && !clipped.isEmpty { grid.insert(clipped) }
         }
+        return grid
+    }
+
+    private func reservationGrid(for request: LayoutRequest) throws -> CollisionGrid {
+        var grid = CollisionGrid()
         for reservation in request.reservations {
             try Task.checkCancellation()
             guard reservation.rect.isFinite, !reservation.rect.isEmpty else { continue }
@@ -46,12 +52,16 @@ public actor MarkerLayoutEngine {
     }
 
     private func chooseStyle(for candidate: ProjectedPlace, in request: LayoutRequest, avoiding grid: CollisionGrid,
-                             from zoomStyles: [MarkerStyle], allowsPhoto: Bool) -> MarkerStyle? {
+                             reservations: CollisionGrid, from zoomStyles: [MarkerStyle], allowsPhoto: Bool) -> MarkerStyle? {
         for style in eligibleStyles(for: candidate.place.id, request: request, zoomStyles: zoomStyles) {
             if style.hasPhoto && !allowsPhoto { continue }
             guard fitsViewport(candidate, style: style, in: request) else { continue }
             let rect = collisionBounds(for: candidate, style: style, in: request)
-            if !grid.intersects(rect, ignoring: candidate.place.id) { return style }
+            guard !grid.intersects(rect, ignoring: candidate.place.id) else { continue }
+            let grows = request.previous[candidate.place.id].map { style.rawValue > $0.rawValue } ?? true
+            // Old morph envelopes must not make already-visible, shrinking neighbors evict each other.
+            if grows && reservations.intersects(rect, ignoring: candidate.place.id) { continue }
+            return style
         }
         return nil
     }

@@ -41,6 +41,12 @@ reverse zoom transitions where clipping/opacity hide the inactive stage.
 
 ## Check bounded work and stable transitions
 
+Keep current annotation footprints collision-free. Animation envelopes additionally
+reserve space for new or growing artwork; retained and shrinking markers must not
+evict each other because old envelopes overlap after camera movement. Preserve
+appearance history and mounted content when a retirement fade reverses before it
+finishes. Fully hidden reentry still starts at its new size with fresh content.
+
 Inspect candidate budgets, geographic cutoff, antimeridian splitting, cache
 freshness/LRU, zoom hysteresis, retirement, and reentry. Confirm filtering and
 selection persist while compatible content refreshes. Expensive work belongs

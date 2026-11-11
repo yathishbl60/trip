@@ -18,6 +18,7 @@ enum LayoutChecks {
         try await LayoutEdgeChecks.run(engine)
         try await AnnotationDesignChecks.run()
         try await MarkerPlacementChecks.run(engine)
+        try await MarkerReservationChecks.run(engine)
     }
 
     private static func validate(_ result: [MarkerPlacement], _ request: LayoutRequest,

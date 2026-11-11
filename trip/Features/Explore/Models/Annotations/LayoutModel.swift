@@ -35,7 +35,7 @@ import Foundation
     }
 
     var history: [String: MarkerStyle] {
-        markers.reduce(into: [:]) { if $1.hasAppeared { $0[$1.id] = $1.style } }
+        markers.reduce(into: [:]) { if $1.hasAppeared || $1.isFading { $0[$1.id] = $1.style } }
     }
 
     var needsRefinement: Bool {

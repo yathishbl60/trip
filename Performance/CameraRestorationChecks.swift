@@ -11,7 +11,7 @@ import SwiftUI
         try require(state.restore(encoded) == camera, "Restoration lost camera perspective")
         try require(state.restore(encoded) == nil, "Restoration ran twice")
         state.record(camera)
-        try require(state.snapshot == encoded, "Settled camera did not persist")
+        try require(MapCameraSnapshot.decode(state.snapshot) == MapCameraSnapshot(camera), "Settled camera did not persist")
         try require(MapCameraRestorationModel().snapshot.isEmpty, "Windows shared camera storage")
         try navigationWins(encoded)
         try invalidSnapshots()

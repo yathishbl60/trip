@@ -14,6 +14,7 @@ import Foundation
         try deferredContent()
         try unmountedChanges()
         try nativeViewReentry()
+        try MarkerRevivalChecks.run()
         try MarkerRetirementChecks.run()
         print("PASS: entry state, Reduce Motion, uninterrupted morphs, retirement, and reappearance")
     }
@@ -48,6 +49,7 @@ import Foundation
         marker.retire()
         marker.appear()
         try require(!marker.hasAppeared, "Retired marker was revealed")
+        marker.hiddenAt = .now.advanced(by: .seconds(-marker.motion.fade))
         let placement = MarkerPlacement(place: marker.place, style: .dot)
         marker.update(placement, scale: 1, reduceMotion: false)
         try require(marker.presentationRevision == revision + 1, "Reappearance reused stale artwork geometry")

@@ -37,7 +37,7 @@ import CoreGraphics
     }
 
     func update(_ placement: MarkerPlacement, scale: CGFloat, reduceMotion: Bool) {
-        if !isVisible { prepareReappearance(style: placement.style) }
+        if !isVisible { prepareReappearance(style: placement.style, reduceMotion: reduceMotion) }
         reserveTransition(to: placement.style, scale: scale, reduceMotion: reduceMotion)
         // Mount expensive content on first use, then retain it across reverse zoom morphs.
         if placement.style.hasPhoto && !hasPhotoContent { hasPhotoContent = true }
@@ -48,7 +48,12 @@ import CoreGraphics
         hiddenAt = nil
     }
 
-    private func prepareReappearance(style: MarkerStyle) {
+    private func prepareReappearance(style: MarkerStyle, reduceMotion: Bool) {
+        // Reverse an unfinished fade without rebuilding artwork that is still on screen.
+        if !reduceMotion, isFading {
+            visibility = .visible
+            return
+        }
         visibility = .entering
         presentationRevision += 1
         hasPhotoContent = style.hasPhoto

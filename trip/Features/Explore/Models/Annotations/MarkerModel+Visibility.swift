@@ -5,6 +5,11 @@ import Foundation
 import CoreGraphics
 
 extension MarkerModel {
+    var isFading: Bool {
+        guard visibility == .retiring, let hiddenAt else { return false }
+        return hiddenAt.duration(to: .now) < .seconds(motion.fade)
+    }
+
     func retire() {
         guard isVisible else { return }
         if hasAppeared {
